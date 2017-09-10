@@ -2,28 +2,14 @@ require 'concurrent'
 
 ALUMNOS = (ARGV[0] || 40).to_i
 
-tareas = ALUMNOS.times.collect { Concurrent::Semaphore.new(1) }
+tareas = ALUMNOS.times.collect { Concurrent::Semaphore.new(0) }
 mutex = ALUMNOS.times.collect { Concurrent::Semaphore.new(0) }
 correcciones = Array.new(ALUMNOS, false)
 entregas = []
 cant = ALUMNOS
 
-ALUMNOS.times do | i |
-  Thread.new do
-    while !correcciones[i]
-      tareas[i].acquire # Funcion P del 'lenguaje' de concurrente
-      sleep 1 # Se hace tarea
-      puts "entregar tarea alumno #{i} "
-      entregas.push i
-      tareas[i].release # Funcion V del 'lenguaje' de concurrente
-      mutex[i].acquire
-    end
-    puts "alumno #{i}: chau!"
-  end
-end
-
-
 maestra = Thread.new do
+  tareas.each(&:release)
   while cant != 0
     if !entregas.empty?
       entregas.pop.tap do |id|
@@ -37,6 +23,20 @@ maestra = Thread.new do
         end
       end
     end
+  end
+end
+
+ALUMNOS.times do | i |
+  Thread.new do
+    while !correcciones[i]
+      tareas[i].acquire # Funcion P del 'lenguaje' de concurrente
+      sleep 1 # Se hace tarea
+      puts "entregar tarea alumno #{i} "
+      entregas.push i
+      tareas[i].release # Funcion V del 'lenguaje' de concurrente
+      mutex[i].acquire
+    end
+    puts "alumno #{i}: chau!"
   end
 end
 

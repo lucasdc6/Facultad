@@ -1,4 +1,4 @@
-sem tarea[40] = ([40], 1);
+sem tarea[40] = ([40], 0);
 sem mutex[40] = ([40], 0);
 boolean correcciones[40] = ([40], false);
 cola entregas;
@@ -17,6 +17,9 @@ Process alumnos[i = 1 to 40]
 
 Process maestra
 {
+  for(int i = 1; i < 40; i++){
+    V(tarea[i]);
+  }
   while(cant != 0){
     if(!entregas.empty?) {
       int id = desencolar(entregas);
