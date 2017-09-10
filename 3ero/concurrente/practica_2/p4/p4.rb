@@ -1,6 +1,6 @@
 require 'concurrent'
 
-ALUMNOS = 40
+ALUMNOS = (ARGV[0] || 40).to_i
 
 tareas = ALUMNOS.times.collect { Concurrent::Semaphore.new(1) }
 mutex = ALUMNOS.times.collect { Concurrent::Semaphore.new(0) }
