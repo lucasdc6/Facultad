@@ -4,23 +4,23 @@
 #include <semaphore.h>
 #include <unistd.h>
 #include <fcntl.h>
-#define NUM_THREADS 2
+#define NUM_THREADS 10
 
-pthread_mutex_t mutex;
+sem_t mutex;
 
 void *passenger(void *threadid) {
   long tid;
   tid = (long) threadid;
-  pthread_mutex_lock(&mutex);
+  sem_wait(&mutex);
   sleep(1);
   printf("Passenger #%ld analized!\n", tid);
-  pthread_mutex_unlock(&mutex);
+  sem_post(&mutex);
   pthread_exit(NULL);
 }
 
 int main (int argc, char *argv[]) {
   pthread_t threads[NUM_THREADS];
-  pthread_mutex_init(&mutex, NULL);
+  sem_init(&mutex, 0, 3);
   long t;
   int rc;
   for (t = 0; t < NUM_THREADS; t++) {
@@ -36,6 +36,6 @@ int main (int argc, char *argv[]) {
     pthread_join(threads[t], NULL);
   }
   pthread_exit(NULL);
-  pthread_mutex_destroy(&mutex);
+  sem_destroy(&mutex);
   return 0;
 }
