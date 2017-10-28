@@ -7,7 +7,7 @@ chan response_c[1..N](char*);
 chan request_a(int*);
 chan response_a[1..N](char*);
 
-chan return_pencil(char);
+chan return_pencil(char*);
 
 Process nana
 {
@@ -18,13 +18,20 @@ Process nana
         if (!empty(request_c) && cant_c){
             recive request_c(&children);
             send response_c[children]("C");
+            cant_c--;
         } [](!empty(request_n) && cant_n)-> {
             recive request_n(&children);
             send response_c[children]("N");
+            cant_n--;
         } [](!empty(request_a) && (cant_n + cant_c))-> {
             char pencil = get_any_pencil();
             recive request_a(&children);
             send response_a[children](&pencil);
+            pencil == 'C' ? cant_c-- : cant_n --;
+        } [](!empty(return_pencil)) {
+            char pencil;
+            recive return_pencil(&pencil);
+            pencil == 'C' ? cant_c++ : cant_n++;
         }
     }
 }
