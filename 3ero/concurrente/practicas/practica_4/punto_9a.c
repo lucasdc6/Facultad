@@ -9,10 +9,10 @@ procedure abuela()
     [] (!lapices_n; niño_n[*]? pedido_negro(id_niño) -> lapices_n--; niño_n[id_niño]!dar('N'));
     [] (!lapices_c; niño_a[*]? pedido_color(id_niño) -> lapices_c--; niño_a[id_niño]!dar('C'));
     [] (!lapices_n; niño_a[*]? pedido_negro(id_niño) -> lapices_n--; niño_a[id_niño]!dar('N'));
-    [] (niño_c[*]?retrono_color() -> lapices_c++;
-    [] (niño_n[*]?retrono_negro() -> lapices_n++;
-    [] (niño_a[*]?retrono_color() -> lapices_c++;
-    [] (niño_a[*]?retrono_negro() -> lapices_n++;
+    [] (niño_c[*]?retrono_color() -> lapices_c++);
+    [] (niño_n[*]?retrono_negro() -> lapices_n++);
+    [] (niño_a[*]?retrono_color() -> lapices_c++);
+    [] (niño_a[*]?retrono_negro() -> lapices_n++);
     }
   }
 }
