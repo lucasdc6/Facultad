@@ -22,12 +22,33 @@ Procedure punto_1 IS
     cant_camionetas := 0;
     cant_camiones := 0;
     LOOP
-      SELECT WHEN(cant_autos < 3 && cant_camionetas = 0 && cant_camiones = 0) => ACCEPT pasar_auto; cant_autos := cant_autos + 1; END pasar_auto;
-      OR WHEN(cant_autos = 0 && cant_camionetas < 2 && cant_camiones = 0) => ACCEPT pasar_camioneta; cant_camionetas :=  cant_camionetas + 1; END pasar_camioneta;
-      OR WHEN(cant_autos = 0 && cant_camionetas = 0 && cant_camiones = 0) => ACCEPT pasar_camion; cant_camiones := cant_camiones + 1; END pasar_camion;
-      OR ACCEPT salir_auto; cant_autos := cant_autos - 1; END salir_auto;
-      OR ACCEPT salir_camioneta; cant_camionetas := cant_camionetas - 1; END salir_camioneta;
-      OR ACCEPT salir_camion; cant_camiones := cant_camiones - 1; END salir_camion;
+      SELECT
+        WHEN(cant_autos < 3 && cant_camionetas = 0 && cant_camiones = 0) =>
+          ACCEPT pasar_auto
+            cant_autos := cant_autos + 1;
+          END pasar_auto;
+      OR
+        WHEN(cant_autos = 0 && cant_camionetas < 2 && cant_camiones = 0) =>
+          ACCEPT pasar_camioneta
+            cant_camionetas :=  cant_camionetas + 1;
+          END pasar_camioneta;
+      OR
+        WHEN(cant_autos = 0 && cant_camionetas = 0 && cant_camiones = 0) =>
+          ACCEPT pasar_camion
+            cant_camiones := cant_camiones + 1;
+          END pasar_camion;
+      OR
+        ACCEPT salir_auto
+          cant_autos := cant_autos - 1;
+        END salir_auto;
+      OR
+        ACCEPT salir_camioneta
+          cant_camionetas := cant_camionetas - 1;
+        END salir_camioneta;
+      OR
+        ACCEPT salir_camion
+          cant_camiones := cant_camiones - 1;
+        END salir_camion;
     END LOOP;
   END puente;
 
