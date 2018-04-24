@@ -14,4 +14,5 @@ Si todo salió bien, se debería poder entrar por ssh a la máquina virtual a
 utilizando la dirección configurada en `/etc/network/interfaces`
 
 __nota: Se puede agregar la clave publica para un acceso más simple__
+
 __Para eso, ejecutar `ssh-ssh-copy-id so@<ip>`__
