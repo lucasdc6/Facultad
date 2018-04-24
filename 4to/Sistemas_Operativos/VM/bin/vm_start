@@ -1,0 +1,3 @@
+#!/bin/bash
+
+VBoxManage startvm SOv2 --type headless

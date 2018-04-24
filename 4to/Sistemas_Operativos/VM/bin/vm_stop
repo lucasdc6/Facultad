@@ -1,0 +1,3 @@
+#!/bin/bash
+
+VBoxManage controlvm SOv2 poweroff
