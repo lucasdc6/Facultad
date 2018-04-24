@@ -1,0 +1,49 @@
+● Visualice la tabla de rutas del router n4 y responda:
+  ○ ¿Cuál es la distancia administrativa del protocolo OSPF?
+
+    La distancia administrativa del protocolo OSPF es de 110.
+
+  ○ ¿Qué significa el “>” que se encuentra en la tabla de ruteo visualizada?
+
+    El símbolo ">" marca la opción elegida dentro de una misma red.
+
+  ○ ¿Cuántas rutas tiene hacia la red 10.0.4.0/24?
+
+    Tiene 2 rutas hacia 10.0.4.0/24
+
+  ○ ¿Cuál es la ruta elegida? ¿Por qué? ¿Cuál es su métrica y cuál su distancia
+  administrativa?
+
+    La ruta elegida es la provista por el protocolo OSPF, dado que su métrica es
+    menor.
+    La métrica de OSPF es de 110, mientras que la de RIP es de 120.
+
+● Configure el router n4 de forma tal que el protocolo RIP tenga una distancia
+administrativa menor que OSPF. Visualice nuevamente la tabla de rutas del router
+y verifique cuál es el next-hop hacia la red 10.0.4.0/24.
+
+  Al configurar el router n4, con una distancia administrativa para el protocolo
+RIP, menor a 110 (Distancia administrativa del protocolo OSPF), las rutas
+provistas por el protocolo RIP pasan a tener mayor prioridad.
+
+● Mientras ejecuta un ping de n8 a n7, capture tráfico en la interfaz eth1 del
+router n4 y responda:
+  ○ ¿Qué paquetes ICMP se visualizan? ¿Por qué?
+
+    Se visualizan paquetes ICMP Request, lo que quiere decir que la "ida" del
+    ping, pasa por la interfaz eth1 del router n4, por el camino provisto por el
+    protocolo RIP.
+
+● Repita el ítem anterior realizando la captura en la interfaz eth0 del router n4
+
+  Si ahora escuchamos en la interfaz eth0, podemos encontrar paquetes ICMP
+  reply, lo que nos dice que la respuesta de n7 no vuelve por el mismo camino.
+
+  Esto se debe a que nosotros solamente cambiamos la distancia administrativa
+  del protocolo RIP en el router n4, y no en el router n3, por lo que para el
+  router n3, tiene como camino hacia 10.0.5.0/24, la ruta provista por el
+  protocolo OSPF.
+
+  Esto además nos demuestra que nosotros podemos controlar la ida de un paquete,
+  configurando nuestro router de salida, pero nunca podemos controlar la vuelta
+  del paquete, porque puede que dependa de routers que no controlamos.

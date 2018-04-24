@@ -1,0 +1,32 @@
+● Número de problema: 1.
+● Descripción del problema: Red publicada en área 1.
+● Lugar donde ocurre: n6.
+● Solución: Publicar red 10.0.4.0/24 en área 0.
+  $ vtysh
+  $ conf t
+  $ router ospf
+  $ no network 10.0.4.0/24 area 1
+  $ network 10.0.4.0/24 area 0
+● Evidencia de que la solución funciona adecuadamente: Ahora el router completa
+con las redes vecinas. Consultado en comando "sh ip ospf route"
+--------------------------------------------------------------------------
+● Número de problema: 2.
+● Descripción del problema: Errores en Hello-interval.
+● Lugar donde ocurre: n1, n2, n4 y n6.
+● Solución: Cambiar Hello-interval por valor estándar.
+  $ vtysh
+  $ conf t
+  $ interface <interface_con_error>
+  $ ospf hello-interval 10
+● Evidencia de que la solución funciona adecuadamente: Ahora aparecen los
+vecinos en la tabla de rutas de ospf. Consultado en comando "sh ip ospf neighbor"
+--------------------------------------------------------------------------
+● Número de problema: 3.
+● Descripción del problema: Errores en Dead-interval.
+● Lugar donde ocurre: n4 y n6.
+● Solución: Cambiar Dead-interval por valor estándar.
+  $ vtysh
+  $ conf t
+  $ interface <interface_con_error>
+● Evidencia de que la solución funciona adecuadamente: Ahora aparecen los
+vecinos en la tabla de rutas de ospf. Consultado en comando "sh ip ospf neighbor"

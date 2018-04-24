@@ -1,0 +1,94 @@
+# n10
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+ip addr add 163.10.26.1 dev eth2
+ip addr add 163.10.27.69 dev eth1
+ip addr add 163.10.27.65 dev eth0
+
+route add -net 163.10.26.0/25 gw 0.0.0.0
+route add -net 163.10.27.64/30 gw 0.0.0.0
+route add -net 163.10.27.68/30 gw 0.0.0.0
+route add -net 163.10.27.72/30 gw 163.10.27.66
+route add -net 163.10.27.76/30 gw 163.10.27.70
+route add -net 163.10.27.0/30 gw 163.10.27.69
+route add -net 163.10.27.128/26 gw 163.10.27.69
+route add -net 163.10.27.192/26 gw 163.10.27.65
+
+# n16
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+ip addr add 163.10.27.1 dev eth2
+ip addr add 163.10.27.70 dev eth1
+ip addr add 163.10.27.77 dev eth0
+
+route add -net 163.10.27.0/27 gw 0.0.0.0
+route add -net 163.10.27.68/30 gw 0.0.0.0
+route add -net 163.10.27.76/30 gw 0.0.0.0
+route add -net 163.10.27.64/30 gw 163.10.27.69
+route add -net 163.10.27.72/30 gw 163.10.27.78
+route add -net 163.10.26.0/25 gw 163.10.27.69
+route add -net 163.10.27.128/26 gw 163.10.27.78
+route add -net 163.10.27.192/26 gw 163.10.27.78
+
+# n8
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+ip addr add 163.10.27.193 dev eth2
+ip addr add 163.10.27.73 dev eth1
+ip addr add 163.10.27.66 dev eth0
+
+route add -net 163.10.27.192/26 gw 0.0.0.0
+route add -net 163.10.27.72/30 gw 0.0.0.0
+route add -net 163.10.27.64/30 gw 0.0.0.0
+route add -net 163.10.27.68/30 gw 163.10.27.65
+route add -net 163.10.27.76/30 gw 163.10.27.74
+route add -net 163.10.26.0/25 gw 163.10.27.65
+route add -net 163.10.27.0/27 gw 163.10.27.65
+route add -net 163.10.27.128/26 gw 163.10.27.74
+
+# n17
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+ip addr add 163.10.27.129 dev eth2
+ip addr add 163.10.27.78 dev eth1
+ip addr add 163.10.27.74 dev eth0
+
+route add -net 163.10.27.128/26 gw 0.0.0.0
+route add -net 163.10.27.72/30 gw 0.0.0.0
+route add -net 163.10.27.76/30 gw 0.0.0.0
+route add -net 163.10.27.64/30 gw 163.10.27.73
+route add -net 163.10.27.68/30 gw 163.10.27.77
+route add -net 163.10.26.0/25 gw 163.10.27.73
+route add -net 163.10.27.0/27 gw 163.10.27.77
+route add -net 163.10.27.192/26 gw 163.10.27.73
+
+# n7
+ip addr add 163.10.26.125 dev eth0
+
+route add default gw 163.10.26.1
+
+# n13
+ip addr add 163.10.26.126 dev eht0
+
+route add default gw 163.10.26.1
+
+# n14
+ip addr add 163.10.27.29 dev eth0
+
+route add default gw 163.10.27.1
+
+# n15
+ip addr add 163.10.27.30 dev eth0
+
+route add default gw 163.10.27.1
+
+# n9
+ip addr add 163.10.27.190 dev eth0
+
+route add default gw 163.10.27.129
+
+# n12
+
+ip addr add 163.10.27.254 dev eth0
+
+route add default gw 163.10.27.193
