@@ -7,4 +7,4 @@ ADD ./index.html /var/www/html
 
 EXPOSE 80
 
-CMD ["apache2ctl", "start"]
+CMD ["apache2ctl", "-DFOREGROUND"]
