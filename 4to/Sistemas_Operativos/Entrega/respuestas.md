@@ -48,7 +48,7 @@ encuentra en estado Exited.
   g) No es necesario reinicar el container
   h) Es necesario, ya que al terminar de ejecutar el comando, bash termina su
 ejecución, deteniendo el container de no tener un proceso a quien dejar en
-background
+foreground
 
 4) b) docker build --tag apache2:so2018 .
 
