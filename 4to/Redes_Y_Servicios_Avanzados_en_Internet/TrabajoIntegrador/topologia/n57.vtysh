@@ -1,0 +1,32 @@
+!
+!
+service password-encryption
+service integrated-vtysh-config
+!
+password 8 IYLzr0fUikn0k
+enable password 8 rRYzfxFLxvmmg
+!
+interface eth0
+!
+interface eth1
+!
+interface eth2
+ ip ospf mtu-ignore
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+router ospf
+ passive-interface eth2
+ network 103.3.4.0/30 area 0.0.0.0
+ network 103.3.4.4/30 area 0.0.0.0
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

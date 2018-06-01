@@ -1,0 +1,40 @@
+!
+!
+service password-encryption
+service integrated-vtysh-config
+!
+password 8 bnONePD.hJ95o
+enable password 8 ugEhMiXjyiaXU
+!
+interface eth0
+!
+interface eth1
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+router bgp 300
+ bgp router-id 103.0.7.131
+ neighbor 103.0.7.129 remote-as 300
+ neighbor 103.0.7.129 next-hop-self
+ neighbor 103.0.7.130 remote-as 300
+ neighbor 103.0.7.130 next-hop-self
+ neighbor 180.0.0.17 remote-as 92
+!
+ address-family ipv6
+ exit-address-family
+ exit
+!
+router ospf
+ passive-interface eth1
+ network 103.0.7.128/29 area 0.0.0.0
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

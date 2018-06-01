@@ -1,0 +1,39 @@
+!
+!
+service password-encryption
+service integrated-vtysh-config
+!
+password 8 LyJSXJZ2Dno.g
+enable password 8 1Zqcb9gpelsu.
+!
+interface eth0
+ ip ospf mtu-ignore
+!
+interface eth1
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+router bgp 301
+ bgp router-id 180.0.0.22
+ neighbor 103.1.7.245 remote-as 301
+ neighbor 103.1.7.245 next-hop-self
+ neighbor 180.0.0.21 remote-as 93
+!
+ address-family ipv6
+ exit-address-family
+ exit
+!
+router ospf
+ passive-interface eth0
+ network 103.1.7.244/30 area 0.0.0.0
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

@@ -1,0 +1,32 @@
+!
+!
+service password-encryption
+service integrated-vtysh-config
+!
+password 8 nht54rlkADZE6
+enable password 8 tM5NGaejaWfYM
+!
+interface eth0
+!
+interface eth1
+!
+interface eth2
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+router ospf
+ passive-interface eth0
+ network 103.2.4.128/28 area 0.0.0.0
+ network 103.2.4.192/30 area 0.0.0.0
+ default-information originate
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end
