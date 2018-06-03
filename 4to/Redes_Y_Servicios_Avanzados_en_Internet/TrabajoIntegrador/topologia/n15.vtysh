@@ -25,6 +25,7 @@ router bgp 301
  bgp router-id 103.1.7.250
  network 103.1.4.0/22
  neighbor 103.0.7.153 remote-as 300
+ neighbor 103.1.7.242 remote-as 500
  neighbor 103.1.7.246 remote-as 301
  neighbor 103.1.7.246 next-hop-self
  neighbor 103.1.7.249 remote-as 301
