@@ -56,9 +56,6 @@ ip prefix-list PEER_NETWORK seq 10 permit 0.0.0.0/0 le 29
 route-map FILTER deny 3
  match origin incomplete
 !
-route-map FILTER deny 4
- match origin igp
-!
 route-map FILTER deny 5
  match ip address PRIVATE_NETWORK
 !

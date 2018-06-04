@@ -61,9 +61,6 @@ route-map NO_TRANSIT permit 10
 route-map FILTER deny 3
  match origin incomplete
 !
-route-map FILTER deny 4
- match origin igp
-!
 route-map FILTER deny 5
  match ip address PRIVATE_NETWORK
 !
