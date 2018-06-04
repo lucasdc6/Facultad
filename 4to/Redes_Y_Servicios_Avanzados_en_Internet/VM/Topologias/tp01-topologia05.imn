@@ -1,0 +1,339 @@
+node n1 {
+    type router
+    model router
+    network-config {
+	hostname n1
+	!
+	interface eth2
+	!
+	interface eth1
+	!
+	interface eth0
+	!
+    }
+    canvas c1
+    iconcoords {239.0 234.0}
+    labelcoords {239.0 266.0}
+    services {zebra IPForward}
+    interface-peer {eth0 n2}
+    interface-peer {eth1 n4}
+    interface-peer {eth2 n10}
+}
+
+node n2 {
+    type router
+    model router
+    network-config {
+	hostname n2
+	!
+	interface eth2
+	!
+	interface eth1
+	!
+	interface eth0
+	!
+    }
+    canvas c1
+    iconcoords {461.0 368.0}
+    labelcoords {461.0 400.0}
+    services {zebra IPForward}
+    interface-peer {eth0 n1}
+    interface-peer {eth1 n3}
+    interface-peer {eth2 n5}
+}
+
+node n3 {
+    type router
+    model router
+    network-config {
+	hostname n3
+	!
+	interface eth2
+	!
+	interface eth0
+	!
+	interface eth1
+	!
+    }
+    canvas c1
+    iconcoords {847.0 410.0}
+    labelcoords {847.0 442.0}
+    interface-peer {eth1 n6}
+    services {zebra IPForward}
+    interface-peer {eth0 n2}
+    interface-peer {eth2 n10}
+}
+
+node n4 {
+    type lanswitch
+    network-config {
+	hostname n4
+	!
+    }
+    canvas c1
+    iconcoords {152.0 317.0}
+    labelcoords {152.0 341.0}
+    interface-peer {e1 n7}
+    interface-peer {e0 n1}
+}
+
+node n5 {
+    type lanswitch
+    network-config {
+	hostname n5
+	!
+    }
+    canvas c1
+    iconcoords {440.0 445.0}
+    labelcoords {440.0 469.0}
+    interface-peer {e1 n8}
+    interface-peer {e0 n2}
+}
+
+node n6 {
+    type lanswitch
+    network-config {
+	hostname n6
+	!
+    }
+    canvas c1
+    iconcoords {778.0 485.0}
+    labelcoords {778.0 509.0}
+    interface-peer {e0 n3}
+    interface-peer {e1 n9}
+}
+
+node n7 {
+    type router
+    model PC
+    network-config {
+	hostname n7
+	!
+	interface eth0
+	!
+    }
+    canvas c1
+    iconcoords {106.0 391.0}
+    labelcoords {106.0 423.0}
+    interface-peer {eth0 n4}
+    services {}
+}
+
+node n8 {
+    type router
+    model PC
+    network-config {
+	hostname n8
+	!
+	interface eth0
+	!
+    }
+    canvas c1
+    iconcoords {377.0 505.0}
+    labelcoords {377.0 537.0}
+    interface-peer {eth0 n5}
+    services {}
+}
+
+node n9 {
+    type router
+    model PC
+    network-config {
+	hostname n9
+	!
+	interface eth0
+	!
+    }
+    canvas c1
+    iconcoords {707.0 560.0}
+    labelcoords {707.0 592.0}
+    interface-peer {eth0 n6}
+    services {}
+}
+
+node n10 {
+    type router
+    model router
+    network-config {
+	hostname n10
+	!
+	interface eth2
+	!
+	interface eth1
+	!
+	interface eth0
+	!
+    }
+    canvas c1
+    iconcoords {599.0 220.0}
+    labelcoords {599.0 252.0}
+    interface-peer {eth0 n1}
+    interface-peer {eth1 n3}
+    interface-peer {eth2 n11}
+    services {zebra IPForward}
+}
+
+node n11 {
+    type lanswitch
+    network-config {
+	hostname n11
+	!
+    }
+    canvas c1
+    iconcoords {792.0 162.0}
+    labelcoords {792.0 186.0}
+    interface-peer {e0 n10}
+    interface-peer {e1 n12}
+}
+
+node n12 {
+    type router
+    model PC
+    network-config {
+	hostname n12
+	!
+	interface eth0
+	!
+    }
+    canvas c1
+    iconcoords {923.0 222.0}
+    labelcoords {923.0 254.0}
+    interface-peer {eth0 n11}
+}
+
+link l2 {
+    nodes {n4 n7}
+    bandwidth 0
+}
+
+link l5 {
+    nodes {n5 n8}
+    bandwidth 0
+}
+
+link l7 {
+    nodes {n3 n6}
+    bandwidth 0
+}
+
+link l8 {
+    nodes {n6 n9}
+    bandwidth 0
+}
+
+link l1 {
+    nodes {n1 n2}
+    bandwidth 0
+}
+
+link l3 {
+    nodes {n1 n4}
+    bandwidth 0
+}
+
+link l4 {
+    nodes {n2 n3}
+    bandwidth 0
+}
+
+link l6 {
+    nodes {n2 n5}
+    bandwidth 0
+}
+
+link l9 {
+    nodes {n1 n10}
+    bandwidth 0
+}
+
+link l10 {
+    nodes {n10 n3}
+    bandwidth 0
+}
+
+link l11 {
+    nodes {n10 n11}
+    bandwidth 0
+}
+
+link l12 {
+    nodes {n11 n12}
+    bandwidth 0
+}
+
+annotation a1 {
+    iconcoords {32.0 239.0 243.0 470.0}
+    type rectangle
+    label {Red A}
+    labelcolor black
+    fontfamily {Arial}
+    fontsize {12}
+    color #C0C0FF
+    width 0
+    border black
+    rad 25
+    canvas c1
+}
+
+annotation a2 {
+    iconcoords {328.0 387.0 509.0 574.0}
+    type rectangle
+    label {Red B}
+    labelcolor black
+    fontfamily {Arial}
+    fontsize {12}
+    color #C0C0FF
+    width 0
+    border black
+    rad 25
+    canvas c1
+}
+
+annotation a3 {
+    iconcoords {635.0 434.0 873.0 605.0}
+    type rectangle
+    label {Red C}
+    labelcolor black
+    fontfamily {Arial}
+    fontsize {12}
+    color #C0C0FF
+    width 0
+    border black
+    rad 25
+    canvas c1
+}
+
+annotation a4 {
+    iconcoords {644.0 110.0 977.0 255.0}
+    type rectangle
+    label {Red D}
+    labelcolor black
+    fontfamily {Arial}
+    fontsize {12}
+    color #C0C0FF
+    width 0
+    border black
+    rad 25
+    canvas c1
+}
+
+canvas c1 {
+    name {Canvas1}
+}
+
+option global {
+    interface_names no
+    ip_addresses yes
+    ipv6_addresses yes
+    node_labels no
+    link_labels no
+    show_api no
+    background_images no
+    annotations yes
+    grid no
+    traffic_start 0
+}
+
+option session {
+}
+

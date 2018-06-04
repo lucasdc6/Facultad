@@ -1,0 +1,23 @@
+
+!
+!
+service integrated-vtysh-config
+!
+interface eth0
+!
+interface eth2
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+ip route 0.0.0.0/0 10.0.3.1
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

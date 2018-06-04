@@ -1,0 +1,33 @@
+
+!
+!
+service integrated-vtysh-config
+!
+interface eth0
+ ip address 10.0.12.2/24
+ ip ospf message-digest-key 1 md5 clave
+!
+interface eth1
+!
+interface eth2
+ ip address 10.0.18.1/24
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+router-id 10.0.12.2
+!
+router ospf
+ network 10.0.12.0/24 area 0.0.0.5
+ network 10.0.17.0/24 area 0.0.0.5
+ network 10.0.18.0/24 area 0.0.0.0
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

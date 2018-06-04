@@ -1,0 +1,341 @@
+node n1 {
+    type router
+    model router
+    network-config {
+	hostname n1
+	!
+	interface eth1
+	 ip address 10.0.6.1/24
+	!
+	interface eth0
+	 ip address 10.0.0.1/24
+	!
+    }
+    canvas c1
+    iconcoords {75.0 132.0}
+    labelcoords {75.0 160.0}
+    interface-peer {eth0 n2}
+    interface-peer {eth1 n7}
+    custom-config {
+	custom-config-id service:zebra
+	custom-command zebra
+	config {
+	files=('/usr/local/etc/quagga/Quagga.conf', 'quaggaboot.sh', '/usr/local/etc/quagga/vtysh.conf', )
+	}
+    }
+    custom-config {
+	custom-config-id service:zebra:/usr/local/etc/quagga/Quagga.conf
+	custom-command /usr/local/etc/quagga/Quagga.conf
+	config {
+	interface eth0
+	  ip address 10.0.0.1/24
+	  ip ospf hello-interval 20
+	!
+	interface eth1
+	  ip address 10.0.6.1/24
+	  ip ospf hello-interval 12
+	!
+	
+	router ospf 
+	  network 10.0.6.0/24 area 0
+	  network 10.0.0.0/24 area 0
+	}
+    }
+    services {zebra OSPFv2 vtysh IPForward}
+}
+
+node n2 {
+    type router
+    model router
+    network-config {
+	hostname n2
+	!
+	interface eth2
+	 ip address 10.0.5.2/24
+	!
+	interface eth0
+	 ip address 10.0.0.2/24
+	!
+    }
+    canvas c1
+    iconcoords {324.0 164.0}
+    labelcoords {324.0 192.0}
+    interface-peer {eth0 n1}
+    interface-peer {eth2 n4}
+    custom-config {
+	custom-config-id service:zebra
+	custom-command zebra
+	config {
+	files=('/usr/local/etc/quagga/Quagga.conf', 'quaggaboot.sh', '/usr/local/etc/quagga/vtysh.conf', )
+	}
+    }
+    custom-config {
+	custom-config-id service:zebra:/usr/local/etc/quagga/Quagga.conf
+	custom-command /usr/local/etc/quagga/Quagga.conf
+	config {
+	interface eth0
+	  ip address 10.0.0.2/24
+	  ip ospf hello-interval 12
+	!
+	interface eth2
+	  ip address 10.0.5.2/24
+	  ip ospf hello-interval 12
+	!
+	router ospf 
+	  network 10.0.0.0/24 area 0
+	  network 10.0.5.0/24 area 0
+	
+	ip route 10.0.7.0 255.255.255.0 10.0.0.1 90
+	}
+    }
+    services {zebra OSPFv2 vtysh IPForward}
+}
+
+node n4 {
+    type router
+    model router
+    network-config {
+	hostname n4
+	!
+	interface eth2
+	 ip address 10.0.5.1/24
+	!
+	interface eth1
+	 ip address 10.0.4.1/24
+	!
+    }
+    canvas c1
+    iconcoords {528.0 108.0}
+    labelcoords {528.0 136.0}
+    interface-peer {eth1 n6}
+    interface-peer {eth2 n2}
+    services {zebra OSPFv2 vtysh IPForward}
+    custom-config {
+	custom-config-id service:zebra
+	custom-command zebra
+	config {
+	files=('/usr/local/etc/quagga/Quagga.conf', 'quaggaboot.sh', '/usr/local/etc/quagga/vtysh.conf', )
+	}
+    }
+    custom-config {
+	custom-config-id service:zebra:/usr/local/etc/quagga/Quagga.conf
+	custom-command /usr/local/etc/quagga/Quagga.conf
+	config {
+	interface eth1
+	  ip address 10.0.4.1/24
+	  ip ospf hello-interval 12
+	  ip ospf dead-interval 60
+	!
+	interface eth2
+	  ip address 10.0.5.1/24
+	  ip ospf hello-interval 12
+	!
+	router ospf
+	  network 10.0.4.0/24 area 0 
+	  network 10.0.5.0/24 area 0
+	}
+    }
+}
+
+node n6 {
+    type router
+    model router
+    network-config {
+	hostname n6
+	!
+	interface eth1
+	 ip address 10.0.7.1/24
+	!
+	interface eth0
+	 ip address 10.0.4.2/24
+	!
+    }
+    canvas c1
+    iconcoords {798.0 165.0}
+    labelcoords {798.0 193.0}
+    interface-peer {eth0 n4}
+    interface-peer {eth1 n8}
+    custom-config {
+	custom-config-id service:zebra
+	custom-command zebra
+	config {
+	files=('/usr/local/etc/quagga/Quagga.conf', 'quaggaboot.sh', '/usr/local/etc/quagga/vtysh.conf', )
+	}
+    }
+    custom-config {
+	custom-config-id service:zebra:/usr/local/etc/quagga/Quagga.conf
+	custom-command /usr/local/etc/quagga/Quagga.conf
+	config {
+	interface eth0
+	  ip address 10.0.4.2/24
+	  ip ospf hello-interval 12
+	  ip ospf dead-interval 60
+	!
+	interface eth1
+	  ip address 10.0.7.1/24
+	  ip ospf hello-interval 12
+	!
+	router ospf
+	  network 10.0.4.0/24 area 1
+	  network 10.0.7.0/24 area 0
+	}
+    }
+    services {zebra OSPFv2 vtysh IPForward}
+}
+
+node n7 {
+    type lanswitch
+    network-config {
+	hostname n7
+	!
+    }
+    canvas c1
+    iconcoords {57.0 303.0}
+    labelcoords {57.0 327.0}
+    interface-peer {e0 n1}
+    interface-peer {e1 n9}
+}
+
+node n8 {
+    type lanswitch
+    network-config {
+	hostname n8
+	!
+    }
+    canvas c1
+    iconcoords {809.0 291.0}
+    labelcoords {809.0 315.0}
+    interface-peer {e0 n6}
+    interface-peer {e1 n10}
+}
+
+node n9 {
+    type router
+    model host
+    network-config {
+	hostname n9
+	!
+	interface eth0
+	 ip address 10.0.6.10/24
+	 ipv6 address 2001:6::10/64
+	!
+    }
+    canvas c1
+    iconcoords {66.0 405.0}
+    labelcoords {66.0 437.0}
+    interface-peer {eth0 n7}
+}
+
+node n10 {
+    type router
+    model host
+    network-config {
+	hostname n10
+	!
+	interface eth0
+	 ip address 10.0.7.10/24
+	 ipv6 address 2001:7::10/64
+	!
+    }
+    canvas c1
+    iconcoords {834.0 429.0}
+    labelcoords {834.0 461.0}
+    interface-peer {eth0 n8}
+}
+
+link l1 {
+    nodes {n1 n2}
+    bandwidth 0
+}
+
+link l5 {
+    nodes {n4 n6}
+    bandwidth 0
+}
+
+link l6 {
+    nodes {n4 n2}
+    bandwidth 0
+}
+
+link l7 {
+    nodes {n1 n7}
+    bandwidth 0
+}
+
+link l8 {
+    nodes {n6 n8}
+    bandwidth 0
+}
+
+link l9 {
+    nodes {n7 n9}
+    bandwidth 0
+}
+
+link l10 {
+    nodes {n8 n10}
+    bandwidth 0
+}
+
+annotation a1 {
+    iconcoords {284.0 32.0}
+    type text
+    label {Troubleshooting  - OSPF}
+    labelcolor black
+    fontfamily {Arial}
+    fontsize {14}
+    effects {bold}
+    canvas c1
+}
+
+annotation a2 {
+    type text
+    iconcoords {796.0 160.0}
+    label {}
+    canvas c1
+}
+
+annotation a3 {
+    type text
+    iconcoords {843.0 428.0}
+    label {}
+    canvas c1
+}
+
+canvas c1 {
+    name {Canvas1}
+}
+
+hook 4:runtime_hook.sh {
+#!/bin/sh
+# session hook script; write commands here to execute on the host at the
+# specified state
+python /home/core/quagga_manager.py -l -f /home/core/practica3/tp03-topologia05.imn
+
+}
+
+hook 5:datacollect_hook.sh {
+#!/bin/sh
+# session hook script; write commands here to execute on the host at the
+# specified state
+python /home/core/quagga_manager.py -s -f /home/core/practica3/tp03-topologia05.imn
+
+}
+
+option global {
+    interface_names yes
+    ip_addresses yes
+    ipv6_addresses no
+    node_labels yes
+    link_labels yes
+    show_api no
+    background_images no
+    annotations yes
+    grid yes
+    traffic_start 0
+}
+
+option session {
+}
+

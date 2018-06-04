@@ -1,0 +1,49 @@
+!
+!
+service integrated-vtysh-config
+!
+interface eth0
+ bandwidth 10000
+ ip address 10.0.1.2/24
+!
+interface eth1
+ ip address 10.0.2.1/24
+!
+interface eth2
+ bandwidth 1
+ ip address 10.0.5.1/24
+!
+interface eth3
+ ip address 10.0.14.1/24
+ shutdown
+!
+interface eth4
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+router-id 10.0.1.2
+!
+router rip
+ redistribute ospf
+ network 10.0.5.0/24
+!
+router ospf
+ ospf router-id 10.0.1.2
+ redistribute connected
+ redistribute static
+ redistribute rip
+ network 10.0.1.0/24 area 0.0.0.0
+ network 10.0.2.0/24 area 0.0.0.0
+ network 10.0.14.0/24 area 0.0.0.0
+ network 10.0.18.0/24 area 0.0.0.0
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

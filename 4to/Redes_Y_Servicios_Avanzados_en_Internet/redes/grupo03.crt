@@ -1,0 +1,97 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 13 (0xd)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=AR, ST=BuenosAires, L=La Plata, O=UNLP, OU=LINTI, CN=UNLP CA/name=EasyRSA/emailAddress=soporte@linti.unlp.edu.ar
+        Validity
+            Not Before: Apr  2 15:19:07 2018 GMT
+            Not After : Mar 30 15:19:07 2028 GMT
+        Subject: C=AR, ST=BuenosAires, L=La Plata, O=UNLP, OU=LINTI, CN=grupo03/name=EasyRSA/emailAddress=soporte@linti.unlp.edu.ar
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:cf:4a:f8:63:e6:9a:0f:8d:2d:3f:82:5b:4a:1e:
+                    64:72:d3:43:7e:a9:a7:97:ab:4e:e4:79:5e:3c:57:
+                    c7:c6:cb:2b:d5:a4:3b:3d:c3:eb:85:be:78:e9:dd:
+                    3b:e2:23:fa:91:43:2a:2c:a0:64:06:80:77:a9:87:
+                    78:93:0d:01:f2:93:5b:65:68:79:30:a5:41:fe:cd:
+                    98:44:63:81:5e:51:01:fe:04:e1:13:a4:95:9e:6a:
+                    ad:4d:a1:0e:86:09:fb:63:99:a3:b9:b6:3e:f9:18:
+                    a7:2f:43:48:95:68:fc:84:c1:5b:24:df:2f:c5:89:
+                    e1:e0:61:6b:75:a3:1a:6d:92:09:52:08:78:1d:f8:
+                    d8:ae:d0:48:93:16:02:26:d8:a6:dd:42:25:af:ef:
+                    09:09:80:fe:af:98:0e:1a:2b:36:4e:df:b9:4e:70:
+                    87:37:79:f8:d7:a7:cc:fa:2b:a9:6f:16:62:41:5e:
+                    67:3c:53:1c:ef:85:e7:1e:ad:00:b1:1d:cf:3f:f0:
+                    a6:0d:bf:39:43:02:a7:21:59:59:51:32:62:08:f0:
+                    fb:7a:d6:e1:b2:f5:89:45:21:a7:b9:d8:04:54:51:
+                    74:e8:d6:e3:54:e9:dd:9e:39:9d:2e:97:80:7e:ca:
+                    1f:9b:97:5d:59:a1:dc:ea:bb:6f:3f:84:55:39:a9:
+                    50:53
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                Easy-RSA Generated Certificate
+            X509v3 Subject Key Identifier: 
+                8A:FC:A2:E3:27:7D:A1:3B:B9:72:DE:C9:2B:56:5D:22:6F:A1:5F:F1
+            X509v3 Authority Key Identifier: 
+                keyid:88:66:03:00:24:1D:8A:CB:D5:FB:0A:3E:84:5C:8B:0D:90:7D:0D:37
+                DirName:/C=AR/ST=BuenosAires/L=La Plata/O=UNLP/OU=LINTI/CN=UNLP CA/name=EasyRSA/emailAddress=soporte@linti.unlp.edu.ar
+                serial:89:1B:3A:41:6D:17:C3:8B
+
+            X509v3 Extended Key Usage: 
+                TLS Web Client Authentication
+            X509v3 Key Usage: 
+                Digital Signature
+            X509v3 Subject Alternative Name: 
+                DNS:grupo03
+    Signature Algorithm: sha256WithRSAEncryption
+         1a:db:82:e3:fb:7e:7b:b3:99:82:45:46:c8:03:bd:39:19:b4:
+         39:2b:f1:65:54:ff:fb:75:ff:7d:d9:de:68:0c:e5:7e:dd:e3:
+         29:fb:ed:63:41:76:fc:39:91:e1:f3:92:4e:51:bd:df:c7:a6:
+         13:1b:c4:f6:ed:fa:80:b1:bc:2b:6c:44:ca:3f:7b:39:40:38:
+         5a:4d:9c:dc:21:4f:77:15:50:93:e0:c2:51:b0:21:7a:6b:77:
+         50:8c:89:80:b4:41:ca:b5:69:bf:37:cc:3c:46:b2:a8:9c:8e:
+         16:a8:40:28:80:86:31:ad:3e:7d:f0:ae:85:e8:89:7d:59:92:
+         13:22:a4:20:5d:1e:c6:6f:98:bf:d0:02:1a:96:1d:f8:8e:47:
+         34:d6:eb:c6:72:cb:53:31:5c:7f:fe:cd:c0:4b:4b:07:27:07:
+         1c:93:87:8f:33:ff:b5:87:72:ef:39:63:c8:df:b6:72:cd:3f:
+         c8:0d:e4:b6:d0:ae:22:e7:88:c0:e9:68:2c:e5:e6:5c:60:bc:
+         92:e5:32:3e:38:fc:63:81:69:0d:ee:52:97:ee:b0:14:a9:47:
+         a2:90:61:43:26:86:c9:9a:40:ad:25:78:07:6b:32:22:10:6d:
+         d3:c9:6d:68:45:0c:52:87:82:b4:21:84:da:9c:9a:c5:4a:b0:
+         77:6f:9f:b9
+-----BEGIN CERTIFICATE-----
+MIIFMzCCBBugAwIBAgIBDTANBgkqhkiG9w0BAQsFADCBozELMAkGA1UEBhMCQVIx
+FDASBgNVBAgTC0J1ZW5vc0FpcmVzMREwDwYDVQQHEwhMYSBQbGF0YTENMAsGA1UE
+ChMEVU5MUDEOMAwGA1UECxMFTElOVEkxEDAOBgNVBAMTB1VOTFAgQ0ExEDAOBgNV
+BCkTB0Vhc3lSU0ExKDAmBgkqhkiG9w0BCQEWGXNvcG9ydGVAbGludGkudW5scC5l
+ZHUuYXIwHhcNMTgwNDAyMTUxOTA3WhcNMjgwMzMwMTUxOTA3WjCBozELMAkGA1UE
+BhMCQVIxFDASBgNVBAgTC0J1ZW5vc0FpcmVzMREwDwYDVQQHEwhMYSBQbGF0YTEN
+MAsGA1UEChMEVU5MUDEOMAwGA1UECxMFTElOVEkxEDAOBgNVBAMTB2dydXBvMDMx
+EDAOBgNVBCkTB0Vhc3lSU0ExKDAmBgkqhkiG9w0BCQEWGXNvcG9ydGVAbGludGku
+dW5scC5lZHUuYXIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDPSvhj
+5poPjS0/gltKHmRy00N+qaeXq07keV48V8fGyyvVpDs9w+uFvnjp3TviI/qRQyos
+oGQGgHeph3iTDQHyk1tlaHkwpUH+zZhEY4FeUQH+BOETpJWeaq1NoQ6GCftjmaO5
+tj75GKcvQ0iVaPyEwVsk3y/FieHgYWt1oxptkglSCHgd+Niu0EiTFgIm2KbdQiWv
+7wkJgP6vmA4aKzZO37lOcIc3efjXp8z6K6lvFmJBXmc8UxzvhecerQCxHc8/8KYN
+vzlDAqchWVlRMmII8Pt61uGy9YlFIae52ARUUXTo1uNU6d2eOZ0ul4B+yh+bl11Z
+odzqu28/hFU5qVBTAgMBAAGjggFuMIIBajAJBgNVHRMEAjAAMC0GCWCGSAGG+EIB
+DQQgFh5FYXN5LVJTQSBHZW5lcmF0ZWQgQ2VydGlmaWNhdGUwHQYDVR0OBBYEFIr8
+ouMnfaE7uXLeyStWXSJvoV/xMIHYBgNVHSMEgdAwgc2AFIhmAwAkHYrL1fsKPoRc
+iw2QfQ03oYGppIGmMIGjMQswCQYDVQQGEwJBUjEUMBIGA1UECBMLQnVlbm9zQWly
+ZXMxETAPBgNVBAcTCExhIFBsYXRhMQ0wCwYDVQQKEwRVTkxQMQ4wDAYDVQQLEwVM
+SU5USTEQMA4GA1UEAxMHVU5MUCBDQTEQMA4GA1UEKRMHRWFzeVJTQTEoMCYGCSqG
+SIb3DQEJARYZc29wb3J0ZUBsaW50aS51bmxwLmVkdS5hcoIJAIkbOkFtF8OLMBMG
+A1UdJQQMMAoGCCsGAQUFBwMCMAsGA1UdDwQEAwIHgDASBgNVHREECzAJggdncnVw
+bzAzMA0GCSqGSIb3DQEBCwUAA4IBAQAa24Lj+357s5mCRUbIA705GbQ5K/FlVP/7
+df992d5oDOV+3eMp++1jQXb8OZHh85JOUb3fx6YTG8T27fqAsbwrbETKP3s5QDha
+TZzcIU93FVCT4MJRsCF6a3dQjImAtEHKtWm/N8w8RrKonI4WqEAogIYxrT598K6F
+6Il9WZITIqQgXR7Gb5i/0AIalh34jkc01uvGcstTMVx//s3AS0sHJwcck4ePM/+1
+h3LvOWPI37ZyzT/IDeS20K4i54jA6Wgs5eZcYLyS5TI+OPxjgWkN7lKX7rAUqUei
+kGFDJobJmkCtJXgHazIiEG3TyW1oRQxSh4K0IYTanJrFSrB3b5+5
+-----END CERTIFICATE-----

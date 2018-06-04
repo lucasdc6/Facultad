@@ -1,0 +1,37 @@
+!
+!
+service integrated-vtysh-config
+!
+interface eth0
+ no link-detect
+ ip address 10.0.0.2/24
+ ipv6 nd suppress-ra
+!
+interface eth1
+ no link-detect
+ ip address 10.0.1.1/24
+ ipv6 nd suppress-ra
+!
+interface eth2
+ no link-detect
+ ip address 10.0.3.1/24
+ ipv6 nd suppress-ra
+!
+interface eth3
+ no link-detect
+ ipv6 nd suppress-ra
+!
+interface lo
+ no link-detect
+!
+router ospf
+ network 10.0.1.0/24 area 0.0.0.0
+ network 10.0.3.0/24 area 0.0.0.0
+ network 10.0.4.0/24 area 0.0.0.0
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

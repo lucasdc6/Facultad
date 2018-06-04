@@ -1,0 +1,46 @@
+● Número de problema: 1.
+● Descripción del problema: Faltan ips en interfaces router n1.
+● Lugar donde ocurre: Router n1.
+● Solución: Agregar ips en eth0, eth1, y eth2.
+  - Nota 1: Para asignar la ip a la interface eth0, es necesario ver cual es la ip por
+defecto en el host n7, que en este caso era la 10.0.0.1 para evitar cambiar la
+configuración de n7.
+  - Nota 2: Para la asignación de ip en las interfaces eth1 y eth2, se utilizó uno
+de los bloques que quedan libres entre los host n7 y n8, en este caso el bloque
+10.0.2.0/24.
+  - Nota 3: Con la asignación de redes se agrega por defecto las redes directamente
+conectadas en la tabla de routeo, de no ser así, deben agregarse manualmente.
+● Evidencia de que la solución funciona adecuadamente: Ahora el host n7 puede
+realizar un ping a n1 y viceversa.
+--------------------------------------------------------------------------------
+● Número de problema: 2.
+● Descripción del problema: Faltan ips en interfaces en router n3
+● Lugar donde ocurre: Router n3.
+● Solución: Agregar ips en eth0, eth1, y eth2.
+  - Nota 1: Para asignar la ip a la interface eth2, es necesario ver cual es la ip por
+defecto en el host n8, que en este caso era la 10.0.3.12 para evitar cambiar la
+configuración de n8.
+  - Nota 2: Para la asignación de ip de las interfaces eth0 y eth1, se utilizó el
+mismo bloque que en el problema anterior, puesto que se trata de la misma red.
+El bloque era el 10.0.2.0/24.
+  - Nota 3: Con la asignación de redes se agrega por defecto las redes directamente
+conectadas en la tabla de routeo, de no ser así, deben agregarse manualmente.
+● Evidencia de que la solución funciona adecuadamente: Ahora el host n8 puede
+realizar un ping a n3 y viceversa.
+-------------------------------------------------------------------------------
+● Número de problema: 3.
+● Descripción del problema: Falta red 10.0.3.0/24 en tabla de routeo de n1.
+● Lugar donde ocurre: Router n1.
+● Solución: Agregar red a tabla de routeo.
+  - Nota 1: Para agregar la red en el router, se lo hizo vía la interface eth1.
+● Evidencia de que la solución funciona adecuadamente: Ahora el host n7 puede
+alcanzar la red de n8 (10.0.3.0/24), pero no puede volver.
+-------------------------------------------------------------------------------
+● Número de problema: 4.
+● Descripción del problema: Falta red 10.0.0.0/24 en tabla de routeo de n3.
+● Lugar donde ocurre: Router n3.
+● Solución: Agregar red a tabla de routeo.
+  - Nota 1: Para agregar la red en el router, se lo hizo vía la interface eth1.
+● Evidencia de que la solución funciona adecuadamente: Ahora el host n8 puede
+alcanzar la red de n7.
+Por lo tanto, ahora el host n7 puede alcanzar al host n8 y volver.

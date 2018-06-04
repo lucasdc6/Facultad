@@ -1,0 +1,26 @@
+
+!
+!
+service integrated-vtysh-config
+!
+interface eth0
+ ip address 10.0.4.2/24
+!
+interface eth1
+!
+interface lo
+!
+router ospf
+ redistribute connected
+ redistribute static
+ network 10.0.4.0/24 area 0.0.0.1
+ area 0.0.0.1 nssa translate-always
+!
+ip route 10.0.8.0/24 10.0.7.2
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

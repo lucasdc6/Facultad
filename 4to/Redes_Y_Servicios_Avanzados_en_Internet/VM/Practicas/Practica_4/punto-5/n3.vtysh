@@ -1,0 +1,30 @@
+
+!
+!
+service integrated-vtysh-config
+!
+interface eth0
+ bandwidth 1
+ ip address 10.0.5.2/24
+!
+interface eth2
+ bandwidth 100000
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+router rip
+ redistribute connected
+ redistribute static
+ network 10.0.5.0/24
+ network 10.0.6.0/24
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

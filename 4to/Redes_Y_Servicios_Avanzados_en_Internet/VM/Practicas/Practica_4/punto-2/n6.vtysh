@@ -1,0 +1,20 @@
+
+!
+!
+service integrated-vtysh-config
+!
+interface eth0
+ ip address 10.0.5.2/24
+!
+interface lo
+!
+router ospf
+ network 10.0.5.0/24 area 0.0.0.2
+ area 0.0.0.2 stub
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

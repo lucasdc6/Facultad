@@ -1,0 +1,28 @@
+!
+!
+service integrated-vtysh-config
+!
+interface eth0
+ ip address 163.10.27.70/30
+ ipv6 nd suppress-ra
+ no link-detect
+!
+interface eth1
+ ip address 163.10.27.77/30
+ ipv6 nd suppress-ra
+ no link-detect
+!
+interface eth2
+ ip address 163.10.27.1/27
+ ipv6 nd suppress-ra
+ no link-detect
+!
+interface lo
+ no link-detect
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end
