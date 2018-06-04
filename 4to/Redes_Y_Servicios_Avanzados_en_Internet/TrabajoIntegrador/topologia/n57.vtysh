@@ -3,10 +3,6 @@
 service password-encryption
 service integrated-vtysh-config
 !
-password 8 8dwU.JvYgEwME
-enable password 8 SqS8oq8sjOWBQ
-password 8 OcMon7lv1PYIg
-enable password 8 ZB2tLL9nwWsiM
 password 8 .xkiLVHpwS56I
 enable password 8 Lt.kHvc750kEY
 !
@@ -29,8 +25,8 @@ router bgp 303
  neighbor 103.3.4.6 remote-as 303
  neighbor 103.3.4.6 next-hop-self
  neighbor 200.10.145.254 remote-as 52101
- neighbor 200.10.145.254 route-map NAP in
- neighbor 200.10.145.254 route-map NAP out
+ neighbor 200.10.145.254 route-map FILTER in
+ neighbor 200.10.145.254 route-map ONLY_ME out
 !
  address-family ipv6
  exit-address-family
@@ -41,10 +37,31 @@ router ospf
  network 103.3.4.0/30 area 0.0.0.0
  network 103.3.4.4/30 area 0.0.0.0
 !
-ip as-path access-list FILTER_NAP permit [0-9]03$
+access-list PRIVATE_NETWORK permit 10.0.0.0/8
+access-list PRIVATE_NETWORK permit 172.16.0.0/12
+access-list PRIVATE_NETWORK permit 192.168.0.0/16
 !
-route-map NAP permit 10
+ip prefix-list PEER_NETWORK seq 5 deny 0.0.0.0/30 ge 32
+ip prefix-list PEER_NETWORK seq 10 permit 0.0.0.0/0 le 29
+!
+ip as-path access-list FILTER_NAP permit _[0-9]+03$
+ip as-path access-list ONLY_303 permit ^$
+!
+route-map FILTER deny 3
+ match origin incomplete
+!
+route-map FILTER permit 4
  match as-path FILTER_NAP
+ set local-preference 110
+!
+route-map FILTER deny 5
+ match ip address PRIVATE_NETWORK
+!
+route-map FILTER permit 10
+ match ip address prefix-list PEER_NETWORK
+!
+route-map ONLY_ME permit 10
+ match as-path ONLY_303
 !
 ip forwarding
 ipv6 forwarding

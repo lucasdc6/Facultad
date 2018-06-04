@@ -3,10 +3,6 @@
 service password-encryption
 service integrated-vtysh-config
 !
-password 8 8dwU.JvYgEwME
-enable password 8 SqS8oq8sjOWBQ
-password 8 P8le9vvglUr8U
-enable password 8 SXal9FnMFQTY2
 password 8 ccMBeJhz0UYEE
 enable password 8 wGK.Jf6DTLX8g
 !
