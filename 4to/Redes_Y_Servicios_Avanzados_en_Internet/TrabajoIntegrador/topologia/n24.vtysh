@@ -22,6 +22,7 @@ router bgp 301
  neighbor 103.1.7.245 remote-as 301
  neighbor 103.1.7.245 next-hop-self
  neighbor 180.0.0.21 remote-as 93
+ neighbor 180.0.0.21 route-map FILTER in
 !
  address-family ipv6
  exit-address-family
@@ -30,6 +31,22 @@ router bgp 301
 router ospf
  passive-interface eth0
  network 103.1.7.244/30 area 0.0.0.0
+!
+access-list PRIVATE_NETWORK permit 10.0.0.0/8
+access-list PRIVATE_NETWORK permit 172.16.0.0/12
+access-list PRIVATE_NETWORK permit 192.168.0.0/16
+!
+ip prefix-list PEER_NETWORK seq 5 deny 0.0.0.0/30 ge 32
+ip prefix-list PEER_NETWORK seq 10 permit 0.0.0.0/0 le 29
+!
+route-map FILTER deny 3
+ match origin incomplete
+!
+route-map FILTER deny 5
+ match ip address PRIVATE_NETWORK
+!
+route-map FILTER permit 10
+ match ip address prefix-list PEER_NETWORK
 !
 ip forwarding
 ipv6 forwarding

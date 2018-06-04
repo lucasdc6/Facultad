@@ -19,10 +19,28 @@ interface gretap0
 !
 interface lo
 !
+router bgp 303
+ bgp router-id 200.10.145.22
+ network 103.3.4.0/22
+ neighbor 103.3.4.6 remote-as 303
+ neighbor 103.3.4.6 next-hop-self
+ neighbor 200.10.145.254 remote-as 52101
+ neighbor 200.10.145.254 route-map NAP in
+ neighbor 200.10.145.254 route-map NAP out
+!
+ address-family ipv6
+ exit-address-family
+ exit
+!
 router ospf
  passive-interface eth2
  network 103.3.4.0/30 area 0.0.0.0
  network 103.3.4.4/30 area 0.0.0.0
+!
+ip as-path access-list FILTER_NAP permit [0-9]03$
+!
+route-map NAP permit 10
+ match as-path FILTER_NAP
 !
 ip forwarding
 ipv6 forwarding

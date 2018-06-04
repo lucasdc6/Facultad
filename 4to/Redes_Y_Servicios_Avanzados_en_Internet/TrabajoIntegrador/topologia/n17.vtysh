@@ -21,8 +21,11 @@ interface lo
 router bgp 304
  bgp router-id 103.4.4.2
  neighbor 103.1.7.141 remote-as 301
+ neighbor 103.4.4.1 remote-as 304
+ neighbor 103.4.4.1 next-hop-self
  neighbor 103.4.4.3 remote-as 304
  neighbor 103.4.4.3 next-hop-self
+ neighbor 103.4.4.3 route-map FILTER out
 !
  address-family ipv6
  exit-address-family
@@ -31,6 +34,11 @@ router bgp 304
 router ospf
  passive-interface eth1
  network 103.4.4.0/29 area 0.0.0.0
+!
+ip as-path access-list MY_TRAFFIC permit _304$
+!
+route-map FILTER permit 10
+ match as-path MY_TRAFFIC
 !
 ip forwarding
 ipv6 forwarding

@@ -20,6 +20,9 @@ router bgp 304
  bgp router-id 103.4.4.3
  network 103.4.4.0/22
  neighbor 103.0.7.149 remote-as 300
+ neighbor 103.0.7.149 route-map FILTER out
+ neighbor 103.4.4.1 remote-as 304
+ neighbor 103.4.4.1 next-hop-self
  neighbor 103.4.4.2 remote-as 304
  neighbor 103.4.4.2 next-hop-self
 !
@@ -30,6 +33,12 @@ router bgp 304
 router ospf
  passive-interface eth0
  network 103.4.4.0/29 area 0.0.0.0
+!
+ip as-path access-list FILTER_AS permit _300_
+ip as-path access-list FILTER_AS permit _302_
+!
+route-map FILTER permit 15
+ match as-path FILTER_AS
 !
 ip forwarding
 ipv6 forwarding

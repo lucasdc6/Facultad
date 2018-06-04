@@ -22,6 +22,9 @@ router bgp 303
  bgp router-id 103.3.4.9
  network 103.3.4.0/22
  neighbor 103.1.7.137 remote-as 301
+ neighbor 103.1.7.137 route-map FILTER in
+ neighbor 103.3.4.5 remote-as 303
+ neighbor 103.3.4.5 next-hop-self
 !
  address-family ipv6
  exit-address-family
@@ -31,6 +34,9 @@ router ospf
  passive-interface eth0
  network 103.3.4.4/30 area 0.0.0.0
  network 103.3.4.8/30 area 0.0.0.0
+!
+route-map FILTER deny 10
+ match origin igp
 !
 ip forwarding
 ipv6 forwarding

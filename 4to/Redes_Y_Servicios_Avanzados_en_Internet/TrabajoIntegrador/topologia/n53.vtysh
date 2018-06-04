@@ -16,7 +16,19 @@ interface gretap0
 !
 interface lo
 !
+router bgp 304
+ bgp router-id 103.4.7.225
+ neighbor 103.4.4.2 remote-as 304
+ neighbor 103.4.4.2 next-hop-self
+ neighbor 103.4.4.3 remote-as 304
+ neighbor 103.4.4.3 next-hop-self
+!
+ address-family ipv6
+ exit-address-family
+ exit
+!
 router ospf
+ redistribute bgp
  network 103.4.4.0/29 area 0.0.0.0
  network 103.4.6.0/24 area 0.0.0.0
  network 103.4.7.0/24 area 0.0.0.0
