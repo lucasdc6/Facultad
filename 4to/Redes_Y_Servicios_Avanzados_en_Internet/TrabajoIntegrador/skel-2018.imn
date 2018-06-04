@@ -76,11 +76,11 @@ node n2 {
     network-config {
 	hostname bgp2
 	!
-	interface eth2
-	 ip address 103.0.7.141/30
-	!
 	interface eth3
-	 ip address 103.0.7.141/30
+	 ip address 103.0.7.153/30
+	!
+	interface eth2
+	 ip address 103.0.7.145/30
 	!
 	interface eth0
 	 ip address 103.0.7.130/29
@@ -209,11 +209,11 @@ node n4 {
     network-config {
 	hostname bgp3
 	!
+	interface eth1
+	 ip address 103.0.7.141/30
+	!
 	interface eth2
 	 ip address 103.0.7.149/30
-	!
-	interface eth1
-	 ip address 103.0.7.145/30
 	!
 	interface eth0
 	 ip address 103.0.7.137/30
@@ -438,8 +438,8 @@ node n14 {
 	!
     }
     canvas c1
-    iconcoords {733.0 83.0}
-    labelcoords {733.0 115.0}
+    iconcoords {709.0 80.0}
+    labelcoords {709.0 112.0}
     interface-peer {e0 n2}
 }
 
@@ -450,6 +450,7 @@ node n15 {
 	hostname n15
 	!
 	interface eth0
+	 ip address 103.0.7.154/30
 	!
 	interface eth1
 	 ip address 103.1.7.241/30
@@ -543,8 +544,8 @@ node n18 {
 	!
     }
     canvas c1
-    iconcoords {735.0 163.0}
-    labelcoords {735.0 163.0}
+    iconcoords {813.0 166.0}
+    labelcoords {813.0 166.0}
     interface-peer {0 n2}
     mirror n19
 }
@@ -556,8 +557,8 @@ node n19 {
 	!
     }
     canvas c2
-    iconcoords {170.0 216.0}
-    labelcoords {170.0 216.0}
+    iconcoords {120.0 220.0}
+    labelcoords {120.0 220.0}
     interface-peer {0 n15}
     mirror n18
 }
@@ -569,7 +570,7 @@ node n16 {
 	hostname n16
 	!
 	interface eth0
-	 ip address 103.0.7.146/30
+	 ip address 103.0.7.142/30
 	!
 	interface eth2
 	 ip address 103.2.4.194/30
@@ -585,6 +586,20 @@ node n16 {
     interface-peer {eth1 n40}
     interface-peer {eth2 n43}
     services {zebra OSPFv2 BGP vtysh IPForward}
+    custom-config {
+	custom-config-id service:vtysh
+	custom-command vtysh
+	config {
+	dirs=()
+	files=()
+	startidx=45
+	cmdup=('sh quaggaboot.sh vtysh',)
+	cmddown=()
+	cmdval=()
+	meta=
+	starttime=
+	}
+    }
     custom-config {
 	custom-config-id service:zebra
 	custom-command zebra
@@ -663,8 +678,8 @@ node n20 {
 	!
     }
     canvas c1
-    iconcoords {750.0 305.0}
-    labelcoords {750.0 305.0}
+    iconcoords {762.0 292.0}
+    labelcoords {762.0 292.0}
     interface-peer {0 n4}
     mirror n21
 }
@@ -831,8 +846,8 @@ node n26 {
 	!
     }
     canvas c2
-    iconcoords {234.0 144.0}
-    labelcoords {234.0 176.0}
+    iconcoords {193.0 127.0}
+    labelcoords {193.0 159.0}
     interface-peer {e0 n15}
 }
 
@@ -1435,8 +1450,8 @@ node n55 {
 	!
     }
     canvas c5
-    iconcoords {869.0 136.0}
-    labelcoords {869.0 168.0}
+    iconcoords {885.0 136.0}
+    labelcoords {885.0 168.0}
     interface-peer {e0 n58}
 }
 
@@ -1839,8 +1854,8 @@ node n23 {
 	!
     }
     canvas c1
-    iconcoords {772.0 392.0}
-    labelcoords {772.0 392.0}
+    iconcoords {775.0 403.0}
+    labelcoords {775.0 403.0}
     interface-peer {0 n4}
     mirror n22
 }
