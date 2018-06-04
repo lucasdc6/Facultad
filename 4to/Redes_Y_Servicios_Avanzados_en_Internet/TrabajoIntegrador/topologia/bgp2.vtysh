@@ -3,8 +3,12 @@
 service password-encryption
 service integrated-vtysh-config
 !
-password 8 S/QlURt3g7G0I
-enable password 8 485PHpP1RpmOI
+password 8 fVMxkjllF9Hgw
+enable password 8 coKsPc6c3BgZU
+password 8 hvrRpM2oyP6tk
+enable password 8 oWfv6gjanozqw
+password 8 5MBzURuuXKaQg
+enable password 8 ax3tS6uOrk.Hk
 !
 interface eth0
 !
@@ -25,12 +29,11 @@ router bgp 300
  network 103.0.4.0/22
  neighbor 103.0.7.129 remote-as 300
  neighbor 103.0.7.129 next-hop-self
- neighbor 103.0.7.131 remote-as 300
- neighbor 103.0.7.131 next-hop-self
  neighbor 103.0.7.146 remote-as 201
  neighbor 103.0.7.146 route-map FILTER in
  neighbor 103.0.7.146 route-map FILTER out
  neighbor 103.0.7.154 remote-as 301
+ neighbor 103.0.7.154 route-map FITLER in
  neighbor 103.0.7.154 route-map FILTER out
 !
  address-family ipv6
@@ -49,17 +52,17 @@ access-list PRIVATE_NETWORK permit 192.168.0.0/16
 ip prefix-list PEER_NETWORK seq 5 deny 0.0.0.0/30 ge 32
 ip prefix-list PEER_NETWORK seq 10 permit 0.0.0.0/0 le 29
 !
+route-map FILTER deny 3
+ match origin incomplete
+!
+route-map FILTER deny 4
+ match origin igp
+!
 route-map FILTER deny 5
  match ip address PRIVATE_NETWORK
 !
 route-map FILTER permit 10
  match ip address prefix-list PEER_NETWORK
-!
-route-map FILTER deny 15
- match origin incomplete
-!
-route-map FILTER deny 20
- match origin igp
 !
 ip forwarding
 ipv6 forwarding

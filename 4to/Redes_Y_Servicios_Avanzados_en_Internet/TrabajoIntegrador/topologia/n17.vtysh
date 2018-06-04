@@ -3,8 +3,12 @@
 service password-encryption
 service integrated-vtysh-config
 !
-password 8 dIm.UnKksOfYk
-enable password 8 BQr5J7AtC7gtc
+password 8 J/4Bl5VKrGA5g
+enable password 8 AyjhMdJN2g.rk
+password 8 OplID4NRdKKEs
+enable password 8 U8STkhRwfQ5AI
+password 8 mMWf58Mr9wbAE
+enable password 8 .Q81ruzyQ9z5c
 !
 interface eth0
 !
@@ -23,9 +27,6 @@ router bgp 304
  neighbor 103.1.7.141 remote-as 301
  neighbor 103.4.4.1 remote-as 304
  neighbor 103.4.4.1 next-hop-self
- neighbor 103.4.4.3 remote-as 304
- neighbor 103.4.4.3 next-hop-self
- neighbor 103.4.4.3 route-map FILTER out
 !
  address-family ipv6
  exit-address-family
@@ -35,10 +36,12 @@ router ospf
  passive-interface eth1
  network 103.4.4.0/29 area 0.0.0.0
 !
-ip as-path access-list MY_TRAFFIC permit _304$
+ip as-path access-list FILTER_AS permit _300_
+ip as-path access-list FILTER_AS permit _302_
 !
 route-map FILTER permit 10
- match as-path MY_TRAFFIC
+ match as-path FILTER_AS
+ set local-preference 10
 !
 ip forwarding
 ipv6 forwarding

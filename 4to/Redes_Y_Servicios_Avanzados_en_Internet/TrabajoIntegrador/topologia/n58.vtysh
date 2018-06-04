@@ -3,8 +3,12 @@
 service password-encryption
 service integrated-vtysh-config
 !
-password 8 xp.6DmLpen/go
-enable password 8 8U2Vm1EfaQh/g
+password 8 8dwU.JvYgEwME
+enable password 8 SqS8oq8sjOWBQ
+password 8 P8le9vvglUr8U
+enable password 8 SXal9FnMFQTY2
+password 8 ccMBeJhz0UYEE
+enable password 8 wGK.Jf6DTLX8g
 !
 interface eth0
 !
@@ -23,10 +27,14 @@ interface lo
 router bgp 303
  bgp router-id 103.3.4.17
  network 103.3.4.0/22
+ neighbor 103.3.4.9 remote-as 303
+ neighbor 103.3.4.9 next-hop-self
  neighbor 103.3.4.14 remote-as 203
  neighbor 103.3.4.14 route-map NO_TRANSIT in
+ neighbor 103.3.4.14 route-map FILTER out
  neighbor 103.3.4.16 remote-as 503
  neighbor 103.3.4.16 route-map NO_TRANSIT in
+ neighbor 103.3.4.16 route-map FILTER out
 !
  address-family ipv6
  exit-address-family
@@ -37,11 +45,30 @@ router ospf
  passive-interface eth2
  network 103.3.4.8/30 area 0.0.0.0
 !
+access-list PRIVATE_NETWORK permit 10.0.0.0/8
+access-list PRIVATE_NETWORK permit 172.16.0.0/12
+access-list PRIVATE_NETWORK permit 192.168.0.0/16
+!
+ip prefix-list PEER_NETWORK seq 5 deny 0.0.0.0/30 ge 32
+ip prefix-list PEER_NETWORK seq 10 permit 0.0.0.0/0 le 29
+!
 ip as-path access-list NO_TRANSIT permit ^203$
 ip as-path access-list NO_TRANSIT permit ^503$
 !
 route-map NO_TRANSIT permit 10
  match as-path NO_TRANSIT
+!
+route-map FILTER deny 3
+ match origin incomplete
+!
+route-map FILTER deny 4
+ match origin igp
+!
+route-map FILTER deny 5
+ match ip address PRIVATE_NETWORK
+!
+route-map FILTER permit 10
+ match ip address prefix-list PEER_NETWORK
 !
 ip forwarding
 ipv6 forwarding

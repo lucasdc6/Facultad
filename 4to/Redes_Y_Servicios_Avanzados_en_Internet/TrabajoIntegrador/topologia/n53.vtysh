@@ -1,6 +1,14 @@
 !
 !
+service password-encryption
 service integrated-vtysh-config
+!
+password 8 8dwU.JvYgEwME
+enable password 8 SqS8oq8sjOWBQ
+password 8 DlGG1PYMphTYA
+enable password 8 OUobapRinzhOk
+password 8 4xhK9eE4fpmoU
+enable password 8 WXJDbOxulcofU
 !
 interface eth0
 !
@@ -19,8 +27,10 @@ interface lo
 router bgp 304
  bgp router-id 103.4.7.225
  neighbor 103.4.4.2 remote-as 304
+ neighbor 103.4.4.2 route-reflector-client
  neighbor 103.4.4.2 next-hop-self
  neighbor 103.4.4.3 remote-as 304
+ neighbor 103.4.4.3 route-reflector-client
  neighbor 103.4.4.3 next-hop-self
 !
  address-family ipv6

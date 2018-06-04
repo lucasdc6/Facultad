@@ -3,8 +3,12 @@
 service password-encryption
 service integrated-vtysh-config
 !
-password 8 LyJSXJZ2Dno.g
-enable password 8 1Zqcb9gpelsu.
+password 8 QSep9jK9Esqd.
+enable password 8 jAqIu4zk56du6
+password 8 jE8ZH04OBQKII
+enable password 8 I0.j/87nzwor2
+password 8 9iCDCprpdWc2c
+enable password 8 tqJ8Be9c9W9Rw
 !
 interface eth0
  ip ospf mtu-ignore
@@ -23,6 +27,7 @@ router bgp 301
  neighbor 103.1.7.245 next-hop-self
  neighbor 180.0.0.21 remote-as 93
  neighbor 180.0.0.21 route-map FILTER in
+ neighbor 180.0.0.21 route-map FILTER out
 !
  address-family ipv6
  exit-address-family
@@ -41,6 +46,9 @@ ip prefix-list PEER_NETWORK seq 10 permit 0.0.0.0/0 le 29
 !
 route-map FILTER deny 3
  match origin incomplete
+!
+route-map FILTER deny 4
+ match origin igp
 !
 route-map FILTER deny 5
  match ip address PRIVATE_NETWORK
