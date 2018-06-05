@@ -26,10 +26,10 @@ router bgp 303
  neighbor 103.3.4.9 remote-as 303
  neighbor 103.3.4.9 next-hop-self
  neighbor 103.3.4.14 remote-as 203
- neighbor 103.3.4.14 route-map NO_TRANSIT in
+ neighbor 103.3.4.14 route-map FILTER in
  neighbor 103.3.4.14 route-map FILTER out
  neighbor 103.3.4.16 remote-as 503
- neighbor 103.3.4.16 route-map NO_TRANSIT in
+ neighbor 103.3.4.16 route-map FILTER in
  neighbor 103.3.4.16 route-map FILTER out
 !
  address-family ipv6
@@ -48,14 +48,13 @@ access-list PRIVATE_NETWORK permit 192.168.0.0/16
 ip prefix-list PEER_NETWORK seq 5 deny 0.0.0.0/30 ge 32
 ip prefix-list PEER_NETWORK seq 10 permit 0.0.0.0/0 le 29
 !
-ip as-path access-list NO_TRANSIT permit ^203$
-ip as-path access-list NO_TRANSIT permit ^503$
-!
-route-map NO_TRANSIT permit 10
- match as-path NO_TRANSIT
+ip as-path access-list NO_TRANSIT permit _303_
 !
 route-map FILTER deny 3
  match origin incomplete
+!
+route-map FILTER deny 4
+ match as-path NO_TRANSIT
 !
 route-map FILTER deny 5
  match ip address PRIVATE_NETWORK

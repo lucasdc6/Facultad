@@ -45,14 +45,14 @@ ip prefix-list PEER_NETWORK seq 5 deny 0.0.0.0/30 ge 32
 ip prefix-list PEER_NETWORK seq 10 permit 0.0.0.0/0 le 29
 !
 ip as-path access-list FILTER_NAP permit _[0-9]+03$
+ip as-path access-list NO_TRANSIT permit _303_
 ip as-path access-list ONLY_303 permit ^$
 !
 route-map FILTER deny 3
  match origin incomplete
 !
-route-map FILTER permit 4
- match as-path FILTER_NAP
- set local-preference 110
+route-map FILTER deny 4
+ match as-path NO_TRANSIT
 !
 route-map FILTER deny 5
  match ip address PRIVATE_NETWORK
