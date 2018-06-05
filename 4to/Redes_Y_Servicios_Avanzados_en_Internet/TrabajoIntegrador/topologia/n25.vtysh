@@ -37,6 +37,7 @@ router bgp 301
  exit
 !
 router ospf
+ redistribute bgp
  passive-interface eth2
  passive-interface eth3
  network 103.1.7.248/30 area 0.0.0.0

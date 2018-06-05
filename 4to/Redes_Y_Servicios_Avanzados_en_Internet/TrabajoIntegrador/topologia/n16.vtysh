@@ -22,7 +22,7 @@ router ospf
  passive-interface eth0
  network 103.2.4.128/28 area 0.0.0.0
  network 103.2.4.192/30 area 0.0.0.0
- default-information originate
+ default-information originate always
 !
 ip forwarding
 ipv6 forwarding

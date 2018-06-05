@@ -28,9 +28,9 @@ router bgp 303
  neighbor 103.3.4.14 remote-as 203
  neighbor 103.3.4.14 route-map FILTER in
  neighbor 103.3.4.14 route-map FILTER out
- neighbor 103.3.4.16 remote-as 503
- neighbor 103.3.4.16 route-map FILTER in
- neighbor 103.3.4.16 route-map FILTER out
+ neighbor 103.3.4.18 remote-as 503
+ neighbor 103.3.4.18 route-map FILTER in
+ neighbor 103.3.4.18 route-map FILTER out
 !
  address-family ipv6
  exit-address-family
