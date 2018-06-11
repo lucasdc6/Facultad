@@ -4,13 +4,13 @@ procedure buscador is
   end contador;
 
   TASK administrador is
-    ENTRY resultado_busqueda(numero: IN integer)
+    ENTRY resultado_busqueda(numero: IN integer);
   end administrador;
 
   type contadores is array (1..N) of contador;
 
   TASK BODY contador is
-    array_interno is array(1..C) of integer;
+    type array_interno is array(1..C) of integer;
     coincidencias: integer;
     numero: integer;
   begin
@@ -19,11 +19,11 @@ procedure buscador is
       numero := numero_buscar;
     end buscar;
 
-    for i := 1 to C do
+    for i in Integer range 1..C loop
       if(array_interno(i) = numero) then
         coincidencias := coincidencias + 1;
       end if;
-    end for;
+    end loop;
     administrador.resultado_busqueda(coincidencias);
   end contador;
 
@@ -32,15 +32,17 @@ procedure buscador is
     total: integer;
   begin
     total := 0;
-    numero_buscar := random();
-    for i := 1 to N do
+    numero_buscar := random;
+    for i in Integer range 1..N loop
       contadores(i).buscar(numero_buscar);
-    end for;
+    end loop;
 
-    for i := 1 to N do
+    for i in Integer range 1..N loop
       accept resultado_busqueda(resultado) do
         total := total + resultado;
       end resultado_busqueda;
-    end for;
+    end loop;
   end administrador;
+begin
+  null;
 end buscador;
