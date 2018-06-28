@@ -9,6 +9,7 @@ Procedure banco is
   begin
     loop
       accept esperando_atencion do
+        null;
         -- atender
       end esperando_atencion;
     end loop;
@@ -19,6 +20,9 @@ Procedure banco is
     select empleado.esperando_atencion;
     or delay 60 * 10;
     end select;
+    null;
     -- chao
   end cliente;
+begin
+  null;
 end banco;
