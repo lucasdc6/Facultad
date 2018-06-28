@@ -1,0 +1,74 @@
+!
+!
+service password-encryption
+service integrated-vtysh-config
+!
+password 8 .xkiLVHpwS56I
+enable password 8 Lt.kHvc750kEY
+!
+interface eth0
+!
+interface eth1
+!
+interface eth2
+ ip ospf mtu-ignore
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+router bgp 303
+ bgp router-id 200.10.145.22
+ network 103.3.4.0/22
+ neighbor 103.3.4.6 remote-as 303
+ neighbor 103.3.4.6 next-hop-self
+ neighbor 200.10.145.254 remote-as 52101
+ neighbor 200.10.145.254 route-map FILTER in
+ neighbor 200.10.145.254 route-map ONLY_ME out
+!
+ address-family ipv6
+ exit-address-family
+ exit
+!
+router ospf
+ redistribute bgp
+ passive-interface eth2
+ network 103.3.4.0/30 area 0.0.0.0
+ network 103.3.4.4/30 area 0.0.0.0
+ network 200.10.145.0/24 area 0.0.0.0
+!
+access-list PRIVATE_NETWORK permit 10.0.0.0/8
+access-list PRIVATE_NETWORK permit 172.16.0.0/12
+access-list PRIVATE_NETWORK permit 192.168.0.0/16
+!
+ip prefix-list PEER_NETWORK seq 5 deny 0.0.0.0/30 ge 32
+ip prefix-list PEER_NETWORK seq 10 permit 0.0.0.0/0 le 29
+!
+ip as-path access-list FILTER_NAP permit _[0-9]+03$
+ip as-path access-list NO_TRANSIT permit _303_
+ip as-path access-list ONLY_303 permit ^$
+ip as-path access-list ONLY_303 permit 301$
+!
+route-map FILTER deny 3
+ match origin incomplete
+!
+route-map FILTER deny 4
+ match as-path NO_TRANSIT
+!
+route-map FILTER deny 5
+ match ip address PRIVATE_NETWORK
+!
+route-map FILTER permit 10
+ match ip address prefix-list PEER_NETWORK
+!
+route-map ONLY_ME permit 10
+ match as-path ONLY_303
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

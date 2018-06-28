@@ -422,10 +422,10 @@ node n13 {
 node n14 {
     type tunnel
     network-config {
-	hostname 172.16.20.22
+	hostname 172.16.20.18
 	!
 	interface e0
-	 ip address 172.16.20.22/24
+	 ip address 172.16.20.18/24
 	!
 	tunnel-type
 	UDP
