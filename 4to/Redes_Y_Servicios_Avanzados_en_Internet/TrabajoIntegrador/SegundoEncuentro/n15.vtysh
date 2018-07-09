@@ -1,0 +1,71 @@
+!
+!
+service password-encryption
+service integrated-vtysh-config
+!
+password 8 .Q.ZCHjYyAon.
+enable password 8 b8G0VWLNhWnq6
+!
+interface eth0
+!
+interface eth1
+ ip ospf mtu-ignore
+!
+interface eth2
+!
+interface eth3
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+router bgp 301
+ bgp router-id 103.1.7.250
+ network 103.1.4.0/22
+ neighbor 103.0.7.153 remote-as 300
+ neighbor 103.0.7.153 route-map FILTER in
+ neighbor 103.0.7.153 route-map FILTER out
+ neighbor 103.1.7.242 remote-as 500
+ neighbor 103.1.7.242 route-map FILTER in
+ neighbor 103.1.7.242 route-map FILTER out
+ neighbor 103.1.7.246 remote-as 301
+ neighbor 103.1.7.246 route-reflector-client
+ neighbor 103.1.7.246 next-hop-self
+ neighbor 103.1.7.249 remote-as 301
+ neighbor 103.1.7.249 route-reflector-client
+ neighbor 103.1.7.249 next-hop-self
+!
+ address-family ipv6
+ exit-address-family
+ exit
+!
+router ospf
+ passive-interface eth0
+ passive-interface eth1
+ network 103.1.7.244/30 area 0.0.0.0
+ network 103.1.7.248/30 area 0.0.0.0
+!
+access-list PRIVATE_NETWORK permit 10.0.0.0/8
+access-list PRIVATE_NETWORK permit 172.16.0.0/12
+access-list PRIVATE_NETWORK permit 192.168.0.0/16
+!
+ip prefix-list PEER_NETWORK seq 5 deny 0.0.0.0/30 ge 32
+ip prefix-list PEER_NETWORK seq 10 permit 0.0.0.0/0 le 29
+!
+route-map FILTER deny 3
+ match origin incomplete
+!
+route-map FILTER deny 5
+ match ip address PRIVATE_NETWORK
+!
+route-map FILTER permit 10
+ match ip address prefix-list PEER_NETWORK
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end

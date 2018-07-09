@@ -1,0 +1,45 @@
+!
+!
+service integrated-vtysh-config
+!
+debug ospf6 lsa unknown
+!
+interface eth0
+ ip address 103.0.7.158/30
+ ipv6 ospf6 network broadcast
+!
+interface eth1
+ ip address 200.53.4.1/24
+ ipv6 ospf6 network broadcast
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+router bgp 53
+ bgp router-id 200.53.4.1
+ network 200.53.4.0/24
+ neighbor 103.0.7.157 remote-as 300
+!
+ address-family ipv6
+ exit-address-family
+ exit
+!
+router ospf
+ ospf router-id 103.0.7.158
+ network 103.0.7.156/30 area 0.0.0.0
+ network 200.53.4.0/24 area 0.0.0.0
+!
+router ospf6
+ router-id 103.0.7.158
+ interface eth0 area 0.0.0.0
+ interface eth1 area 0.0.0.0
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end
