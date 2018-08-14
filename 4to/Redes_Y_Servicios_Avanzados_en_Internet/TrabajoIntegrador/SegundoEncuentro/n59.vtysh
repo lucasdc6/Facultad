@@ -1,0 +1,27 @@
+!
+!
+service integrated-vtysh-config
+!
+interface eth0
+!
+interface eth1
+!
+interface eth2
+!
+interface gre0
+!
+interface gretap0
+!
+interface lo
+!
+router ospf
+ network 103.3.4.0/30 area 0.0.0.0
+ network 103.3.5.0/24 area 0.0.0.0
+ network 103.3.6.64/26 area 0.0.0.0
+!
+ip forwarding
+ipv6 forwarding
+!
+line vty
+!
+end
