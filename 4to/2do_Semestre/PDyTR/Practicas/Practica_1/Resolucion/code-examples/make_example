@@ -1,0 +1,20 @@
+# Genera todos los clientes y servidores
+# 10^3 | 10^4 | 10^5 | 10^6 bytes
+make all_buffers
+
+# O generar uno especifico
+# Buffer de x bytes
+make BUFFER_SIZE=x
+
+# O generar solo buffer de:
+# 10^3 bytes
+make
+
+# 10^4 bytes
+make 10000
+
+# 10^5 bytes
+make 100000
+
+# 10^6 bytes
+make 1000000
