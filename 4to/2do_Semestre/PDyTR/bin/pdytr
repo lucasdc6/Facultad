@@ -1,3 +1,37 @@
 #!/usr/bin/env bash
 
-docker exec -it pdytr bash
+PDYTR=${PDYTR:-$PWD/../}
+
+function start {
+  docker ps --format '{{.Names}}' | grep pdytr > /dev/null
+  if [ $? -eq 1 ]; then
+    echo "Starting pdytr"
+    if [ "$1" == "view" ]; then
+      docker run --rm -itd --name pdytr -v $PDYTR:/pdytr/ -p 5901:5901 -p 6901:6901 gmaron/pdytr
+    else
+      docker run --rm -itd --name pdytr -v $PDYTR:/pdytr/ -p 5901:5901 -p 6901:6901 gmaron/pdytr:simple
+    fi
+  else
+    echo "pdytr already up"
+  fi
+}
+
+function stop {
+  docker stop pdytr 2> /dev/null
+}
+
+function pdytr {
+  docker ps --format '{{.Names}}' | grep pdytr > /dev/null
+
+  if [ $? -eq 0 ]; then
+    docker exec -it pdytr bash
+  fi
+}
+
+if [ "$1" == "start" ]; then
+  start $2
+elif [ "$1" == "stop" ]; then
+  stop
+else
+  pdytr
+fi

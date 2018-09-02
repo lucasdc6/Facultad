@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-docker stop pdytr 2> /dev/null
