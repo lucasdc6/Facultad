@@ -8,6 +8,10 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#ifndef BUFFER_SIZE
+  #define BUFFER_SIZE 1000000
+#endif
+
 void error(char *msg)
 {
     perror(msg);
@@ -17,7 +21,7 @@ void error(char *msg)
 int main(int argc, char *argv[])
 {
      int sockfd, newsockfd, portno, clilen;
-     char buffer[256];
+     char buffer[BUFFER_SIZE];
      struct sockaddr_in serv_addr, cli_addr;
      int n;
      if (argc < 2) {
@@ -42,10 +46,10 @@ int main(int argc, char *argv[])
                  &clilen);
      if (newsockfd < 0) 
           error("ERROR on accept");
-     bzero(buffer,256);
-     n = read(newsockfd,buffer,255);
+     bzero(buffer,BUFFER_SIZE);
+     n = read(newsockfd,buffer,BUFFER_SIZE-1);
      if (n < 0) error("ERROR reading from socket");
-     printf("Here is the message: %s\n",buffer);
+     printf("Here is the message: %s\nRead return value: %d\n",buffer, n);
      n = write(newsockfd,"I got your message",18);
      if (n < 0) error("ERROR writing to socket");
      return 0; 
