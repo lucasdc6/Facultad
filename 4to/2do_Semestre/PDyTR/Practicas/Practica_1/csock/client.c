@@ -7,7 +7,7 @@
 #include <netdb.h> 
 
 #ifndef BUFFER_SIZE
-  #define BUFFER_SIZE 1000000
+  #define BUFFER_SIZE 1000
 #endif
 
 void error(char *msg)
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
          (char *)&serv_addr.sin_addr.s_addr,
          server->h_length);
     serv_addr.sin_port = htons(portno);
-    if (connect(sockfd,&serv_addr,sizeof(serv_addr)) < 0) 
+    if (connect(sockfd,(const struct sockaddr*)&serv_addr,sizeof(serv_addr)) < 0)
         error("ERROR connecting");
     //printf("Please enter the message: ");
     bzero(buffer,BUFFER_SIZE);
