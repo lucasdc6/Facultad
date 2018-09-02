@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PDYTR=${PDYTR:-$PWD/../}
+PDYTR=${PDYTR:-$PWD}
 
 function start {
   docker ps --format '{{.Names}}' | grep pdytr > /dev/null
@@ -24,7 +24,7 @@ function pdytr {
   docker ps --format '{{.Names}}' | grep pdytr > /dev/null
 
   if [ $? -eq 0 ]; then
-    docker exec -it pdytr bash
+    docker exec -it --user root pdytr bash
   fi
 }
 
