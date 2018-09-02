@@ -647,9 +647,9 @@ Programación Distribuida y Tiempo Real, c, java, \LaTeX, sockets
 
 
 
-\section{Punto 1}
-\textit{Identifique similitudes y diferencias entre los sockets en C y en Java.}\\\\
-Como primer pantallazo a los lenguajes, tenemos lo siguiente.
+\section{Fundamentos teóricos}
+Primero se responderan los puntos relacionados con todos los conceptos teóricos 
+necesarios para la comprención de la práctica.\\
 En C, se utilizará la librería estándar \textbf{"socket.h"}, mientras que en Java,
 se va a utilizarán los paquetes \textbf{"java.net"}, aunque utilizando ciertos
 paquetes para la interacción con el socket, provenientes de la librería
@@ -666,14 +666,10 @@ En C, ambas creaciones quedan bajo la responsabilidad de la función \textbf{Soc
 El cliente, se conectará a un socket utilizando la función \textbf{Connect()}
 
 \section{Punto 2}
-\textit{Tanto en C como en Java (directorios csock-javasock)}
-\subsection{Inciso A}
-\textit{¿Por qué puede decirse que los ejemplos no son representativos del modelo c/s?}
+\subsection{A}
 \subsubsection{csock}
 \subsubsection{javasock}
-\subsection{Inciso B}
-\textit{Muestre que no necesariamente siempre se leen/escriben todos los datos involucrados en
-las comunicaciones con una llamada read/write con sockets.}
+\subsection{B}
 \subsubsection{csock}
 Se modificó el programa para aceptar varios tamaños de buffer (Ver apéndice A)
 Para probarlo rápidamente, se presenta la regla en make, lo que generará clientes y servidores que envian y reciben bytes
@@ -683,30 +679,11 @@ En este caso, la cantidad máxima de caracteres que se llegaron a leer fue de
 \lstinputlisting[language=bash]{code-examples/make_example}
 
 \subsubsection{javasock}
-\subsection{Inciso C}
-\textit{Agregue a la modificación anterior una verificación de llegada correcta de los datos que se
-envían (cantidad y contenido del buffer), de forma tal que se asegure que todos los datos
-enviados llegan correctamente, independientemente de la cantidad de datos
-involucrados.}
+\subsection{C}
 \subsubsection{csock}
 \subsubsection{javasock}
 
-\subsection{Inciso D}
-\textit{Grafique el promedio y la desviación estándar de los tiempos de comunicaciones de cada
-comunicación. Explique el experimento realizado para calcular el tiempo de
-comunicaciones.}\\\\
-Para este punto, se plantea calcular los tiempos de la comunicaciónes, esto quiere decir,
-el tiempo que tarda el cliente en establecer la conexión con el servidor, una vez establecida,
-se contempla el envío de los datos por parte del cliente, y la recepción por parte del servidor.
-Una vez terminado todo este flujo, se puede dar por concluída la comunicación.
-
-\subsubsection{csock}
-\subsubsection{javasock}
-
-\section{Punto 3}
-\textit{¿Por qué en C se puede usar la misma variable tanto para leer de teclado como para
-enviar por un socket? ¿Esto sería relevante para las aplicaciones c/s?}
-\subsection{Comunicación mediante sockets\\Tipos}
+\section{Comunicación mediante sockets\\Tipos}
 En un programa C, para el envío de datos por un socket, se puede utilizar cualquier variable de tipo puntero.
 Con esto, se entiende que se puede utilizar hasta la misma variable que se utilizó para leer desde teclado
 (tipi char*).\\
@@ -738,10 +715,7 @@ Luego, el socket acepta como buffer una variable de tipo \textbf{void*}, lo que 
 enviar un puntero a cualquier tipo. El mayor problema que puede taer esto es que, como son bytes,
 el cliente no sepa como interpretarlos.
 
-\section{Punto 4}
-
-\textit{¿Podría implementar un servidor de archivos remotos utilizando sockets?\\Describa
-brevemente la interfaz y los detalles que considere más importantes del diseño.}\\
+\section{Servidor de archivos}
 
 No solo sería posible, sino que ya existen 2 protocolos para envio de archivos por la red.
 
@@ -772,9 +746,9 @@ Cuenta con un conjunto de instrucciones mucho más reducido que el servidor FTP.
 \subsection{Implementación propia}
 Para la implementación de un servidor, utilizaría 
 
-\section{Punto 5}
-\textit{Defina qué es un servidor con estado (\textbf{stateful server}) y qué es un servidor sin estado
-(\textbf{stateless server}).}\\
+\section{Servidores con y sin estado}
+Una posible diferenciación de los servidores en el esquema cliente/servidor es la de 
+servidor \textbf{con estado} y servidor \textbf{sin estado}
 
 \subsection{Servidor con estado}
 Un servidor con estado, es aquel que recuerda el estado en el que habia quedado el sistema
@@ -793,17 +767,8 @@ conexiones.
 \appendices
 \section{Código C}
 \label{appendixA}
-Se presentarán secciones del código C de principal relevancia.\\
-Cambios planteados al cliente de csock - \texttt{csock/client.c}\\
-
+Se presentarán secciones del código C de principal relevancia.\\\\
 \lstinputlisting[language=C]{../csock/client.c}
-
-\noindent\rule{\textwidth}{1pt}
-
-\noindent
-Cambios planteados al servidor de csock - \texttt{csock/server.c}\\
-
-\lstinputlisting[language=C]{../csock/server.c}
 
 \section{Código Java}
 \hyperref[appendixA]{Al código C}\\
