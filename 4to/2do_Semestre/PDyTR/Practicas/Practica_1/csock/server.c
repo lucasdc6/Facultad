@@ -9,7 +9,7 @@
 #include <netinet/in.h>
 
 #ifndef BUFFER_SIZE
-  #define BUFFER_SIZE 1000000
+  #define BUFFER_SIZE 1000
 #endif
 
 void error(char *msg)
