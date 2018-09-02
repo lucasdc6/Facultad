@@ -2,8 +2,10 @@
 int main()
 {
   char *buffer = NULL;
-  // you cannot use buffer
+  /* No se puede usar 
+     la variable buffer */
   buffer = (char*)malloc(256);
-  // now you can use buffer
+  /* Ya se puede usar
+     la variable buffer */
   return 0;
 }

@@ -1,6 +1,6 @@
 int main()
 {
   char buffer[256];
-  // use buffer
+  // Uso de la variable buffer
   return 0;
 }
