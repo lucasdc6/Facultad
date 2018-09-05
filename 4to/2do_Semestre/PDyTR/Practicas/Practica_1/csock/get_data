@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+if [ "$1" == "-h" -o "$1" == "--help" ]; then
+  echo "Usage:"
+  echo -e "\trun [CANT] [BUFFER_SIZE]\n"
+  echo -e "Write to \`buffer_[BUFFER_SIZE]_data\`\n"
+  exit 0
+fi
+
+LOOP=${1:-10}
+BUFFER_SIZE=${2:-1000}
+FILE="buffer_${BUFFER_SIZE}_data"
+
+touch $FILE
+chmod 666 $FILE
+
+for ((i=1; i <= $LOOP; i++)); do
+  echo -e "Run $i/$LOOP - Buffer size: $BUFFER_SIZE"
+  bin/server-${BUFFER_SIZE} 66966 &> /dev/null &
+  bin/client-${BUFFER_SIZE} localhost 66966 >> $FILE
+  sleep 2
+done
+
+echo "=============">> $FILE
+awk '{for(i=1;i<=NF;i++)s+=$i}END{print s}' $FILE >> $FILE
+
