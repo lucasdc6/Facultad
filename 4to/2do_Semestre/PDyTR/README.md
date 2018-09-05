@@ -20,6 +20,7 @@ Dicho script cuenta con 3 funcionalidades básicas:
 - `pdytr start`: Inicia el ambiente en modo `simple`
 - `pdytr start view`: Inicia el ambiente en modo visual. Para ingresar al
   ambiente haga [click aqui](http://localhost:6901/?password=vncpassword)
+
   _También disponible mediante VNC_
 - `pdytr stop`: Cierra el ambiente.
 
@@ -27,3 +28,8 @@ Dentro del ambiente, se cuenta con `gcc` y `javac` para la compilación de las
 prácticas.
 
 Todo el ambiente de trabajo se encuentra en el directorio `/pdytr`
+
+*IMPORTANTE:* Tener en cuenta que el workindir del contenedor docker es tomado
+desde donde se *ejecuta* `pdytr start` o `pdytr start view`.
+Si se quiere fija un workingdir se puede setear la variable de ambiente `PDYTR`
+con la dirección del workindir
