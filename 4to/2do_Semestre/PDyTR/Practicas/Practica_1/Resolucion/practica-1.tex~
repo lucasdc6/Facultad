@@ -700,9 +700,9 @@ el tiempo que tarda el cliente en establecer la conexión con el servidor, una v
 se contempla el envío de los datos por parte del cliente, y la recepción por parte del servidor.
 Una vez terminado todo este flujo, se puede dar por concluída la comunicación.
 
-El contéo del tiempo se realizó del lado del \textbf{cliente}.\\
+El contéo del tiempo se realizó del lado del \textbf{cliente}.
 Para tomar los datos para realizar el promedio y la desviación estándar de cada tamaño de buffer,
-se cuenta con un script en el mismo directorio de csock llamado \textit{get\_data}
+se cuenta con un script en el mismo directorio de csock llamado
 Dicho script ejecutara repetídas veces la conexión cliente-servidor y volcará los tiempos en un archivo
 en el mismo directorio, llamado \textbf{buffer\_[BUFFER\_SIZE]\_data}, donde \textbf{BUFFER\_SIZE} es el tamaño
 del buffer con el que se corrió dicho script.
@@ -715,6 +715,9 @@ El script acepta 2 paŕametros:
 
 En el \hyperref[appendixC]{apéndice C}, se pueden encontrar archivos de datos de buffers de tamaños
 $10^{3}$, $10^{4}$, $10^{5}$ y $10^{6}$
+
+\subsubsection{csock}
+\subsubsection{javasock}
 
 \section{Punto 3}
 \textit{¿Por qué en C se puede usar la misma variable tanto para leer de teclado como para
