@@ -7,9 +7,9 @@ function start {
   if [ $? -eq 1 ]; then
     echo "Starting pdytr"
     if [ "$1" == "view" ]; then
-      docker run --rm -itd --name pdytr -v $PDYTR:/pdytr/ -p 5901:5901 -p 6901:6901 gmaron/pdytr
+      docker run --rm -itd --name pdytr -v $PDYTR:/pdytr/ -p 5901:5901 -p 6901:6901 gmaron/pdytr > /dev/null
     else
-      docker run --rm -itd --name pdytr -v $PDYTR:/pdytr/ -p 5901:5901 -p 6901:6901 gmaron/pdytr:simple
+      docker run --rm -itd --name pdytr -v $PDYTR:/pdytr/ -p 5901:5901 -p 6901:6901 gmaron/pdytr:simple > /dev/null
     fi
   else
     echo "pdytr already up"
@@ -17,7 +17,13 @@ function start {
 }
 
 function stop {
-  docker stop pdytr 2> /dev/null
+  echo "Stopping PDyTR..."
+  docker stop pdytr &> /dev/null
+  if [ $? -eq 0 ]; then
+    echo "PDyTR stopped"
+  else
+    echo -e "PDyTR not started\nTry with \`pdytr start\`"
+  fi
 }
 
 function pdytr {
@@ -25,6 +31,8 @@ function pdytr {
 
   if [ $? -eq 0 ]; then
     docker exec -it --user root pdytr bash
+  else
+    echo -e "PDyTR not started\nTry with \`pdytr start\`"
   fi
 }
 
