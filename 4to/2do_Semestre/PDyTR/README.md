@@ -18,9 +18,9 @@ Dicho script cuenta con 3 funcionalidades básicas:
 
 - `pdytr`: Entra en el ambiente en modo terminal.
 - `pdytr start`: Inicia el ambiente en modo `simple`
-- `pdytr start view`: Inicia el ambiente en modo visual. Se cuenta con las url
- `http://localhost:6901/?password=vncpassword` para el uso visual. (También
-disponible mediante VNC)
+- `pdytr start view`: Inicia el ambiente en modo visual. Para ingresar al
+  ambiente haga [click aqui](http://localhost:6901/?password=vncpassword)
+  _También disponible mediante VNC_
 - `pdytr stop`: Cierra el ambiente.
 
 Dentro del ambiente, se cuenta con `gcc` y `javac` para la compilación de las
