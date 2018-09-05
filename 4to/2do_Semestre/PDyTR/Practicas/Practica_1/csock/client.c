@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
   n = read(sockfd,buffer,BUFFER_SIZE-1);
   if (n < 0) 
     error("ERROR reading from socket");
-  printf("%s\n",buffer);
+  //printf("%s\n",buffer);
   printf("%g\n", dwalltime()-time);
   return 0;
 }

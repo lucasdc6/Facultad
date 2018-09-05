@@ -64,6 +64,5 @@ int main(int argc, char *argv[])
   printf("Here is the message!\nRead return value: %d\n", n);
   n = write(newsockfd,"I got your message",18);
   if (n < 0) error("ERROR writing to socket");
-  printf("%g\n", dwalltime()-time);
   return 0; 
 }
