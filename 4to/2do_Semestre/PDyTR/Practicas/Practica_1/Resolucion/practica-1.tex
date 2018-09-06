@@ -553,6 +553,7 @@ pdfkeywords={Programación Distribuida y Tiempo Real, c, java, LaTeX, sockets}}%
 % received ..."  text while in non-compsoc journals this is reversed. Sigh.
 
 \author{Lucas Di Cunzolo}
+\author{Santiago Tettamanti}
 % note the % following the last \IEEEmembership and also \thanks - 
 % these prevent an unwanted space from occurring between the last author name
 % and the end of the author line. i.e., if you had this:
@@ -669,8 +670,10 @@ El cliente, se conectará a un socket utilizando la función \textbf{Connect()}
 \textit{Tanto en C como en Java (directorios csock-javasock)}
 \subsection{Inciso A}
 \textit{¿Por qué puede decirse que los ejemplos no son representativos del modelo c/s?}
-\subsubsection{csock}
-\subsubsection{javasock}
+
+En cliente-servidor el servidor está continuamente esperando alguna conexion por parte de algún cliente, en este caso el servidor cierra la conexion al recibir el primer request y enviar la respuesta. El cliente no usa la respuesta recibida por el servidor, en cambio el servidor si usa lo enviado por el cliente y realiza acciones con esos datos que no tienen que ver con la respuesta a la petición (aunque se sobreentiende que es para mostrar el ejemplo).
+Tampoco se respetan los pasos de conexión: inicialización, envío/recepción de peticiones y finalización; en el ejemplo solo le hace el segundo paso, no existe handshake con el servidor o mensajes de finalización de conexión. Es más un ejemplo de conexión entre procesos usando sockets que de client/servidor puro.
+
 \subsection{Inciso B}
 \textit{Muestre que no necesariamente siempre se leen/escriben todos los datos involucrados en
 las comunicaciones con una llamada read/write con sockets.}
