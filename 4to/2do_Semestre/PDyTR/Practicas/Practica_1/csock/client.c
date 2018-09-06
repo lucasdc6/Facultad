@@ -67,14 +67,34 @@ int main(int argc, char *argv[])
   buffer[i++] = 'w';
   buffer[i++] = 'r';
   buffer[i] = '!';
-  n = write(sockfd,buffer,BUFFER_SIZE);
-  if (n < 0) 
-    error("ERROR writing to socket");
-  bzero(buffer,BUFFER_SIZE);
-  n = read(sockfd,buffer,BUFFER_SIZE-1);
-  if (n < 0) 
-    error("ERROR reading from socket");
-  //printf("%s\n",buffer);
+  
+  long int bufferi[1];
+  bufferi[0]=BUFFER_SIZE-1;
+  char response[2];
+  response[0]='M';
+  i=0;
+
+  n = write(sockfd,bufferi,4);
+
+  while(response[0] == 'M'){
+
+    n = write(sockfd,&buffer[i],BUFFER_SIZE);
+    if (n < 0) 
+      error("ERROR writing to socket");
+    
+    n = read(sockfd,response,2 );
+
+    if (response[0] == 'M'){
+      n = read(sockfd,bufferi,BUFFER_SIZE-1);
+      i=bufferi[0];
+      if (n < 0) 
+        error("ERROR reading from socket");
+    }
+  }
+  printf("%s\n",response);
+
+
+
   printf("%g\n", dwalltime()-time);
   return 0;
 }

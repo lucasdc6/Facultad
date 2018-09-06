@@ -59,10 +59,24 @@ int main(int argc, char *argv[])
     error("ERROR on accept");
   double time = dwalltime();
   bzero(buffer,BUFFER_SIZE);
-  n = read(newsockfd,buffer,BUFFER_SIZE-1);
-  if (n < 0) error("ERROR reading from socket");
-  printf("Here is the message!\nRead return value: %d\n", n);
-  n = write(newsockfd,"I got your message",18);
+  long int bufferi[1];
+  int i=0;
+
+  n = read(newsockfd,bufferi,4);
+ printf("%d\n",bufferi[0] );
+  while(bufferi[0] != i){
+    i+= read(newsockfd,&buffer[i],BUFFER_SIZE-1);
+    if (i != bufferi[0]){
+      write(newsockfd,"M",2);
+      write(newsockfd,&i,2);
+    }
+  }
+   n = write(newsockfd,"I",2);
   if (n < 0) error("ERROR writing to socket");
+
+  printf("Here is the message! %s\nRead return value: %d\n %d\n",buffer,i,bufferi[0]);
+  
+
+
   return 0; 
 }
