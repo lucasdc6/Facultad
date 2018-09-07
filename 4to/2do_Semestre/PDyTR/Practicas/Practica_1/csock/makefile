@@ -5,10 +5,12 @@ BUFFER_SIZE=1000
 all: folders server-${BUFFER_SIZE} client-${BUFFER_SIZE}
 
 server-${BUFFER_SIZE}:
-	gcc -o ${BUILD_FOLDER}/server-${BUFFER_SIZE} server.c -D BUFFER_SIZE=${BUFFER_SIZE}
+	gcc -o ${BUILD_FOLDER}/server-${BUFFER_SIZE} server.c -D BUFFER_SIZE=${BUFFER_SIZE} -Wall
+	gcc -o ${BUILD_FOLDER}/server-${BUFFER_SIZE}v1 serverv1.c -D BUFFER_SIZE=${BUFFER_SIZE} -Wall
 
 client-${BUFFER_SIZE}:
-	gcc -o ${BUILD_FOLDER}/client-${BUFFER_SIZE} client.c -D BUFFER_SIZE=${BUFFER_SIZE}
+	gcc -o ${BUILD_FOLDER}/client-${BUFFER_SIZE} client.c -D BUFFER_SIZE=${BUFFER_SIZE} -Wall
+	gcc -o ${BUILD_FOLDER}/client-${BUFFER_SIZE}v1 clientv1.c -D BUFFER_SIZE=${BUFFER_SIZE} -Wall
 
 10000: BUFFER_SIZE=10000
 10000: all
