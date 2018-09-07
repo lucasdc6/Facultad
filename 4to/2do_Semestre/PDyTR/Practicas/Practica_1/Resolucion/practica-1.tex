@@ -685,7 +685,8 @@ En este caso, la cantidad máxima de caracteres que se llegaron a leer fue de
 
 \lstinputlisting[language=bash]{code-examples/make_example}
 
-\subsubsection{javasock}
+Para ver el código, se puede ír al \hyperref[punto2b]{Apéndice, subsección "Punto 2-B"}
+
 \subsection{Inciso C}
 \textit{Agregue a la modificación anterior una verificación de llegada correcta de los datos que se
 envían (cantidad y contenido del buffer), de forma tal que se asegure que todos los datos
@@ -695,6 +696,8 @@ involucrados.}
 Se implementó un chequeo por la correcta llegada de los datos al proceso server, tanto en cantidad como el contenido.
 Para el chequeo de cantidad se hizo que el cliente, primero que nada, envíe la cantidad total de datos que va a enviar y luego envíe los datos aguardando una respuesta por parte del server; el server por su parte, primero recibirá la cantidad de datos que se van a enviar y luego, cuando realmente se reciban los datos comparará esa cantidad recibida al inicio con la cantidad de datos recibidos. Si la cantidad es igual quiere decir que los datos se recibieron correctamente (al menos en cantidad), y enviará un mensaje al cliente indicando que los datos llegaron bien y no debe enviar más; en cambio si la cantidad no es igual quiere decir que no se recibieron todos los datos, por lo que enviará al cliente un mensaje indicando que debe enviar más  y la cantidad de datos recibidos hasta el momento. Así el cliente dependiendo de la respueta del servidor o terminará la comunicación o enviará los datos faltantes comenzando de nuevo el ciclo.
 Para el chequeo de contenido el cliente enviará un checksum de los datos a enviar. El servidor, luego de recibir todos los datos, comparará el checksum recibido por el cliente con el generado por el mismo (usando la misma función que el cliente). Si ambos checksums son iguales quiere decir que los datos no fueron corrompidos en la comunicación, en cambio si son distintos los datos fueron corrompidos (sufrieron alguna modificación en la comunicación).
+
+Para ver el código, se puede ír al \hyperref[punto2b]{Apéndice, subsección "Punto 2-B"}
 
 \subsection{Inciso D}
 \textit{Grafique el promedio y la desviación estándar de los tiempos de comunicaciones de cada
@@ -814,7 +817,27 @@ conexiones.
 Se presentarán secciones del código C de principal relevancia.\\
 Cambios planteados al cliente de csock - \texttt{csock/client.c}\\
 
+\subsection{Punto 2-B}
+\label{punto2b}
+
+\subsubsection{Cliente}
+
+\lstinputlisting[language=C]{../csock/clientv1.c}
+
+\subsubsection{Servidor}
+
+\lstinputlisting[language=C]{../csock/serverv1.c}
+
+\subsection{Punto 2-C}
+\label{punto2c}
+
+\subsubsection{Cliente}
+
 \lstinputlisting[language=C]{../csock/client.c}
+
+\subsubsection{Servidor}
+
+\lstinputlisting[language=C]{../csock/serverv1.c}
 
 \noindent\rule{\textwidth}{1pt}
 

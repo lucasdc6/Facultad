@@ -553,6 +553,7 @@ pdfkeywords={Programación Distribuida y Tiempo Real, c, java, LaTeX, sockets}}%
 % received ..."  text while in non-compsoc journals this is reversed. Sigh.
 
 \author{Lucas Di Cunzolo}
+\author{Santiago Tettamanti}
 % note the % following the last \IEEEmembership and also \thanks - 
 % these prevent an unwanted space from occurring between the last author name
 % and the end of the author line. i.e., if you had this:
@@ -669,8 +670,10 @@ El cliente, se conectará a un socket utilizando la función \textbf{Connect()}
 \textit{Tanto en C como en Java (directorios csock-javasock)}
 \subsection{Inciso A}
 \textit{¿Por qué puede decirse que los ejemplos no son representativos del modelo c/s?}
-\subsubsection{csock}
-\subsubsection{javasock}
+
+En cliente-servidor el servidor está continuamente esperando alguna conexion por parte de algún cliente, en este caso el servidor cierra la conexion al recibir el primer request y enviar la respuesta. El cliente no usa la respuesta recibida por el servidor, en cambio el servidor si usa lo enviado por el cliente y realiza acciones con esos datos que no tienen que ver con la respuesta a la petición (aunque se sobreentiende que es para mostrar el ejemplo).
+Tampoco se respetan los pasos de conexión: inicialización, envío/recepción de peticiones y finalización; en el ejemplo solo le hace el segundo paso, no existe handshake con el servidor o mensajes de finalización de conexión. Es más un ejemplo de conexión entre procesos usando sockets que de client/servidor puro.
+
 \subsection{Inciso B}
 \textit{Muestre que no necesariamente siempre se leen/escriben todos los datos involucrados en
 las comunicaciones con una llamada read/write con sockets.}
@@ -688,8 +691,10 @@ En este caso, la cantidad máxima de caracteres que se llegaron a leer fue de
 envían (cantidad y contenido del buffer), de forma tal que se asegure que todos los datos
 enviados llegan correctamente, independientemente de la cantidad de datos
 involucrados.}
-\subsubsection{csock}
-\subsubsection{javasock}
+
+Se implementó un chequeo por la correcta llegada de los datos al proceso server, tanto en cantidad como el contenido.
+Para el chequeo de cantidad se hizo que el cliente, primero que nada, envíe la cantidad total de datos que va a enviar y luego envíe los datos aguardando una respuesta por parte del server; el server por su parte, primero recibirá la cantidad de datos que se van a enviar y luego, cuando realmente se reciban los datos comparará esa cantidad recibida al inicio con la cantidad de datos recibidos. Si la cantidad es igual quiere decir que los datos se recibieron correctamente (al menos en cantidad), y enviará un mensaje al cliente indicando que los datos llegaron bien y no debe enviar más; en cambio si la cantidad no es igual quiere decir que no se recibieron todos los datos, por lo que enviará al cliente un mensaje indicando que debe enviar más  y la cantidad de datos recibidos hasta el momento. Así el cliente dependiendo de la respueta del servidor o terminará la comunicación o enviará los datos faltantes comenzando de nuevo el ciclo.
+Para el chequeo de contenido el cliente enviará un checksum de los datos a enviar. El servidor, luego de recibir todos los datos, comparará el checksum recibido por el cliente con el generado por el mismo (usando la misma función que el cliente). Si ambos checksums son iguales quiere decir que los datos no fueron corrompidos en la comunicación, en cambio si son distintos los datos fueron corrompidos (sufrieron alguna modificación en la comunicación).
 
 \subsection{Inciso D}
 \textit{Grafique el promedio y la desviación estándar de los tiempos de comunicaciones de cada
@@ -700,9 +705,9 @@ el tiempo que tarda el cliente en establecer la conexión con el servidor, una v
 se contempla el envío de los datos por parte del cliente, y la recepción por parte del servidor.
 Una vez terminado todo este flujo, se puede dar por concluída la comunicación.
 
-El contéo del tiempo se realizó del lado del \textbf{cliente}.
+El contéo del tiempo se realizó del lado del \textbf{cliente}.\\
 Para tomar los datos para realizar el promedio y la desviación estándar de cada tamaño de buffer,
-se cuenta con un script en el mismo directorio de csock llamado
+se cuenta con un script en el mismo directorio de csock llamado \textit{get\_data}
 Dicho script ejecutara repetídas veces la conexión cliente-servidor y volcará los tiempos en un archivo
 en el mismo directorio, llamado \textbf{buffer\_[BUFFER\_SIZE]\_data}, donde \textbf{BUFFER\_SIZE} es el tamaño
 del buffer con el que se corrió dicho script.
@@ -715,9 +720,6 @@ El script acepta 2 paŕametros:
 
 En el \hyperref[appendixC]{apéndice C}, se pueden encontrar archivos de datos de buffers de tamaños
 $10^{3}$, $10^{4}$, $10^{5}$ y $10^{6}$
-
-\subsubsection{csock}
-\subsubsection{javasock}
 
 \section{Punto 3}
 \textit{¿Por qué en C se puede usar la misma variable tanto para leer de teclado como para
