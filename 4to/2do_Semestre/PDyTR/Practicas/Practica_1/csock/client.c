@@ -42,7 +42,7 @@ void error(char *msg)
 
 int main(int argc, char *argv[])
 {
-  int sockfd, portno, n;
+  int sockfd, portno, silent, n;
   struct sockaddr_in serv_addr;
   struct hostent *server;
 
@@ -51,7 +51,14 @@ int main(int argc, char *argv[])
     fprintf(stderr,"usage %s hostname port\n", argv[0]);
     exit(0);
   }
+
   portno = atoi(argv[2]);
+
+  if (argc == 4) {
+    silent = atoi(argv[3]);
+  } else {
+    silent = 0;
+  }
   double time = dwalltime();
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
   if (sockfd < 0) 
@@ -102,9 +109,12 @@ int main(int argc, char *argv[])
         error("ERROR reading from socket");
     }
   }
-  printf("%s\n",response);
+  if (!silent) {
+    printf("%s\n",response);
 
-  printf("Check: %lu\n", buffer_hash);
+    printf("Check: %lu\n", buffer_hash);
+  }
+
   n = write(sockfd, &buffer_hash,sizeof(buffer_hash));
 
   printf("%g\n", dwalltime()-time);
