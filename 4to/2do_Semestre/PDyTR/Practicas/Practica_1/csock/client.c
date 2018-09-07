@@ -13,6 +13,17 @@
 #define BUFFER_SIZE 1000
 #endif
 
+unsigned long hash(unsigned char *str)
+{
+  unsigned long hash = 5381;
+  int c;
+
+  while (c = *str++)
+    hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+  return hash;
+}
+
 double dwalltime()
 {
   double sec;
@@ -67,21 +78,21 @@ int main(int argc, char *argv[])
   buffer[i++] = 'w';
   buffer[i++] = 'r';
   buffer[i] = '!';
-  
+
   long int bufferi[1];
   bufferi[0]=BUFFER_SIZE-1;
   char response[2];
   response[0]='M';
   i=0;
 
+  unsigned long buffer_hash = hash(buffer);
+
   n = write(sockfd,bufferi,4);
 
   while(response[0] == 'M'){
 
-    n = write(sockfd,&buffer[i],BUFFER_SIZE);
-    if (n < 0) 
-      error("ERROR writing to socket");
-    
+    n = write(sockfd,&buffer[i],BUFFER_SIZE-1);
+
     n = read(sockfd,response,2 );
 
     if (response[0] == 'M'){
@@ -93,7 +104,8 @@ int main(int argc, char *argv[])
   }
   printf("%s\n",response);
 
-
+  printf("Check: %lu\n", buffer_hash);
+  n = write(sockfd, &buffer_hash,sizeof(buffer_hash));
 
   printf("%g\n", dwalltime()-time);
   return 0;
