@@ -13,6 +13,17 @@
 #define BUFFER_SIZE 1000
 #endif
 
+unsigned long hash(char *str)
+{
+  unsigned long hash = 5381;
+  int c;
+
+  while (c = *str++)
+    hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+  return hash;
+}
+
 double dwalltime()
 {
   double sec;
@@ -74,8 +85,11 @@ int main(int argc, char *argv[])
    n = write(newsockfd,"I",2);
   if (n < 0) error("ERROR writing to socket");
 
-  printf("Here is the message! %s\nRead return value: %d\n %d\n",buffer,i,bufferi[0]);
-  
+  //printf("Here is the message! %s\nRead return value: %d\n %d\n",buffer,i,bufferi[0]);
+
+  unsigned long buffer_checksum;
+  n = read(newsockfd, &buffer_checksum,sizeof(buffer_checksum));
+  printf("Checksum de client: %lu\nMi checsum %lu\n", buffer_checksum, hash(buffer));
 
 
   return 0; 
