@@ -16,8 +16,15 @@ chmod 666 $FILE
 
 for ((i=1; i <= $LOOP; i++)); do
   echo -e "Run $i/$LOOP - Buffer size: $BUFFER_SIZE"
-  bin/server-${BUFFER_SIZE} 66966 &> /dev/null &
-  bin/client-${BUFFER_SIZE} localhost 66966 >> $FILE
+  bin/server-${BUFFER_SIZE} 7000 &> /dev/null &
+  bin/client-${BUFFER_SIZE} localhost 7000 1 >> $FILE
+  for ((j=1; j <= 10; j++ )); do
+    echo -e "Retry n° $j $i/$LOOP - Buffer size: $BUFFER_SIZE"
+    bin/client-${BUFFER_SIZE} localhost 7000 1 >> $FILE
+  done
+  if [ "$?" -ne 1 ]; then
+    exit 1
+  fi
   sleep 2
 done
 
