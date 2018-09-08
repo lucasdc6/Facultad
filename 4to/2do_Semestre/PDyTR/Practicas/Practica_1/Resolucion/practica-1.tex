@@ -82,6 +82,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{hyperref}
+\usepackage{graphicx}
 \usepackage[svgnames]{xcolor}
 \hypersetup{
   colorlinks=false,
@@ -464,10 +465,10 @@
 \newcommand\MYhyperrefoptions{bookmarks=true,bookmarksnumbered=true,
 pdfpagemode={UseOutlines},plainpages=false,pdfpagelabels=true,
 colorlinks=true,linkcolor={black},citecolor={black},urlcolor={black},
-pdftitle={Práctica 1},%<!CHANGE!
-pdfsubject={Programación Distribuida y Tiempo Real - Práctica 1},%<!CHANGE!
-pdfauthor={Lucas Di Cunzolo},%<!CHANGE!
-pdfkeywords={Programación Distribuida y Tiempo Real, c, java, LaTeX, sockets}}%<^!CHANGE!
+pdftitle={Práctica 1},
+pdfsubject={Programación Distribuida y Tiempo Real - Práctica 1},
+pdfauthor={Lucas Di Cunzolo,Santiago Tettamanti},
+pdfkeywords={Programación Distribuida y Tiempo Real, c, java, LaTeX, sockets}}
 %\ifCLASSINFOpdf
 %\usepackage[\MYhyperrefoptions,pdftex]{hyperref}
 %\else
@@ -552,8 +553,7 @@ pdfkeywords={Programación Distribuida y Tiempo Real, c, java, LaTeX, sockets}}%
 % journal papers have the author affiliations above the "Manuscript
 % received ..."  text while in non-compsoc journals this is reversed. Sigh.
 
-\author{Lucas Di Cunzolo}
-\author{Santiago Tettamanti}
+\author{Lucas Di Cunzolo\\Santiago Tettamanti}
 % note the % following the last \IEEEmembership and also \thanks - 
 % these prevent an unwanted space from occurring between the last author name
 % and the end of the author line. i.e., if you had this:
@@ -699,6 +699,9 @@ Para el chequeo de contenido el cliente enviará un checksum de los datos a envi
 
 Para ver el código, se puede ír al \hyperref[punto2b]{Apéndice, subsección "Punto 2-B"}
 
+Para ver capturas de la ejecución de los programas, puede ir al
+\hyperref[capturas]{Apéndice de capturas}
+
 \subsection{Inciso D}
 \textit{Grafique el promedio y la desviación estándar de los tiempos de comunicaciones de cada
 comunicación. Explique el experimento realizado para calcular el tiempo de
@@ -791,7 +794,73 @@ Un servidor TFTP utiliza solamente un socket, para realizar la conexión, del ti
 Cuenta con un conjunto de instrucciones mucho más reducido que el servidor FTP.
 
 \subsection{Implementación propia}
-Para la implementación de un servidor, utilizaría 
+Para la implementación de un servidor básico, pensaría en un grupo de comandos similar al FTP,
+pero acotado tanto en cantidad, como en seguridad de cada una.
+
+Para seguir completamente un cliente FTP, como se dijo anteriormente, es necesario realizar una
+conexión TCP completa, eso quiere decir, con un saludo de 3 vías, y un cierre también de 3 vías.
+
+Como instrucciones iniciales, pensaría las siguientes:
+
+\begin{itemize}
+  \item \textbf{ls:} Lista los archivos.
+  \item \textbf{add:} Agregar un archivo.
+  \item \textbf{get:} Baja un archivo.
+  \item \textbf{delete:} Elimina un archivo.
+\end{itemize}
+
+Para el manejo de los comandos el servidor tiene que manejar 2 instancias.
+La primer instancia es la de comandos.\\
+El servidor, en principio, se encuentra a la espera de alguno de los comandos
+dichos anteriormente. Cualquier palabra diferente de los comandos va a dar un
+mensaje de 'comando no reconocido'.
+
+Luego, cada comando deberá reconocer las acciones a realizar luego.
+
+\textit{Nota: para simplificar el funcionamiento del servidor, se asume un
+\textbf{único} directorio.}
+
+\subsubsection{LS - Listar archivos}
+
+En principio, este comando no representa mayores problemas.
+Desde el cliente se le manda la palabra \texttt{ls} o \texttt{list}.
+
+Luego, el servidor contesta con la lista de archivos que tiene.
+El listado de archivos lo puede obtener mediante la función \texttt{readdir}
+Previamente abriento el directorio con la función \texttt{opendir}
+Se debe verificar el tamaño de los datos enviados desde el servidor para 
+asgurarse que lleguen todos.
+
+\subsubsection{ADD - Agregar un archivo}
+
+Este puede ser el comando más complejo de implementar de la lista.
+Luegamente, en primer instancia se manda el nombre del comando, junto con el
+path relativo al archivo a subir.
+
+Desde el cliente, se verifica la existencia del archivo y, de existir, lo abre.
+Luego comprueba el tamaño del archivo y lo envía al servidor.
+Para comprobar la integridad del archivo, se envía por último un \textit{checksum},
+el cual el servidor debe contrastar contra un checksum del archivo que le llegó.
+
+\subsubsection{GET - Baja un archivo}
+
+Este comando presenta una complejidad similar al anterior, pero ahora la carga se presenta
+del lado del servidor.
+
+En primer instancia, el cliente manda la palabra \texttt{get}, seguida del nombre del archivo a bajar.
+
+El servidor comprueba la existencia del archivo, de no existir lo informa, de existir,
+primero abre el archivo y comprueba su tamaño. Luego genera un checksum del archivo.
+Por último, envía el archivo y el checksum por el socket.
+
+\subsubsection{DELETE - Elimina un archivo}
+
+En primera instancia, el cliente envía la palabra \texttt{delete}, seguído del nombre del archivo a eliminar.
+
+El servidor comprueba que exista el archivo, y lo elimina.
+
+En este comando no es necesario comprobar el tamaño del nombre del archivo dado que el \textbf{máximo}
+path admitido en linux es de 4096 (definido por la variable \texttt{PATH\_MAX}, en \texttt{linux/limits.h})
 
 \section{Punto 5}
 \textit{Defina qué es un servidor con estado (\textbf{stateful server}) y qué es un servidor sin estado
@@ -865,6 +934,21 @@ Se presentarán secciones del código Java de principal relevancia.
 
 \noindent \textbf{Datos del buffer $10^{6}$:}
 \lstinputlisting{../csock/data/buffer_1000000_data}
+
+\section{Capturas}
+\label{capturas}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/server.png}
+\caption{Servidor\label{Servidor}}
+\end{figure}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/client.png}
+\caption{Cliente\label{Cliente}}
+\end{figure}
 
 \ifCLASSOPTIONcaptionsoff
   \newpage

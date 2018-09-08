@@ -1,4 +1,5 @@
-# Genera todos los clientes y servidores
+# Genera todos los clientes
+# y servidores
 # 10^3 | 10^4 | 10^5 | 10^6 bytes
 make all_buffers
 
