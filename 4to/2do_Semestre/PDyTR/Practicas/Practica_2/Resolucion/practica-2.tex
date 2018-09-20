@@ -659,6 +659,8 @@ El flag -M sirve para generar código seguro para la concurrencia, utilizando un
 
 El flag -A, es flag por default, que dependiendo el sistema en el que se compila, va a ser (o no), seguro para la concurrencia multihilo.
 
+\ref{error-multi}
+
 \section{Punto 3}
 rpcgen utiliza la estructura definida en el archivo .x para generar estructuras C en ambos puntos (cliente y servidor), con las cuales va a trabajar casteando.
 
@@ -668,6 +670,20 @@ Esto nos permite trabajar con cualquier tipo de C, siempre volviendo a castear a
 \section{Punto 4}
 
 Implementación.
+
+\newpage
+\onecolumn
+\appendix
+\section{Punto 1}
+
+\section{Punto 2}
+
+\label{error-multi}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/error-muli.png}
+\caption{Servidor\label{Servidor}}
+\end{figure}
 
 \ifCLASSOPTIONcaptionsoff
   \newpage
