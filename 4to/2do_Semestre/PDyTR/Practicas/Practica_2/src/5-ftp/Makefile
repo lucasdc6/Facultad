@@ -1,24 +1,22 @@
 .c.o:
 	gcc -c -Wall -DRPC_SVC_FG $<
 
-all: simp client server
+all: client server
 
 
-simp: simp.o
-	gcc -o simp simp.o 
-
-client: simpclient.o simp_clnt.o simp_xdr.o
-	gcc -o client simpclient.o simp_clnt.o simp_xdr.o -lnsl
+client: ftpclient.o ftp_clnt.o ftp_xdr.o hash.o
+	gcc -o client ftpclient.o ftp_clnt.o ftp_xdr.o hash.o -lnsl -Wall
 
 
-server: simpservice.o simp_svc.o simp_xdr.o
-	gcc -o server simpservice.o simp_svc.o simp_xdr.o -lrpcsvc -lnsl
+server: ftpservice.o ftp_svc.o ftp_xdr.o hash.o
+	gcc -o server ftpservice.o ftp_svc.o ftp_xdr.o hash.o -lrpcsvc -lnsl -Wall
 
-simp.h: simp.x
-	rpcgen -N simp.x
+ftp.h: ftp.x
+	rpcgen -N ftp.x
 
 clean: 
-	rm *.o simp.h simp_svc.* simp_clnt.* simp_xdr.* client server simp
+	rm *.o ftp.h ftp_svc.* ftp_clnt.* ftp_xdr.* client server
 
-simpclient.c: simp.h
-simpservice.c: simp.h
+ftpclient.c: ftp.h
+ftpservice.c: ftp.h
+hash.c: hash.h
