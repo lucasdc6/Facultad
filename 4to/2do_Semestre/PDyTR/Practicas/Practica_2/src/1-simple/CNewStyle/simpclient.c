@@ -13,14 +13,8 @@ int add( CLIENT *clnt, int x, int y) {
   ops.x = x;
   ops.y = y;
 
-  /* Cambiar timeout */
-  struct timeval tv;
-  tv.tv_sec = 1;    /* change time-out to 1 seconds */
-  tv.tv_usec = 0;
-  clnt_control(clnt, CLSET_TIMEOUT, &tv);
-
   /* Call the client stub created by rpcgen */
-  result = add_1(&ops,clnt);
+  result = add_1(ops,clnt);
   if (result==NULL) {
     fprintf(stderr,"Trouble calling remote procedure\n");
     exit(0);
@@ -39,7 +33,7 @@ int sub( CLIENT *clnt, int x, int y) {
   ops.y = y;
 
   /* Call the client stub created by rpcgen */
-  result = sub_1(&ops,clnt);
+  result = sub_1(ops,clnt);
   if (result==NULL) {
     fprintf(stderr,"Trouble calling remote procedure\n");
     exit(0);

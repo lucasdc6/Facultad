@@ -15,10 +15,10 @@ server: simpservice.o simp_svc.o simp_xdr.o
 	gcc -o server simpservice.o simp_svc.o simp_xdr.o -lrpcsvc -lnsl
 
 simp.h: simp.x
-	rpcgen -C simp.x
+	rpcgen -N simp.x
 
 clean: 
-	rm *.o simp.h simp_svc.* simp_clnt.* simp_xdr.*
+	rm *.o simp.h simp_svc.* simp_clnt.* simp_xdr.* client server simp
 
 simpclient.c: simp.h
 simpservice.c: simp.h
