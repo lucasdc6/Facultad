@@ -1,12 +1,11 @@
 #define VERSION_NUMBER 1
 
-%#define DATA_SIZE 8192
+%#define DATA_SIZE 4294967295
 
 struct ftp_file {
   string name<PATH_MAX>;
-	opaque data[DATA_SIZE];
-  int size;
-	int checksum;
+	opaque data<>;
+	uint64_t checksum;
 };
 
 program FTP_PROG {

@@ -1,6 +1,6 @@
 #ifndef HASH_H
 #define HASH_H
-typedef unsigned long u_long;
+#include <inttypes.h>
 
-int hash(char *);
+uint64_t hash(char *);
 #endif
