@@ -66,6 +66,5 @@ read_1_svc(char *path, struct svc_req *rqstp)
     file_struct->name = malloc(PATH_MAX);
     file_struct->name = strcpy(file_struct->name, path);
 
-    printf("%s\n", file_struct->data);
     return file_struct;
 }

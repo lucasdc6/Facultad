@@ -53,14 +53,13 @@ int ftp_read(CLIENT *clnt, char *path, char *name) {
     exit(0);
   }
 
+  printf("Storing file %s...\n", name);
   file = fopen(name, "w");
   if (file == NULL) {
     fprintf(stderr, "Error opening file %s\n", path);
   }
   fwrite(ftp_file_data->data, sizeof(char), ftp_file_data->size, file);
   fclose(file);
-
-  printf("posta?\n%s\n", ftp_file_data->data);
 
   return 1;
 }
