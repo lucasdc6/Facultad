@@ -647,6 +647,33 @@ Programación Distribuida y Tiempo Real, c, \LaTeX, rpc
 \IEEEpeerreviewmaketitle
 
 \section{Punto 1}
+\subsection{A}
+Si los procedimientos fuesen locales estarían todos dentro de un mismo archivo como cualquier otro programa "común" de C.
+Como se muestra en \ref{error-multi}
+No habría latencia en la comunicación ni perdida de comunicación ya que no habría comunicación alguna con ningún host server/client (sin tener en cuenta el SO local); todas las llamadas se harían dentro del mismo espacio de direcciones.
+
+\subsection{B}
+Capturas de las salidas de tanto los clientes como los servidores de cada uno de los casos:
+
+Caso 1: \ref{1-simple-client}
+           \ref{1-simple-server}
+
+Caso 2: \ref{2-ui-client}
+           No sacamos captura del server ui, no habia output en este caso
+
+Caso 3: \ref{3-array-client}
+           \ref{3-array-server}
+
+Caso 4: \ref{4-list-client}
+           \ref{4-list-server} 
+
+\subsection{C}
+
+Con UDP \ref{udp-client}:
+Vemos que al poner en el server en el medio de la comunicación un mensaje de exit \ref{exit-to-server}, el servidor termina bruscamente en el medio de la operación \ref{server-trouble}; entonces el cliente, al terminar el timeout definido en \ref{client-timeout}, termina la comunicacion, tal como se ve en \ref{client-trouble}.
+Lo mismo pasa si en vez de terminar su proceso el servidor tarda mucho en procesar lo pedido, lo que simularemos con un mensaje de sleep dentro del proceso servidor \ref{server-sleep} de tal manera que el sleep tenga una duracion mayor a la definida en el timeout del cliente; entonces como el servidor no da su respuesta antes que termine el timeout, el cliente cerrará la conexión \ref{server-trouble}. En este caso el servidor, a diferencia de con el mensaje exit, serguirá su ejecución esperando el próximo request \ref{server-waiting}.
+
+Con TCP \ref{tcp-client} el resultado es exactamente el mismo tanto cuando el servidor termina su ejecución en medio de la comunicación (agregando el mensaje exit) como cuando tarda más de lo debido (agregando mensaje sleep)
 
 \section{Punto 2}
 \subsection{A}
@@ -675,6 +702,151 @@ Implementación.
 \onecolumn
 \appendix
 \section{Punto 1}
+\subsection{A}
+\label{local-procedures}
+\begin{lstlisting}
+#include <stdio.h>
+#include <stdlib.h>
+
+int add( int x, int y ) {
+  return(x+y);     /* Note the use of the '+' operator to achieve addition! */
+}
+
+int subtract( int x, int y ) {
+  return(x-y);     /* This is a little harder, we have to use '-' */
+}
+
+
+int main( int argc, char *argv[]) {
+
+  int x,y;
+
+  if (argc!=3) {
+    fprintf(stderr,"Usage: simp num1 num\n");
+    fprintf(stderr,"       num1 and num2 must be integer values (for now)\n");
+    fprintf(stderr,"       Floating point arithmetic is coming soon - preregister now and\n");
+    fprintf(stderr,"       receive our new integrated multiplication program at no extra cost!\n");
+    exit(0);
+  }
+
+  x = atoi(argv[1]);
+  y = atoi(argv[2]);
+
+  printf("%d + %d = %d\n",x,y,add(x,y));
+  printf("%d - %d = %d\n",x,y,subtract(x,y));
+  return(0);
+}
+\end{lstlisting}
+
+\subsection{B}
+
+\label{1-simple-client}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/1-simple-client.png}
+\caption{Simple client\label{client}}
+\end{figure}
+
+\label{1-simple-server}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/1-simple-server.png}
+\caption{Simple server\label{server}}
+\end{figure}
+
+\label{2-ui-client}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/2-ui-client.png}
+\caption{UI client\label{client}}
+\end{figure}
+
+\label{3-array-client}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/3-array-client.png}
+\caption{Array client\label{client}}
+\end{figure}
+
+\label{3-array-server}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/3-array-server.png}
+\caption{Array server\label{server}}
+\end{figure}
+
+\label{4-list-client}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/4-list-client.png}
+\caption{List client\label{client}}
+\end{figure}
+
+\label{4-list-server}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/4-list-server.png}
+\caption{List server\label{server}}
+\end{figure}
+
+\subsection{C}
+
+\label{udp-client}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/udp-client.png}
+\caption{UDP client\label{udp client}}
+\end{figure}
+
+\label{exit-to-server}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/exit-to-server.png}
+\caption{Server exit\label{server exit}}
+\end{figure}
+
+\label{server-trouble}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/server-trouble.png}
+\caption{server trouble\label{server trouble}}
+\end{figure}
+
+\label{client-timeout}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/client-timeout.png}
+\caption{Client timeout\label{client timeout}}
+\end{figure}
+
+\label{client-trouble}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/client-trouble.png}
+\caption{Client trouble\label{Client trouble}}
+\end{figure}
+
+\label{server-sleep}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/server-sleep.png}
+\caption{Server sleep\label{Server sleep}}
+\end{figure}
+
+\label{server-waitig}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/server-waiting.png}
+\caption{Server waiting\label{Server waiting}}
+\end{figure}
+
+\label{tcp-client}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/tcp-client.png}
+\caption{TCP client\label{tcp client}}
+\end{figure}
+
 
 \section{Punto 2}
 
