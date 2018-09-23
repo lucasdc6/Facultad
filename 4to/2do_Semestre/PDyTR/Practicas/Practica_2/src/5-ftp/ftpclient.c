@@ -2,48 +2,51 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "hash.h"
-#include "ftp.h"  /* Created for us by rpcgen - has everything we need ! */
+#include <ctype.h>
+#include <stdlib.h>
+#include <getopt.h>
+#include "commands.h"
 
-/* Wrapper function takes care of calling the RPC procedure */
-int write( CLIENT *clnt, char *data, char *name, int size) {
-  #ifdef DEBUG
-  printf("write - Args: \n\t- data: %s\n\t- name: %s\n\n", data, name);
-  #endif
-  ftp_file ftp_file_data;
-  int *result;
+typedef void (*command_function)(CLIENT*, char*, char*);
 
-  /* Gather everything into a single data structure to send to the server */
-  strcpy(ftp_file_data.data, data);
-  ftp_file_data.name = malloc(PATH_MAX);
-  ftp_file_data.name = strcpy(ftp_file_data.name, name);
-  ftp_file_data.size = size;
-  ftp_file_data.checksum = hash(data);
+typedef struct {
+  char name[15];
+  command_function cmd;
+} command;
 
-  /* Call the client stub created by rpcgen */
-  result = write_1(ftp_file_data,clnt);
-  if (result == NULL) {
-    fprintf(stderr,"Trouble calling remote procedure\n");
-    exit(0);
-  }
-  return(*result);
-}
 
 int main( int argc, char *argv[]) {
   CLIENT *clnt;
-  char* data;
-  char name[PATH_MAX];
-  int size;
-  if (argc < 3) {
-    fprintf(stderr,"Usage: %s hostname path name (optional)\n",argv[0]);
+  int i, c;
+  command commands[] = {
+    { "write", &ftp_write },
+    { "read", &ftp_read },
+    { "list", &ftp_write }
+  };
+
+  if (argc < 2) {
+    fprintf(stderr,"Usage: %s command hostname path name (optional)\n",argv[0]);
     exit(0);
   }
 
+  int command = -1;
+  for (i = 0; i < 3; i++) {
+    if (!strcmp(commands[i].name, argv[1])) {
+      command = i;
+      break;
+    }
+  }
+
+  if (command == -1) {
+    fprintf(stderr, "Invalid command");
+    exit(1);
+  }
+
+  // Config RPC
   /* Create a CLIENT data structure that reference the RPC
      procedure FTP_PROG, version FTP_VERSION running on the
      host specified by the 1st command line arg. */
-
-  clnt = clnt_create(argv[1], FTP_PROG, FTP_VERSION, "udp");
+  clnt = clnt_create("localhost", FTP_PROG, FTP_VERSION, "udp");
 
   /* Make sure the create worked */
   if (clnt == (CLIENT *) NULL) {
@@ -51,22 +54,42 @@ int main( int argc, char *argv[]) {
     exit(1);
   }
 
-  FILE* file;
-  file = fopen(argv[2], "r");
-  data = malloc(DATA_SIZE);
-  size = fread(data, sizeof(char), DATA_SIZE, file);
+  // Config getopt
+  int option_index = 0;
+  static struct option long_options[] = {
+    {"name", required_argument, 0, 'n'},
+    {"path", required_argument, 0, 'p'},
+    {0,      0,                 0,  0 }
+  };
 
-  fclose(file);
+  // Variables for ftp command
+  char path[PATH_MAX];
+  strcpy(path, "");
+  char name[PATH_MAX];
+  strcpy(name, "");
 
-  if (argc < 4) {
-    strcpy(name, argv[2]);
-  } else {
-    strcpy(name, argv[3]);
+  // Parse arguments
+  while ((c = getopt_long(argc, argv, "n:p:", long_options, &option_index)) != -1) {
+    switch (c) {
+      case 'n':
+        strcpy(name, optarg);
+        break;
+      case 'p':
+        /*
+        if(strcmp(argv[1], "write")) {
+          fprintf(stderr, "The flag -p/--path is only available for write command\n");
+          strcpy(path, name);
+          continue;
+        }
+        */
+        strcpy(path, optarg);
+        break;
+      default:
+        abort();
+    }
   }
 
-  write(clnt,data,name,size);
+  // Call command
+  commands[command].cmd(clnt, path, name);
   return(0);
 }
-
-
-

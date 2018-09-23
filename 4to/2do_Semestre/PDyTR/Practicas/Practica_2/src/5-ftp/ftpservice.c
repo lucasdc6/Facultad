@@ -53,10 +53,19 @@ write_1_svc(ftp_file argp, struct svc_req *rqstp)
 	return((int*)&result);
 }
 
-int *
-read_1_svc(ftp_file argp, struct svc_req *rqstp)
+ftp_file *
+read_1_svc(char *path, struct svc_req *rqstp)
 {
-    static int result = 1;
+	printf("Reading %s...\n", path);
+    FILE *file;
+    ftp_file *file_struct;
+    file_struct = malloc(sizeof(ftp_file));
 
-    return(&result);
+    file = fopen(path, "r");
+    file_struct->size = fread(file_struct->data, sizeof(char), DATA_SIZE, file);
+    file_struct->name = malloc(PATH_MAX);
+    file_struct->name = strcpy(file_struct->name, path);
+
+    printf("%s\n", file_struct->data);
+    return file_struct;
 }

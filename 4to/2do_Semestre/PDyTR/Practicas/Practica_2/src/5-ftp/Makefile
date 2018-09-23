@@ -4,8 +4,8 @@
 all: client server
 
 
-client: ftpclient.o ftp_clnt.o ftp_xdr.o hash.o
-	gcc -o client ftpclient.o ftp_clnt.o ftp_xdr.o hash.o -lnsl -Wall
+client: ftpclient.o ftp_clnt.o ftp_xdr.o hash.o commands.o
+	gcc -o client ftpclient.o ftp_clnt.o ftp_xdr.o hash.o commands.o -lnsl -Wall
 
 
 server: ftpservice.o ftp_svc.o ftp_xdr.o hash.o
@@ -20,3 +20,4 @@ clean:
 ftpclient.c: ftp.h
 ftpservice.c: ftp.h
 hash.c: hash.h
+commands.c: commands.h

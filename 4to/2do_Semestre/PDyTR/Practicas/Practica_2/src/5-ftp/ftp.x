@@ -11,7 +11,7 @@ struct ftp_file {
 
 program FTP_PROG {
    version FTP_VERSION {
-     int READ(ftp_file) = 1;
+     ftp_file READ(string) = 1;
      int WRITE(ftp_file) = 2;
    } = VERSION_NUMBER;
 } = 555555555;
