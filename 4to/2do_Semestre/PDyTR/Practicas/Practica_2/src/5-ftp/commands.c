@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <inttypes.h>
 #include "hash.h"
 #include "ftp.h"  /* Created for us by rpcgen - has everything we need ! */
 
@@ -24,11 +26,20 @@ int ftp_write(CLIENT *clnt, char *path, char *name) {
   int *result;
 
   /* Gather everything into a single data structure to send to the server */
-  strcpy(ftp_file_data.data, data);
+  ftp_file_data.data.data_len = size;
+  ftp_file_data.data.data_val = malloc(size);
+  strcpy(ftp_file_data.data.data_val, data);
   ftp_file_data.name = malloc(PATH_MAX);
   ftp_file_data.name = strcpy(ftp_file_data.name, name);
-  ftp_file_data.size = size;
   ftp_file_data.checksum = hash(data);
+
+  #ifdef DEBUG
+  printf("name: %s\ndata: %s\nsize: %d\nchecksum: %" PRIu64 "\n",
+        ftp_file_data.name,
+        ftp_file_data.data.data_val,
+        ftp_file_data.data.data_len,
+        ftp_file_data.checksum);
+  #endif
 
   /* Call the client stub created by rpcgen */
   result = write_1(ftp_file_data,clnt);
@@ -42,7 +53,7 @@ int ftp_write(CLIENT *clnt, char *path, char *name) {
 /* Wrapper function takes care of calling the RPC procedure */
 int ftp_read(CLIENT *clnt, char *path, char *name) {
   #ifdef DEBUG
-  printf("write - Args: \n\t- data: %s\n\t- name: %s\n\n", data, name);
+  //printf("write - Args: \n\t- data: %s\n\t- name: %s\n\n", data, name);
   #endif
   FILE* file;
   ftp_file *ftp_file_data;
@@ -58,7 +69,7 @@ int ftp_read(CLIENT *clnt, char *path, char *name) {
   if (file == NULL) {
     fprintf(stderr, "Error opening file %s\n", path);
   }
-  fwrite(ftp_file_data->data, sizeof(char), ftp_file_data->size, file);
+  fwrite(ftp_file_data->data.data_val, sizeof(char), ftp_file_data->data.data_len, file);
   fclose(file);
 
   return 1;

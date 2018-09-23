@@ -4,6 +4,8 @@
    needed in this file is you give it the "-Ss" command line arg.
 */
 #include <stdio.h>
+#include <inttypes.h>
+#include <string.h>
 #include "hash.h"
 #include "ftp.h"
 
@@ -27,7 +29,7 @@ write_1_svc(ftp_file argp, struct svc_req *rqstp)
 
     // Set path
     snprintf(path, PATH_MAX, "%s/%s", "store", argp.name);
-
+    
     #ifdef DEBUG
     printf("Path: %s\n\n", path);
     #endif
@@ -36,16 +38,17 @@ write_1_svc(ftp_file argp, struct svc_req *rqstp)
     file = fopen(path, "w");
     if (file == NULL) {
         fprintf(stderr, "Error creating file\n");
+        exit(1);
     }
     
     // Check checksum
-    int checksum = hash(argp.data);
+    uint64_t checksum = hash(argp.data.data_val);
     if (checksum != argp.checksum) {
-        fprintf(stderr, "Error in checksum!!\nOriginal: %d\nOwn: %d\n", argp.checksum, checksum);
+        fprintf(stderr, "Error in checksum!!\nOriginal: %"PRIu64"\nOwn: %"PRIu64"\n", argp.checksum, checksum);
     }
 
     // Write file
-    result = fwrite(argp.data, sizeof(char), argp.size, file);
+    result = fwrite(argp.data.data_val, sizeof(char), argp.data.data_len, file);
 
     fclose(file);
 	printf("Storing %s...\n", argp.name);
@@ -59,10 +62,15 @@ read_1_svc(char *path, struct svc_req *rqstp)
 	printf("Reading %s...\n", path);
     FILE *file;
     ftp_file *file_struct;
-    file_struct = malloc(sizeof(ftp_file));
+    file_struct = malloc(sizeof(char*) + sizeof(u_int) + sizeof(char*) + sizeof(int));
+    file_struct->data.data_val = malloc(DATA_SIZE);
 
     file = fopen(path, "r");
-    file_struct->size = fread(file_struct->data, sizeof(char), DATA_SIZE, file);
+    if (file == NULL) {
+        fprintf(stderr, "Error opeing file %s\n", path);
+        exit(1);
+    }
+    file_struct->data.data_len = fread(file_struct->data.data_val, sizeof(char), DATA_SIZE, file);
     file_struct->name = malloc(PATH_MAX);
     file_struct->name = strcpy(file_struct->name, path);
 
