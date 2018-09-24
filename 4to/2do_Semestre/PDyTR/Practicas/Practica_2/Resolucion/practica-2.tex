@@ -83,6 +83,7 @@
 \usepackage{listings}
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage[svgnames]{xcolor}
 \hypersetup{
   colorlinks=false,
@@ -696,7 +697,9 @@ Esto nos permite trabajar con cualquier tipo de C, siempre volviendo a castear a
 
 \section{Punto 4}
 
-Implementación.
+Para este punto, se implementaron las funciones básicas, \texttt{write|add}, \texttt{read|get} y \texttt{list|ls}
+
+Como primera instancia, se definió nuestro archivo \texttt{.x}, disponible para ver en el apéndice \ref{punto-4}
 
 \section{Punto 5}
 \subsection{A}
@@ -764,49 +767,49 @@ int main( int argc, char *argv[]) {
 \subsection{B}
 
 \label{1-simple-client}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/1-simple-client.png}
 \caption{Simple client\label{client}}
 \end{figure}
 
 \label{1-simple-server}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/1-simple-server.png}
 \caption{Simple server\label{server}}
 \end{figure}
 
 \label{2-ui-client}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/2-ui-client.png}
 \caption{UI client\label{client}}
 \end{figure}
 
 \label{3-array-client}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/3-array-client.png}
 \caption{Array client\label{client}}
 \end{figure}
 
 \label{3-array-server}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/3-array-server.png}
 \caption{Array server\label{server}}
 \end{figure}
 
 \label{4-list-client}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/4-list-client.png}
 \caption{List client\label{client}}
 \end{figure}
 
 \label{4-list-server}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/4-list-server.png}
 \caption{List server\label{server}}
@@ -815,56 +818,56 @@ int main( int argc, char *argv[]) {
 \subsection{C}
 
 \label{udp-client}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/udp-client.png}
 \caption{UDP client\label{udp client}}
 \end{figure}
 
 \label{exit-to-server}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/exit-to-server.png}
 \caption{Server exit\label{server exit}}
 \end{figure}
 
 \label{server-trouble}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/server-trouble.png}
 \caption{server trouble\label{server trouble}}
 \end{figure}
 
 \label{client-timeout}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/client-timeout.png}
 \caption{Client timeout\label{client timeout}}
 \end{figure}
 
 \label{client-trouble}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/client-trouble.png}
 \caption{Client trouble\label{Client trouble}}
 \end{figure}
 
 \label{server-sleep}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/server-sleep.png}
 \caption{Server sleep\label{Server sleep}}
 \end{figure}
 
 \label{server-waitig}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/server-waiting.png}
 \caption{Server waiting\label{Server waiting}}
 \end{figure}
 
 \label{tcp-client}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/tcp-client.png}
 \caption{TCP client\label{tcp client}}
@@ -874,51 +877,47 @@ int main( int argc, char *argv[]) {
 \section{Punto 2}
 
 \label{error-multi}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/error-muli.png}
 \caption{Servidor\label{Servidor}}
 \end{figure}
 
+\label{punto-4}
+\section{Punto 4}
+
 \section{Punto 5}
 
 \label{experiment-timeout25}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/experiment-timeout25.png}
-\caption{Experiment timeout \label{Experiment timeout}}
+\caption{Experiment timeout \label{Experiment-timeout}}
 \end{figure}
 
 \label{experiment-timeout25-client}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/experiment-timeout25-client.png}
 \caption{Experiment timeout client1\label{Client1}}
 \end{figure}
 
 \label{experiment-timeout25-server}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/experiment-timeout25-server.png}
 \caption{Experiment timeout server1\label{Server1}}
 \end{figure}
 
-\label{experiment-timeout26}
-\begin{figure}[ht!]
-\centering
-\includegraphics\label{experiment-timeout26-server}
-\caption{Experiment timeout 2 \label{Experiment timeout 2}}
-\end{figure}
-
 \label{experiment-timeout26-client}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/experiment-timeout26-client.png}
 \caption{Experiment timeout client2\label{Client2}}
 \end{figure}
 
 \label{experiment-timeout26-server}
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/experiment-timeout26-server.png}
 \caption{Experiment timeout serve2\label{Server2}}
