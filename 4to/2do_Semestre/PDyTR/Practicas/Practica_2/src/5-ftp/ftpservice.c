@@ -8,7 +8,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <dirent.h>
-#include "hash.h"
+#include "utils.h"
 #include "ftp.h"
 
 /* Here is the actual remote procedure */
@@ -19,6 +19,7 @@
 int *
 write_1_svc(ftp_file argp, struct svc_req *rqstp)
 {
+    double time = dwalltime();
     #ifdef DEBUG
     printf("write_1_svc - Args:\n\targp:\n\t\t- name: %s\n\t\t- data: %s\n\t\t- size: %d \n\t\t- checksum: %d\n\n",
             argp.name, argp.data, argp.size, argp.checksum);
@@ -55,12 +56,14 @@ write_1_svc(ftp_file argp, struct svc_req *rqstp)
     fclose(file);
 	printf("Storing %s...\n", argp.name);
 
+    fprintf(stderr, "Took %g ms\n\n", dwalltime()-time);
 	return((int*)&result);
 }
 
 ftp_file *
 read_1_svc(char *path, struct svc_req *rqstp)
 {
+    double time = dwalltime();    
 	printf("Reading %s...\n", path);
     FILE *file;
     ftp_file *file_struct;
@@ -77,17 +80,20 @@ read_1_svc(char *path, struct svc_req *rqstp)
     file_struct->name = malloc(PATH_MAX);
     file_struct->name = strcpy(file_struct->name, path);
 
+    fprintf(stderr, "Took %g ms\n\n", dwalltime()-time);
     return file_struct;
 }
 
 char **
 list_1_svc(char *path, struct svc_req *rqstp)
 {
+    double time = dwalltime();    
 	printf("Listing files '%s'\n", path);
     DIR *dir;
     char **paths;
     paths = (char**)malloc(sizeof(char*));
-    paths[0] = (char*)malloc(PATH_MAX);
+    *paths = (char*)malloc(PATH_MAX);
+    *paths = strcpy(*paths, "");
     struct dirent *dir_str;
 
     dir = opendir(path);
@@ -104,5 +110,6 @@ list_1_svc(char *path, struct svc_req *rqstp)
         }
         closedir(dir);
     }
+    fprintf(stderr, "Took %g ms\n\n", dwalltime()-time);
     return paths;
 }

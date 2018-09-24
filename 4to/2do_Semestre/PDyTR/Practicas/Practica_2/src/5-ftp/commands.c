@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
-#include "hash.h"
+#include "utils.h"
 #include "ftp.h"  /* Created for us by rpcgen - has everything we need ! */
 
 /* Wrapper function takes care of calling the RPC procedure */
 int ftp_write(CLIENT *clnt, char *path, char *name) {
+  double time = dwalltime();
   #ifdef DEBUG
   printf("write - Args: \n\t- data: %s\n\t- name: %s\n\n", data, name);
   #endif
@@ -47,11 +48,13 @@ int ftp_write(CLIENT *clnt, char *path, char *name) {
     fprintf(stderr,"Trouble calling remote procedure\n");
     exit(0);
   }
+  fprintf(stderr, "Took %g ms\n\n", dwalltime()-time);
   return(*result);
 }
 
 /* Wrapper function takes care of calling the RPC procedure */
 int ftp_read(CLIENT *clnt, char *path, char *name) {
+  double time = dwalltime();
   #ifdef DEBUG
   //printf("write - Args: \n\t- data: %s\n\t- name: %s\n\n", data, name);
   #endif
@@ -72,16 +75,19 @@ int ftp_read(CLIENT *clnt, char *path, char *name) {
   fwrite(ftp_file_data->data.data_val, sizeof(char), ftp_file_data->data.data_len, file);
   fclose(file);
 
+  fprintf(stderr, "Took %g ms\n\n", dwalltime()-time);
   return 1;
 }
 
 /* Wrapper function takes care of calling the RPC procedure */
 int ftp_list(CLIENT *clnt, char *path, char *name) {
+  double time = dwalltime();
   #ifdef DEBUG
   //printf("write - Args: \n\t- data: %s\n\t- name: %s\n\n", data, name);
   #endif
   char **paths;
   paths = list_1(path, clnt);
   printf("%s\n", paths[0]);
+  fprintf(stderr, "Took %g ms\n\n", dwalltime()-time);
   return 0;
 }

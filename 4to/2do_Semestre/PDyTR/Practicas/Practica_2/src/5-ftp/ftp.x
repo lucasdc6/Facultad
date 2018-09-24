@@ -1,6 +1,6 @@
 #define VERSION_NUMBER 1
 
-%#define DATA_SIZE 4294967295
+%#define DATA_SIZE UINT_MAX-1
 
 struct ftp_file {
   string name<PATH_MAX>;
