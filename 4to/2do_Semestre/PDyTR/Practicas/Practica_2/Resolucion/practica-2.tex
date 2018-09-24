@@ -670,8 +670,8 @@ Caso 4: \ref{4-list-client}
 \subsection{C}
 
 Con UDP \ref{udp-client}:
-Vemos que al poner en el server en el medio de la comunicación un mensaje de exit \ref{exit-to-server}, el servidor termina bruscamente en el medio de la operación \ref{server-trouble}; entonces el cliente, al terminar el timeout definido en \ref{client-timeout}, termina la comunicacion, tal como se ve en \ref{client-trouble}.
-Lo mismo pasa si en vez de terminar su proceso el servidor tarda mucho en procesar lo pedido, lo que simularemos con un mensaje de sleep dentro del proceso servidor \ref{server-sleep} de tal manera que el sleep tenga una duracion mayor a la definida en el timeout del cliente; entonces como el servidor no da su respuesta antes que termine el timeout, el cliente cerrará la conexión \ref{server-trouble}. En este caso el servidor, a diferencia de con el mensaje exit, serguirá su ejecución esperando el próximo request \ref{server-waiting}.
+Vemos que al poner en el server en el medio de la comunicación un mensaje de exit \ref{exit-to-server}, el servidor termina bruscamente en el medio de la operación \ref{server-trouble}; entonces el cliente, al terminar el timeout definido en su proceso \ref{client-timeout}, termina la comunicacion, tal como se ve en esta captura de la ejecución del cliente \ref{client-trouble}.
+Lo mismo pasa si en vez de terminar su proceso el servidor tarda mucho en procesar lo pedido, lo que simularemos con un mensaje de sleep dentro del proceso servidor \ref{server-sleep} de tal manera que el sleep tenga una duracion mayor a la definida en el timeout del cliente; entonces como el servidor no da su respuesta antes que termine el timeout, el cliente cerrará la conexión \ref{client-trouble}. En este caso el servidor, a diferencia de con el mensaje exit, serguirá su ejecución esperando el próximo request \ref{server-waiting}.
 
 Con TCP \ref{tcp-client} el resultado es exactamente el mismo tanto cuando el servidor termina su ejecución en medio de la comunicación (agregando el mensaje exit) como cuando tarda más de lo debido (agregando mensaje sleep)
 
@@ -697,6 +697,29 @@ Esto nos permite trabajar con cualquier tipo de C, siempre volviendo a castear a
 \section{Punto 4}
 
 Implementación.
+
+\section{Punto 5}
+\subsection{A}
+\subsection{A.1}
+Para el experimento del timeout usaremos el caso 1-simple. 
+Vemos que si ponemos en el proceso servidor un delay de 25 mediante un sleep(25) en el medio de la comunicación:
+\ref{experiment-timeout-25}
+Entonces la comunicación se realiza exitosamente y la llamada al proceso remoto termina de forma correcta:
+\ref{experiment-timeout-25-client}
+\ref{experiment-timeout-25-server}
+
+En cambio si ponemos en el proceso servidor un delay de 26 mediante un sleep(26) en el medio de la comunicación:
+\ref{experiment-timeout-26}
+Entonces la comunicación se corta por parte del cliente y la llamada no se completa:
+\ref{experiment-timeout-26-client}
+\ref{experiment-timeout-26-server} 
+
+Mediante estos resultados podemos afirmar que el timeout definido en el proceso cliente es el 25 segundos, por los que si el proceso servidor o la comunicación tardan más de ese tiempo entonces el cliente finalizará la comunicación abruptamente dando por sentado una falla en la misma.
+Esto lo podemos corroborar en el codigo de llamada al proceso por parte del cliente:
+\ref{client-timeout}
+
+\subsection{A.2}
+
 
 \newpage
 \onecolumn
@@ -855,6 +878,50 @@ int main( int argc, char *argv[]) {
 \centering
 \includegraphics[width=125mm]{capturas/error-muli.png}
 \caption{Servidor\label{Servidor}}
+\end{figure}
+
+\section{Punto 5}
+
+\label{experiment-timeout25}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/experiment-timeout25.png}
+\caption{Experiment timeout \label{Experiment timeout}}
+\end{figure}
+
+\label{experiment-timeout25-client}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/experiment-timeout25-client.png}
+\caption{Experiment timeout client1\label{Client1}}
+\end{figure}
+
+\label{experiment-timeout25-server}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/experiment-timeout25-server.png}
+\caption{Experiment timeout server1\label{Server1}}
+\end{figure}
+
+\label{experiment-timeout26}
+\begin{figure}[ht!]
+\centering
+\includegraphics\label{experiment-timeout26-server}
+\caption{Experiment timeout 2 \label{Experiment timeout 2}}
+\end{figure}
+
+\label{experiment-timeout26-client}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/experiment-timeout26-client.png}
+\caption{Experiment timeout client2\label{Client2}}
+\end{figure}
+
+\label{experiment-timeout26-server}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=125mm]{capturas/experiment-timeout26-server.png}
+\caption{Experiment timeout serve2\label{Server2}}
 \end{figure}
 
 \ifCLASSOPTIONcaptionsoff
