@@ -11,7 +11,8 @@ typedef int (*command_function)(CLIENT*, char*, char*);
 
 typedef struct command {
   char name[15];
-  command_function cmd;
+  char description[100];
+  command_function callback;
 } command_t;
 
 
@@ -21,20 +22,49 @@ int main( int argc, char *argv[]) {
 
   // Declare commands with functions
   command_t commands[] = {
-    { "write", &ftp_write },
-    { "read", &ftp_read },
-    { "list", &ftp_list },
-    { "ls", &ftp_list }
+    {
+      .name="write",
+      .description="Add a file from --src to --dest",
+      .callback=&ftp_write
+    },
+    {
+      .name="add",
+      .description="Add a file from --src to --dest",
+      .callback=&ftp_write
+    },
+    {
+      .name="read",
+      .description="Store a file from --src to --dest",
+      .callback=&ftp_read
+    },
+    {
+      .name="get",
+      .description="Store a file from --src to --dest",
+      .callback=&ftp_read
+    },
+    {
+      .name="list",
+      .description="List files from --src",
+      .callback=&ftp_list
+    },
+    {
+      .name="ls",
+      .description="List files from --src",
+      .callback=&ftp_list
+    },
   };
 
   // Check parameters
   if (argc < 2) {
-    fprintf(stderr,"Usage: %s command --name <name> --path <path> --host <host>\n",argv[0]);
+    fprintf(stderr,"Usage: %s\n",argv[0]);
+    for (i = 0; i < sizeof(commands)/sizeof(command_t); i++) {
+      fprintf(stderr, "\t- %s: %s\n", commands[i].name, commands[i].description);
+    }  
     exit(0);
   }
 
   int command = -1;
-  for (i = 0; i < 4; i++) {
+  for (i = 0; i < sizeof(commands)/sizeof(command_t); i++) {
     if (!strcmp(commands[i].name, argv[1])) {
       command = i;
       break;
@@ -49,28 +79,28 @@ int main( int argc, char *argv[]) {
   // Config getopt
   int option_index = 0;
   static struct option long_options[] = {
-    {"name", required_argument, 0, 'n'},
-    {"path", required_argument, 0, 'p'},
+    {"src", required_argument, 0, 's'},
+    {"dest", required_argument, 0, 'd'},
     {"host", required_argument, 0, 'h'},
     {0,      0,                 0,  0 }
   };
 
   // Variables for ftp command
-  char path[PATH_MAX];
-  strcpy(path, "");
-  char name[PATH_MAX];
-  strcpy(name, "");
+  char src[PATH_MAX];
+  strcpy(src, "");
+  char dest[PATH_MAX];
+  strcpy(dest, "");
   char hostname[PATH_MAX];
   strcpy(hostname, "");
 
   // Parse arguments
-  while ((c = getopt_long(argc, argv, "n:p:h:", long_options, &option_index)) != -1) {
+  while ((c = getopt_long(argc, argv, "s:d:h:", long_options, &option_index)) != -1) {
     switch (c) {
-      case 'n':
-        strcpy(name, optarg);
+      case 's':
+        strcpy(src, optarg);
         break;
-      case 'p':
-        strcpy(path, optarg);
+      case 'd':
+        strcpy(dest, optarg);
         break;
       case 'h':
         strcpy(hostname, optarg);
@@ -78,6 +108,16 @@ int main( int argc, char *argv[]) {
       default:
         abort();
     }
+  }
+
+  if (!strlen(src)) {
+    fprintf(stderr, "Specify a --src path\n");
+    exit(1);
+  }
+
+  if (!strlen(dest)) {
+    fprintf(stderr, "--dest setted to tmp1\n");
+    strcpy(dest, "tmp1");
   }
 
   // Config RPC
@@ -97,6 +137,6 @@ int main( int argc, char *argv[]) {
 
   printf("Connecting to server with host %s\n", hostname);
   // Call command
-  commands[command].cmd(clnt, path, name);
-  return(0);
+  commands[command].callback(clnt, src, dest);
+  return 0;
 }
