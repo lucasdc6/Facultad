@@ -74,3 +74,14 @@ int ftp_read(CLIENT *clnt, char *path, char *name) {
 
   return 1;
 }
+
+/* Wrapper function takes care of calling the RPC procedure */
+int ftp_list(CLIENT *clnt, char *path, char *name) {
+  #ifdef DEBUG
+  //printf("write - Args: \n\t- data: %s\n\t- name: %s\n\n", data, name);
+  #endif
+  char **paths;
+  paths = list_1(path, clnt);
+  printf("%s\n", paths[0]);
+  return 0;
+}

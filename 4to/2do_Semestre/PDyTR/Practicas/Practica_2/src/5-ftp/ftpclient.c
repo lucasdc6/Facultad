@@ -23,7 +23,7 @@ int main( int argc, char *argv[]) {
   command commands[] = {
     { "write", &ftp_write },
     { "read", &ftp_read },
-    { "list", &ftp_write }
+    { "list", &ftp_list }
   };
 
   // Check parameters

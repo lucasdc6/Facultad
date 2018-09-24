@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <string.h>
+#include <sys/types.h>
+#include <dirent.h>
 #include "hash.h"
 #include "ftp.h"
 
@@ -68,11 +70,39 @@ read_1_svc(char *path, struct svc_req *rqstp)
     file = fopen(path, "r");
     if (file == NULL) {
         fprintf(stderr, "Error opeing file %s\n", path);
-        exit(1);
+        file_struct->data.data_len = -1;
+        return file_struct;
     }
     file_struct->data.data_len = fread(file_struct->data.data_val, sizeof(char), DATA_SIZE, file);
     file_struct->name = malloc(PATH_MAX);
     file_struct->name = strcpy(file_struct->name, path);
 
     return file_struct;
+}
+
+char **
+list_1_svc(char *path, struct svc_req *rqstp)
+{
+	printf("Listing files '%s'\n", path);
+    DIR *dir;
+    char **paths;
+    paths = (char**)malloc(sizeof(char*));
+    paths[0] = (char*)malloc(PATH_MAX);
+    struct dirent *dir_str;
+
+    dir = opendir(path);
+    if(dir) {
+        while((dir_str = readdir(dir)) != NULL) {
+            if (strcmp(dir_str->d_name, ".") && strcmp(dir_str->d_name, "..")) {
+                strcat(paths[0], dir_str->d_name);
+                strcat(*paths, "\t");
+
+                #ifdef DEBUG
+                printf("%d - %s\n", i-1, paths[i-1]);
+                #endif
+            }
+        }
+        closedir(dir);
+    }
+    return paths;
 }

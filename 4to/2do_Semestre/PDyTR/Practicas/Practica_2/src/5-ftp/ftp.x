@@ -12,6 +12,7 @@ program FTP_PROG {
    version FTP_VERSION {
      ftp_file READ(string) = 1;
      int WRITE(ftp_file) = 2;
+     string LIST(string) = 3;
    } = VERSION_NUMBER;
 } = 555555555;
 
