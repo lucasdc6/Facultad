@@ -46,7 +46,7 @@ write_1_svc(ftp_file argp, struct svc_req *rqstp)
     } else if (ENOENT == errno) {
         mkdir("store", 0777);
     } else {
-        fprintf(stderr, "Error creating file\n");
+        fprintf(stderr, "Error creating file '%s'\n", path);
         result = -1;
         return &result;
     }
@@ -54,7 +54,7 @@ write_1_svc(ftp_file argp, struct svc_req *rqstp)
     // Open file and check errors
     file = fopen(path, "w");
     if (file == NULL) {
-        fprintf(stderr, "Error creating file\n");
+        fprintf(stderr, "Error creating file '%s'\n", path);
         result = -1;
         return &result;
     }

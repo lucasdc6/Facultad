@@ -45,8 +45,9 @@ int ftp_write(CLIENT *clnt, char *src, char *dest) {
     fprintf(stderr,"Trouble calling remote procedure\n");
     exit(0);
   } else if (*result == -1) {
-    fprintf(stderr, "Error creating file\n");
+    fprintf(stderr, "Error creating file 'store/%s' in server\n", dest);
   }
+  printf("File stored at 'store/%s'\n", dest);
   fprintf(stderr, "Took %g ms\n\n", dwalltime()-time);
   return(*result);
 }
