@@ -9,30 +9,27 @@
 int ftp_write(CLIENT *clnt, char *path, char *name) {
   double time = dwalltime();
   #ifdef DEBUG
-  printf("write - Args: \n\t- data: %s\n\t- name: %s\n\n", data, name);
+  printf("write - Args: \n\t- path: %s\n\t- name: %s\n\n", path, name);
   #endif
   FILE* file;
-  char* data;
-  int size;
 
   file = fopen(path, "r");
   if (file == NULL) {
     fprintf(stderr, "Error opening file %s\n", path);
+    exit(1);
   }
-  data = malloc(DATA_SIZE);
-  size = fread(data, sizeof(char), DATA_SIZE, file);
-  fclose(file);
 
   ftp_file ftp_file_data;
   int *result;
 
   /* Gather everything into a single data structure to send to the server */
-  ftp_file_data.data.data_len = size;
-  ftp_file_data.data.data_val = malloc(size);
-  strcpy(ftp_file_data.data.data_val, data);
+  ftp_file_data.data.data_val = malloc(DATA_SIZE);
+  ftp_file_data.data.data_len = fread(ftp_file_data.data.data_val, sizeof(char), DATA_SIZE, file);
   ftp_file_data.name = malloc(PATH_MAX);
   ftp_file_data.name = strcpy(ftp_file_data.name, name);
-  ftp_file_data.checksum = hash(data);
+  ftp_file_data.checksum = hash(ftp_file_data.data.data_val);
+
+  fclose(file);
 
   #ifdef DEBUG
   printf("name: %s\ndata: %s\nsize: %d\nchecksum: %" PRIu64 "\n",
@@ -47,6 +44,8 @@ int ftp_write(CLIENT *clnt, char *path, char *name) {
   if (result == NULL) {
     fprintf(stderr,"Trouble calling remote procedure\n");
     exit(0);
+  } else if (*result == -1) {
+    fprintf(stderr, "Error creating file\n");
   }
   fprintf(stderr, "Took %g ms\n\n", dwalltime()-time);
   return(*result);
@@ -71,6 +70,7 @@ int ftp_read(CLIENT *clnt, char *path, char *name) {
   file = fopen(name, "w");
   if (file == NULL) {
     fprintf(stderr, "Error opening file %s\n", path);
+    exit(1);
   }
   fwrite(ftp_file_data->data.data_val, sizeof(char), ftp_file_data->data.data_len, file);
   fclose(file);

@@ -7,12 +7,12 @@
 #include <getopt.h>
 #include "commands.h"
 
-typedef void (*command_function)(CLIENT*, char*, char*);
+typedef int (*command_function)(CLIENT*, char*, char*);
 
-typedef struct {
+typedef struct command {
   char name[15];
   command_function cmd;
-} command;
+} command_t;
 
 
 int main( int argc, char *argv[]) {
@@ -20,10 +20,11 @@ int main( int argc, char *argv[]) {
   int i, c;
 
   // Declare commands with functions
-  command commands[] = {
+  command_t commands[] = {
     { "write", &ftp_write },
     { "read", &ftp_read },
-    { "list", &ftp_list }
+    { "list", &ftp_list },
+    { "ls", &ftp_list }
   };
 
   // Check parameters
@@ -33,7 +34,7 @@ int main( int argc, char *argv[]) {
   }
 
   int command = -1;
-  for (i = 0; i < 3; i++) {
+  for (i = 0; i < 4; i++) {
     if (!strcmp(commands[i].name, argv[1])) {
       command = i;
       break;
@@ -86,7 +87,7 @@ int main( int argc, char *argv[]) {
   if(!strlen(hostname)) {
     strcpy(hostname, "localhost");
   }
-  clnt = clnt_create(hostname, FTP_PROG, FTP_VERSION, "udp");
+  clnt = clnt_create(hostname, FTP_PROG, FTP_VERSION, "tcp");
 
   /* Make sure the create worked */
   if (clnt == (CLIENT *) NULL) {

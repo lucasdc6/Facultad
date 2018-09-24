@@ -4,8 +4,10 @@
    needed in this file is you give it the "-Ss" command line arg.
 */
 #include <stdio.h>
+#include <errno.h>
 #include <inttypes.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
 #include "utils.h"
@@ -22,12 +24,13 @@ write_1_svc(ftp_file argp, struct svc_req *rqstp)
     double time = dwalltime();
     #ifdef DEBUG
     printf("write_1_svc - Args:\n\targp:\n\t\t- name: %s\n\t\t- data: %s\n\t\t- size: %d \n\t\t- checksum: %d\n\n",
-            argp.name, argp.data, argp.size, argp.checksum);
+            argp.name, argp.data.data_val, argp.data.data_len, argp.checksum);
     #endif
 
     // Declare variables
 	FILE *file;
-    static size_t result;
+    DIR *dir;
+    static int result;
     char path[PATH_MAX];
 
     // Set path
@@ -37,11 +40,23 @@ write_1_svc(ftp_file argp, struct svc_req *rqstp)
     printf("Path: %s\n\n", path);
     #endif
 
+    dir = opendir("store");
+    if (dir) {
+        closedir(dir);
+    } else if (ENOENT == errno) {
+        mkdir("store", 0777);
+    } else {
+        fprintf(stderr, "Error creating file\n");
+        result = -1;
+        return &result;
+    }
+
     // Open file and check errors
     file = fopen(path, "w");
     if (file == NULL) {
         fprintf(stderr, "Error creating file\n");
-        exit(1);
+        result = -1;
+        return &result;
     }
     
     // Check checksum
@@ -54,7 +69,7 @@ write_1_svc(ftp_file argp, struct svc_req *rqstp)
     result = fwrite(argp.data.data_val, sizeof(char), argp.data.data_len, file);
 
     fclose(file);
-	printf("Storing %s...\n", argp.name);
+	printf("Storing %s...\n", path);
 
     fprintf(stderr, "Took %g ms\n\n", dwalltime()-time);
 	return((int*)&result);
@@ -63,6 +78,7 @@ write_1_svc(ftp_file argp, struct svc_req *rqstp)
 ftp_file *
 read_1_svc(char *path, struct svc_req *rqstp)
 {
+
     double time = dwalltime();    
 	printf("Reading %s...\n", path);
     FILE *file;
@@ -72,7 +88,7 @@ read_1_svc(char *path, struct svc_req *rqstp)
 
     file = fopen(path, "r");
     if (file == NULL) {
-        fprintf(stderr, "Error opeing file %s\n", path);
+        fprintf(stderr, "Error opening file %s\n", path);
         file_struct->data.data_len = -1;
         return file_struct;
     }
@@ -104,11 +120,13 @@ list_1_svc(char *path, struct svc_req *rqstp)
                 strcat(*paths, "\t");
 
                 #ifdef DEBUG
-                printf("%d - %s\n", i-1, paths[i-1]);
+                printf("%s\n", dir_str->d_name);
                 #endif
             }
         }
         closedir(dir);
+    } else {
+        snprintf(*paths, PATH_MAX, "list: cannot access %s: No such directory", path);
     }
     fprintf(stderr, "Took %g ms\n\n", dwalltime()-time);
     return paths;
