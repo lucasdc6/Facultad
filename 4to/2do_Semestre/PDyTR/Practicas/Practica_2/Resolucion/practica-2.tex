@@ -722,6 +722,103 @@ Esto lo podemos corroborar en el codigo de llamada al proceso por parte del clie
 \ref{client-timeout}
 
 \subsection{A.2}
+También utilizaremos para calcular el promedio de una llamada rpc el caso 1-simple. Cambiaremos el codigo del cliente de tal manera que solo llame a un proceso remoto y agregaremos una función para calcular el tiempo que tarda la llamada al proceso remoto:
+Funcion para calcular el tiempo:
+\begin{lstlisting}
+double dwalltime (){
+  double sec;
+  struct timeval tv;
+  gettimeofday(&tv,NULL);
+  sec=tv.tv_sec + tv.tv_usec /1000000.0;
+  return sec;
+}
+\end{lstlisting}
+
+Llamada a proceso remoto:
+\begin{lstlisting}
+  /* get the 2 numbers that should be added */
+  x = atoi(argv[2]);
+  y = atoi(argv[3]);
+
+  double time = dwalltime();
+  printf("%d + %d = %d\n",x,y, add(clnt,x,y));
+  printf("%g \n" ,dwalltime() - time);
+ 
+
+  return(0);
+\end{lstlisting} 
+
+Se ejecutó 50 veces el proceso cliente con los siguientes resultados: 
+
+0.000288963
+0.000247002
+0.000273943
+0.000135899
+0.000260115
+0.000271082
+0.000247955
+0.000322104
+0.00015521
+0.000272989
+0.000265121
+0.000277042
+0.000202179
+0.000264883
+0.000272989
+0.00028801
+0.000247955
+0.000257015
+0.000270844
+0.000267029
+0.000267982
+0.000257969
+0.000261068
+0.00027895
+0.000280142
+0.000283957
+0.000282764
+0.000194073
+0.000265837
+0.000252008
+0.000263929
+0.000252962
+0.000270128
+0.000262022
+0.000276089
+0.000256062
+0.00026989
+0.000192881
+0.000282049
+0.000222921
+0.00019002
+0.000277996
+0.000178099
+0.000316143
+0.000213146
+0.000187159
+0.000271082
+0.000237942
+0.000293016
+0.000289917
+---------------------
+Sum: 0.012716532
+Average: 0.00025433064
+Este es el tiempo que tardó la llamada en 50 ejecuciones distintas. Debajo, la suma y el promedio de ellas, todo expresado en segundos.
+
+\subsection{B}
+Teniendo en cuenta los datos del inciso anterior, se redujo el timeout del proceso cliente del caso 1-simple un 10\% menos que el promedio encontrado (0.00025433064 - 0.00025433064*10/100 = 0.00022889757):
+
+\label{reduced-timeout}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/reduced-timeout.png}
+\caption{Experiment reduced timeout\label{Reduced timeout}}
+\end{figure}
+
+
+Y se ejecutó 10 veces el cliente, haciendo por lo tanto 10 llamadas remotas, pero al parecer el struct TIMEOUT no permite floats, por lo que todo lo menor a 1 será tomado como 0 y ninguna llamada será menor al tiempo de timeout.
+
+\subsection{C}
 
 
 \newpage

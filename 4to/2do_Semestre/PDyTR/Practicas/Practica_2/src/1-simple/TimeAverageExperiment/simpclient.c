@@ -76,8 +76,9 @@ int main( int argc, char *argv[]) {
 
   double time = dwalltime();
   printf("%d + %d = %d\n",x,y, add(clnt,x,y));
-  printf("%d - %d = %d\n",x,y, sub(clnt,x,y));
   printf("%g \n" ,dwalltime() - time);
+ 
+
   return(0);
 }
 
