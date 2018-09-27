@@ -1,0 +1,7 @@
+*.o
+client
+server
+ftp.h
+ftp_clnt.c
+ftp_svc.c
+ftp_xdr.c
