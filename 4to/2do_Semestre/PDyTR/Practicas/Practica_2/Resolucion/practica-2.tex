@@ -648,46 +648,42 @@ Programación Distribuida y Tiempo Real, c, \LaTeX, rpc
 \IEEEpeerreviewmaketitle
 
 \section{Punto 1}
-\subsection{A}
+\subsection{Inciso A}
 Si los procedimientos fuesen locales estarían todos dentro de un mismo archivo como cualquier otro programa "común" de C.
-Como se muestra en \ref{error-multi}
+Como se muestra en el apendice \ref{local-procedures}
 No habría latencia en la comunicación ni perdida de comunicación ya que no habría comunicación alguna con ningún host server/client (sin tener en cuenta el SO local); todas las llamadas se harían dentro del mismo espacio de direcciones.
 
-\subsection{B}
+\subsection{Inciso B}
 Capturas de las salidas de tanto los clientes como los servidores de cada uno de los casos:
 
-Caso 1: \ref{1-simple-client}
-           \ref{1-simple-server}
+Caso 1: Figura \ref{fig:1-simple-client} - Figura \ref{fig:1-simple-server}
 
-Caso 2: \ref{2-ui-client}
-           No sacamos captura del server ui, no habia output en este caso
+Caso 2: Figura \ref{fig:2-ui-client}\\
+\indent No sacamos captura del server ui, no habia output en este caso
 
-Caso 3: \ref{3-array-client}
-           \ref{3-array-server}
+Caso 3: Figura \ref{fig:3-array-client} - Figura \ref{fig:3-array-server}
 
-Caso 4: \ref{4-list-client}
-           \ref{4-list-server} 
+Caso 4: Figura \ref{fig:4-list-client} - Figura \ref{fig:4-list-server} 
 
-\subsection{C}
+\subsection{Inciso C}
 
-Con UDP \ref{udp-client}:
-Vemos que al poner en el server en el medio de la comunicación un mensaje de exit \ref{exit-to-server}, el servidor termina bruscamente en el medio de la operación \ref{server-trouble}; entonces el cliente, al terminar el timeout definido en su proceso \ref{client-timeout}, termina la comunicacion, tal como se ve en esta captura de la ejecución del cliente \ref{client-trouble}.
-Lo mismo pasa si en vez de terminar su proceso el servidor tarda mucho en procesar lo pedido, lo que simularemos con un mensaje de sleep dentro del proceso servidor \ref{server-sleep} de tal manera que el sleep tenga una duracion mayor a la definida en el timeout del cliente; entonces como el servidor no da su respuesta antes que termine el timeout, el cliente cerrará la conexión \ref{client-trouble}. En este caso el servidor, a diferencia de con el mensaje exit, serguirá su ejecución esperando el próximo request \ref{server-waiting}.
+Con UDP(Figura \ref{fig:udp-client}):
+Vemos que al poner en el server en el medio de la comunicación un mensaje de exit (Figura \ref{fig:exit-to-server}), el servidor termina bruscamente en el medio de la operación (Figura \ref{fig:server-trouble}); entonces el cliente, al terminar el timeout definido en su proceso(Figura \ref{fig:client-timeout}), termina la comunicacion, tal como se ve en esta captura de la ejecución del cliente(Figura \ref{fig:client-trouble}).
+Lo mismo pasa si en vez de terminar su proceso el servidor tarda mucho en procesar lo pedido, lo que simularemos con un mensaje de sleep dentro del proceso servidor(Figura \ref{fig:server-sleep}) de tal manera que el sleep tenga una duracion mayor a la definida en el timeout del cliente; entonces como el servidor no da su respuesta antes que termine el timeout, el cliente cerrará la conexión(Figura \ref{fig:client-trouble}). En este caso el servidor, a diferencia de con el mensaje exit, serguirá su ejecución esperando el próximo request(Figura \ref{fig:server-waiting}).
 
-Con TCP \ref{tcp-client} el resultado es exactamente el mismo tanto cuando el servidor termina su ejecución en medio de la comunicación (agregando el mensaje exit) como cuando tarda más de lo debido (agregando mensaje sleep)
+Con TCP(Figura \ref{fig:tcp-client}) el resultado es exactamente el mismo tanto cuando el servidor termina su ejecución en medio de la comunicación (agregando el mensaje exit) como cuando tarda más de lo debido (agregando mensaje sleep)
 
 \section{Punto 2}
-\subsection{A}
+\subsection{2.A}
 El flag -N intenta de generar código en un estándar más nuevo que el ANSI (flag -C).
 Al intentar compilar el código con ese flag, utilizando el código original, falla.
 Esto se debe a que rcpgen, genera un .h las funciones con el tipo SIN puntero, a diferencia del flag -C, que los genera como punteros a operand.
 
-\subsection{B}
-El flag -M sirve para generar código seguro para la concurrencia, utilizando un paŕametro extra al servicio, de tipo int*.
+\subsection{2.B}
+El flag -M sirve para generar código seguro para la concurrencia, utilizando un paŕametro extra al servicio, de tipo int*.\\
+El flag -A, es la configuracion por default, que dependiendo el sistema en el que se compila, va a ser (o no), seguro para la concurrencia multihilo.
 
-El flag -A, es flag por default, que dependiendo el sistema en el que se compila, va a ser (o no), seguro para la concurrencia multihilo.
-
-\ref{error-multi}
+Figura \ref{fig:error-multi}
 
 \section{Punto 3}
 rpcgen utiliza la estructura definida en el archivo .x para generar estructuras C en ambos puntos (cliente y servidor), con las cuales va a trabajar casteando.
@@ -699,110 +695,55 @@ Esto nos permite trabajar con cualquier tipo de C, siempre volviendo a castear a
 
 Para este punto, se implementaron las funciones básicas, \texttt{write|add}, \texttt{read|get} y \texttt{list|ls}
 
-Como primera instancia, se definió nuestro archivo \texttt{.x}, disponible para ver en el apéndice \ref{punto-4}
+Como primera instancia, se definió nuestro archivo \texttt{.x}, disponible para ver en el apéndice \ref{punto-4-definicion}
+
+Se busco manejar cualquier tipo de archivos, por eso el uso del tipo opaque.
+
+Luego se definieron el cliente junto a los comandos disponibles (seccion \ref{punto-4-cliente}) y los servicios (seccion \ref{punto-4-servidor}).
+
+Cabe aclarar que para mejorar la legibilidad del codigo, se opto por utilizar un arreglo de estructuras con punteros a funciones para diferenciar rapidamente los comandos.
+
+El parseo de los argumentos al cliente cuenta con 2 etapas, la primera busca algun comando valido, y se realiza a recorriendo manualmente \texttt{argv}.\\
+La segunda busca las flags posibles para los comandos, esto se hizo usando la libreria \texttt{getopt} para mayor facilidad.
+
+La conexion con el servidor tuvo que ser obligatoriamente del tipo \textbf{TCP} para soportar los grandes volumenes de datos.
 
 \section{Punto 5}
 \subsection{A}
 \subsection{A.1}
 Para el experimento del timeout usaremos el caso 1-simple. 
 Vemos que si ponemos en el proceso servidor un delay de 25 mediante un sleep(25) en el medio de la comunicación:
-\ref{experiment-timeout-25}
+
+Figura \ref{fig:experiment-timeout-25}
+
 Entonces la comunicación se realiza exitosamente y la llamada al proceso remoto termina de forma correcta:
-\ref{experiment-timeout-25-client}
-\ref{experiment-timeout-25-server}
+
+Figura \ref{fig:experiment-timeout-25-client}
+
+Figura \ref{fig:experiment-timeout-25-server}
 
 En cambio si ponemos en el proceso servidor un delay de 26 mediante un sleep(26) en el medio de la comunicación:
-\ref{experiment-timeout-26}
+Ver Figura \ref{fig:experiment-timeout-26}
 Entonces la comunicación se corta por parte del cliente y la llamada no se completa:
-\ref{experiment-timeout-26-client}
-\ref{experiment-timeout-26-server} 
+
+Ver Figura \ref{fig:experiment-timeout-26-client}
+
+Ver Figura \ref{fig:experiment-timeout-26-server} 
 
 Mediante estos resultados podemos afirmar que el timeout definido en el proceso cliente es el 25 segundos, por los que si el proceso servidor o la comunicación tardan más de ese tiempo entonces el cliente finalizará la comunicación abruptamente dando por sentado una falla en la misma.
 Esto lo podemos corroborar en el codigo de llamada al proceso por parte del cliente:
-\ref{client-timeout}
+
+Ver Figura \ref{fig:client-timeout}
 
 \subsection{A.2}
 También utilizaremos para calcular el promedio de una llamada rpc el caso 1-simple. Cambiaremos el codigo del cliente de tal manera que solo llame a un proceso remoto y agregaremos una función para calcular el tiempo que tarda la llamada al proceso remoto:
 Funcion para calcular el tiempo:
-\begin{lstlisting}
-double dwalltime (){
-  double sec;
-  struct timeval tv;
-  gettimeofday(&tv,NULL);
-  sec=tv.tv_sec + tv.tv_usec /1000000.0;
-  return sec;
-}
-\end{lstlisting}
+\lstinputlisting[language=C]{code/dwalltime.c}
 
 Llamada a proceso remoto:
-\begin{lstlisting}
-  /* get the 2 numbers that should be added */
-  x = atoi(argv[2]);
-  y = atoi(argv[3]);
+\lstinputlisting[language=C]{code/time.c}
 
-  double time = dwalltime();
-  printf("%d + %d = %d\n",x,y, add(clnt,x,y));
-  printf("%g \n" ,dwalltime() - time);
- 
-
-  return(0);
-\end{lstlisting} 
-
-Se ejecutó 50 veces el proceso cliente con los siguientes resultados: 
-
-0.000288963
-0.000247002
-0.000273943
-0.000135899
-0.000260115
-0.000271082
-0.000247955
-0.000322104
-0.00015521
-0.000272989
-0.000265121
-0.000277042
-0.000202179
-0.000264883
-0.000272989
-0.00028801
-0.000247955
-0.000257015
-0.000270844
-0.000267029
-0.000267982
-0.000257969
-0.000261068
-0.00027895
-0.000280142
-0.000283957
-0.000282764
-0.000194073
-0.000265837
-0.000252008
-0.000263929
-0.000252962
-0.000270128
-0.000262022
-0.000276089
-0.000256062
-0.00026989
-0.000192881
-0.000282049
-0.000222921
-0.00019002
-0.000277996
-0.000178099
-0.000316143
-0.000213146
-0.000187159
-0.000271082
-0.000237942
-0.000293016
-0.000289917
----------------------
-Sum: 0.012716532
-Average: 0.00025433064
+Se ejecutó 50 veces el proceso cliente, el resultado se puede ver en el apendice \ref{50-times-client}
 Este es el tiempo que tardó la llamada en 50 ejecuciones distintas. Debajo, la suma y el promedio de ellas, todo expresado en segundos.
 
 \subsection{B}
@@ -823,201 +764,189 @@ Y se ejecutó 10 veces el cliente, haciendo por lo tanto 10 llamadas remotas, pe
 
 \newpage
 \onecolumn
-\appendix
-\section{Punto 1}
-\subsection{A}
+\appendix{Código C}
+\subsection{Punto 1}
 \label{local-procedures}
-\begin{lstlisting}
-#include <stdio.h>
-#include <stdlib.h>
+\lstinputlisting[language=C, firstline=13]{code/simp.c}
 
-int add( int x, int y ) {
-  return(x+y);     /* Note the use of the '+' operator to achieve addition! */
-}
+\subsection{Punto 4}
+\subsubsection{Definicion}
+\label{punto-4-definicion}
+\lstinputlisting[language=C]{../src/5-ftp/ftp.x}
 
-int subtract( int x, int y ) {
-  return(x-y);     /* This is a little harder, we have to use '-' */
-}
+\subsubsection{Cliente}
+\label{punto-4-cliente}
+\lstinputlisting[language=C]{../src/5-ftp/ftpclient.c}
+\lstinputlisting[language=C]{../src/5-ftp/commands.c}
 
+\subsubsection{Servidor}
+\label{punto-4-servidor}
+\lstinputlisting[language=C]{../src/5-ftp/ftpservice.c}
 
-int main( int argc, char *argv[]) {
+\subsection{Punto 5}
 
-  int x,y;
+\label{50-times-client}
+\lstinputlisting{code/50-times}
 
-  if (argc!=3) {
-    fprintf(stderr,"Usage: simp num1 num\n");
-    fprintf(stderr,"       num1 and num2 must be integer values (for now)\n");
-    fprintf(stderr,"       Floating point arithmetic is coming soon - preregister now and\n");
-    fprintf(stderr,"       receive our new integrated multiplication program at no extra cost!\n");
-    exit(0);
-  }
+\subsection{Figuras}
 
-  x = atoi(argv[1]);
-  y = atoi(argv[2]);
-
-  printf("%d + %d = %d\n",x,y,add(x,y));
-  printf("%d - %d = %d\n",x,y,subtract(x,y));
-  return(0);
-}
-\end{lstlisting}
-
-\subsection{B}
-
-\label{1-simple-client}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/1-simple-client.png}
-\caption{Simple client\label{client}}
+\caption{Simple client}
+\label{fig:1-simple-client}
 \end{figure}
 
-\label{1-simple-server}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/1-simple-server.png}
-\caption{Simple server\label{server}}
+\caption{Simple server}
+\label{fig:1-simple-server}
 \end{figure}
 
-\label{2-ui-client}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/2-ui-client.png}
-\caption{UI client\label{client}}
+\caption{UI client}
+\label{fig:2-ui-client}
 \end{figure}
 
-\label{3-array-client}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/3-array-client.png}
-\caption{Array client\label{client}}
+\caption{Array client}
+\label{fig:3-array-client}
 \end{figure}
 
-\label{3-array-server}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/3-array-server.png}
-\caption{Array server\label{server}}
+\caption{Array server}
+\label{fig:3-array-server}
 \end{figure}
 
-\label{4-list-client}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/4-list-client.png}
-\caption{List client\label{client}}
+\caption{List client}
+\label{fig:4-list-client}
 \end{figure}
 
-\label{4-list-server}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/4-list-server.png}
-\caption{List server\label{server}}
+\caption{List server}
+\label{fig:4-list-server}
 \end{figure}
 
-\subsection{C}
-
-\label{udp-client}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/udp-client.png}
-\caption{UDP client\label{udp client}}
+\caption{UDP client}
+\label{fig:udp-client}
 \end{figure}
 
-\label{exit-to-server}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/exit-to-server.png}
-\caption{Server exit\label{server exit}}
+\caption{Server exit}
+\label{fig:exit-to-server}
 \end{figure}
 
-\label{server-trouble}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/server-trouble.png}
-\caption{server trouble\label{server trouble}}
+\caption{server trouble}
+\label{fig:server-trouble}
 \end{figure}
 
-\label{client-timeout}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/client-timeout.png}
-\caption{Client timeout\label{client timeout}}
+\caption{Client timeout}
+\label{fig:client-timeout}
 \end{figure}
 
-\label{client-trouble}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/client-trouble.png}
-\caption{Client trouble\label{Client trouble}}
+\caption{Client trouble}
+\label{fig:client-trouble}
 \end{figure}
 
-\label{server-sleep}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/server-sleep.png}
-\caption{Server sleep\label{Server sleep}}
+\caption{Server sleep}
+\label{fig:server-sleep}
 \end{figure}
 
-\label{server-waitig}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/server-waiting.png}
-\caption{Server waiting\label{Server waiting}}
+\caption{Server waiting}
+\label{fig:server-waiting}
 \end{figure}
 
-\label{tcp-client}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/tcp-client.png}
-\caption{TCP client\label{tcp client}}
+\caption{TCP client}
+\label{fig:tcp-client}
 \end{figure}
 
 
 \section{Punto 2}
 
-\label{error-multi}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/error-muli.png}
-\caption{Servidor\label{Servidor}}
+\caption{Servidor}
+\label{fig:error-multi}
 \end{figure}
-
-\label{punto-4}
-\section{Punto 4}
 
 \section{Punto 5}
 
-\label{experiment-timeout25}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/experiment-timeout25.png}
-\caption{Experiment timeout \label{Experiment-timeout}}
+\caption{Experiment timeout}
+\label{fig:experiment-timeout-25}
 \end{figure}
 
-\label{experiment-timeout25-client}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/experiment-timeout25-client.png}
-\caption{Experiment timeout client1\label{Client1}}
+\caption{Experiment timeout client1}
+\label{fig:experiment-timeout-25-client}
 \end{figure}
 
-\label{experiment-timeout25-server}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/experiment-timeout25-server.png}
-\caption{Experiment timeout server1\label{Server1}}
+\caption{Experiment timeout server1}
+\label{fig:experiment-timeout-25-server}
 \end{figure}
 
-\label{experiment-timeout26-client}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/experiment-timeout26.png}
+\caption{Experiment timeout}
+\label{fig:experiment-timeout-26}
+\end{figure}
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/experiment-timeout26-client.png}
-\caption{Experiment timeout client2\label{Client2}}
+\caption{Experiment timeout client2}
+\label{fig:experiment-timeout-26-client}
 \end{figure}
 
-\label{experiment-timeout26-server}
 \begin{figure}[H]
 \centering
 \includegraphics[width=125mm]{capturas/experiment-timeout26-server.png}
-\caption{Experiment timeout serve2\label{Server2}}
+\caption{Experiment timeout serve2}
+\label{fig:experiment-timeout-26-server}
 \end{figure}
 
 \ifCLASSOPTIONcaptionsoff

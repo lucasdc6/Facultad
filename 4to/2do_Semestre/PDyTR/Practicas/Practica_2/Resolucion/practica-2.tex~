@@ -83,6 +83,7 @@
 \usepackage{listings}
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage[svgnames]{xcolor}
 \hypersetup{
   colorlinks=false,
@@ -529,7 +530,7 @@ pdfkeywords={Programación Distribuida y Tiempo Real, c, java, LaTeX, sockets}}
 
 
 \begin{document}
-\title{Práctica 1\\Programación Distribuida y Tiempo Real}
+\title{Práctica 2\\Programación Distribuida y Tiempo Real}
 %
 %
 % author names and IEEE memberships
@@ -611,12 +612,12 @@ pdfkeywords={Programación Distribuida y Tiempo Real, c, java, LaTeX, sockets}}
 % in the abstract or keywords.
 \IEEEtitleabstractindextext{%
 \begin{abstract}
-Introducción a Sockets en C y Java.
+RPC - Introducción.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-Programación Distribuida y Tiempo Real, c, java, \LaTeX, sockets
+Programación Distribuida y Tiempo Real, c, \LaTeX, rpc
 \end{IEEEkeywords}}
 
 
@@ -646,308 +647,377 @@ Programación Distribuida y Tiempo Real, c, java, \LaTeX, sockets
 % creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
 
-
-
 \section{Punto 1}
-\textit{Identifique similitudes y diferencias entre los sockets en C y en Java.}\\\\
-Como primer pantallazo a los lenguajes, tenemos lo siguiente.
-En C, se utilizará la librería estándar \textbf{"socket.h"}, mientras que en Java,
-se va a utilizarán los paquetes \textbf{"java.net"}, aunque utilizando ciertos
-paquetes para la interacción con el socket, provenientes de la librería
-\textbf{"java.io"}, utilizando las clases \textbf{InputStream} y \textbf{OutputStream}
+\subsection{A}
+Si los procedimientos fuesen locales estarían todos dentro de un mismo archivo como cualquier otro programa "común" de C.
+Como se muestra en \ref{error-multi}
+No habría latencia en la comunicación ni perdida de comunicación ya que no habría comunicación alguna con ningún host server/client (sin tener en cuenta el SO local); todas las llamadas se harían dentro del mismo espacio de direcciones.
 
-\subsection{Similitudes y diferencias entre C y Java}
-Como primera y más grande diferencia entre ambos lenguajes, se puede remarcar la diferenciación
-entre "socket cliente" y "socket servidor", planteado por la librería de java. Lo que no sucede en C.
+\subsection{B}
+Capturas de las salidas de tanto los clientes como los servidores de cada uno de los casos:
 
-Para iniciar un socket en java, en modo servidor, se utiliza la clase \textbf{ServerSocket}, mientras que para iniciar uno en modo cliente, se utiliza la clase \textbf{Socket}.
+Caso 1: \ref{1-simple-client}
+           \ref{1-simple-server}
 
-En C, ambas creaciones quedan bajo la responsabilidad de la función \textbf{Socket()}, solo que para diferenciar el socket, el servidor debe "bindear" y quedarse a la espera de datos. Esto lo hace usando \textbf{Bind()} y \textbf{Listen()} respectivamente.
+Caso 2: \ref{2-ui-client}
+           No sacamos captura del server ui, no habia output en este caso
 
-El cliente, se conectará a un socket utilizando la función \textbf{Connect()}
+Caso 3: \ref{3-array-client}
+           \ref{3-array-server}
+
+Caso 4: \ref{4-list-client}
+           \ref{4-list-server} 
+
+\subsection{C}
+
+Con UDP \ref{udp-client}:
+Vemos que al poner en el server en el medio de la comunicación un mensaje de exit \ref{exit-to-server}, el servidor termina bruscamente en el medio de la operación \ref{server-trouble}; entonces el cliente, al terminar el timeout definido en su proceso \ref{client-timeout}, termina la comunicacion, tal como se ve en esta captura de la ejecución del cliente \ref{client-trouble}.
+Lo mismo pasa si en vez de terminar su proceso el servidor tarda mucho en procesar lo pedido, lo que simularemos con un mensaje de sleep dentro del proceso servidor \ref{server-sleep} de tal manera que el sleep tenga una duracion mayor a la definida en el timeout del cliente; entonces como el servidor no da su respuesta antes que termine el timeout, el cliente cerrará la conexión \ref{client-trouble}. En este caso el servidor, a diferencia de con el mensaje exit, serguirá su ejecución esperando el próximo request \ref{server-waiting}.
+
+Con TCP \ref{tcp-client} el resultado es exactamente el mismo tanto cuando el servidor termina su ejecución en medio de la comunicación (agregando el mensaje exit) como cuando tarda más de lo debido (agregando mensaje sleep)
 
 \section{Punto 2}
-\textit{Tanto en C como en Java (directorios csock-javasock)}
-\subsection{Inciso A}
-\textit{¿Por qué puede decirse que los ejemplos no son representativos del modelo c/s?}
+\subsection{A}
+El flag -N intenta de generar código en un estándar más nuevo que el ANSI (flag -C).
+Al intentar compilar el código con ese flag, utilizando el código original, falla.
+Esto se debe a que rcpgen, genera un .h las funciones con el tipo SIN puntero, a diferencia del flag -C, que los genera como punteros a operand.
 
-En cliente-servidor el servidor está continuamente esperando alguna conexion por parte de algún cliente, en este caso el servidor cierra la conexion al recibir el primer request y enviar la respuesta. El cliente no usa la respuesta recibida por el servidor, en cambio el servidor si usa lo enviado por el cliente y realiza acciones con esos datos que no tienen que ver con la respuesta a la petición (aunque se sobreentiende que es para mostrar el ejemplo).
-Tampoco se respetan los pasos de conexión: inicialización, envío/recepción de peticiones y finalización; en el ejemplo solo le hace el segundo paso, no existe handshake con el servidor o mensajes de finalización de conexión. Es más un ejemplo de conexión entre procesos usando sockets que de client/servidor puro.
+\subsection{B}
+El flag -M sirve para generar código seguro para la concurrencia, utilizando un paŕametro extra al servicio, de tipo int*.
 
-\subsection{Inciso B}
-\textit{Muestre que no necesariamente siempre se leen/escriben todos los datos involucrados en
-las comunicaciones con una llamada read/write con sockets.}
-\subsubsection{csock}
-Se modificó el programa para aceptar varios tamaños de buffer (Ver apéndice A)
-Para probarlo rápidamente, se presenta la regla en make, lo que generará clientes y servidores que envian y reciben bytes
+El flag -A, es flag por default, que dependiendo el sistema en el que se compila, va a ser (o no), seguro para la concurrencia multihilo.
 
-En este caso, la cantidad máxima de caracteres que se llegaron a leer fue de 
-
-\lstinputlisting[language=bash]{code-examples/make_example}
-
-Para ver el código, se puede ír al \hyperref[punto2b]{Apéndice, subsección "Punto 2-B"}
-
-\subsection{Inciso C}
-\textit{Agregue a la modificación anterior una verificación de llegada correcta de los datos que se
-envían (cantidad y contenido del buffer), de forma tal que se asegure que todos los datos
-enviados llegan correctamente, independientemente de la cantidad de datos
-involucrados.}
-
-Se implementó un chequeo por la correcta llegada de los datos al proceso server, tanto en cantidad como el contenido.
-Para el chequeo de cantidad se hizo que el cliente, primero que nada, envíe la cantidad total de datos que va a enviar y luego envíe los datos aguardando una respuesta por parte del server; el server por su parte, primero recibirá la cantidad de datos que se van a enviar y luego, cuando realmente se reciban los datos comparará esa cantidad recibida al inicio con la cantidad de datos recibidos. Si la cantidad es igual quiere decir que los datos se recibieron correctamente (al menos en cantidad), y enviará un mensaje al cliente indicando que los datos llegaron bien y no debe enviar más; en cambio si la cantidad no es igual quiere decir que no se recibieron todos los datos, por lo que enviará al cliente un mensaje indicando que debe enviar más  y la cantidad de datos recibidos hasta el momento. Así el cliente dependiendo de la respueta del servidor o terminará la comunicación o enviará los datos faltantes comenzando de nuevo el ciclo.
-Para el chequeo de contenido el cliente enviará un checksum de los datos a enviar. El servidor, luego de recibir todos los datos, comparará el checksum recibido por el cliente con el generado por el mismo (usando la misma función que el cliente). Si ambos checksums son iguales quiere decir que los datos no fueron corrompidos en la comunicación, en cambio si son distintos los datos fueron corrompidos (sufrieron alguna modificación en la comunicación).
-
-Para ver el código, se puede ír al \hyperref[punto2b]{Apéndice, subsección "Punto 2-B"}
-
-Para ver capturas de la ejecución de los programas, puede ir al
-\hyperref[capturas]{Apéndice de capturas}
-
-\subsection{Inciso D}
-\textit{Grafique el promedio y la desviación estándar de los tiempos de comunicaciones de cada
-comunicación. Explique el experimento realizado para calcular el tiempo de
-comunicaciones.}\\\\
-Para este punto, se plantea calcular los tiempos de la comunicaciónes, esto quiere decir,
-el tiempo que tarda el cliente en establecer la conexión con el servidor, una vez establecida,
-se contempla el envío de los datos por parte del cliente, y la recepción por parte del servidor.
-Una vez terminado todo este flujo, se puede dar por concluída la comunicación.
-
-El contéo del tiempo se realizó del lado del \textbf{cliente}.\\
-Para tomar los datos para realizar el promedio y la desviación estándar de cada tamaño de buffer,
-se cuenta con un script en el mismo directorio de csock llamado \textit{get\_data}
-Dicho script ejecutara repetídas veces la conexión cliente-servidor y volcará los tiempos en un archivo
-en el mismo directorio, llamado \textbf{buffer\_[BUFFER\_SIZE]\_data}, donde \textbf{BUFFER\_SIZE} es el tamaño
-del buffer con el que se corrió dicho script.
-
-El script acepta 2 paŕametros:
-\begin{enumerate}
-  \item Cantidad de iteraciones a realizar - Por defecto en 10
-  \item Tamaño del buffer a testear - Por defecto en $10^{3}$
-\end{enumerate}
-
-En el \hyperref[appendixC]{apéndice C}, se pueden encontrar archivos de datos de buffers de tamaños
-$10^{3}$, $10^{4}$, $10^{5}$ y $10^{6}$
+\ref{error-multi}
 
 \section{Punto 3}
-\textit{¿Por qué en C se puede usar la misma variable tanto para leer de teclado como para
-enviar por un socket? ¿Esto sería relevante para las aplicaciones c/s?}
-\subsection{Comunicación mediante sockets\\Tipos}
-En un programa C, para el envío de datos por un socket, se puede utilizar cualquier variable de tipo puntero.
-Con esto, se entiende que se puede utilizar hasta la misma variable que se utilizó para leer desde teclado
-(tipi char*).\\
-Todo puntero en C, puede utilizarse de dos maneras.
+rpcgen utiliza la estructura definida en el archivo .x para generar estructuras C en ambos puntos (cliente y servidor), con las cuales va a trabajar casteando.
 
-\begin{itemize}
-  \item Manera estática:
-  \lstinputlisting[language=C]{code-examples/static-mem.c}
-  Manejando memoria de manera estática, nos ahorramos el alocado de la memoria
-  previo al uso, simplificando el código.
-  Las principales desventajas son que si se necesita más de 256 caracteres, va a ser necesario
-  cambiar de variable, y que de utilizar solamente 1 caracter, se tiene \textbf{siempre} alocado
-  para 256 caracteres.
-  La alternatica es utilizar memoria dinámica.\\
-
-  \item Manera dinámica:
-  \lstinputlisting[language=C]{code-examples/dynamic-mem.c}
-
-  En este caso va a ser necesario llamar a alguna de las funcionas para alocado de memoria antes
-  de utilizar la variable. De no hacer, generará errores.
-  
-  La principal ventaja de utilizar memoria de esta manera, es la posibilidad de realocar su espacio
-  en cualquier momento.
-  
-  Como principal desventaja es que se le complejidad al código.
-\end{itemize}
-
-Luego, el socket acepta como buffer una variable de tipo \textbf{void*}, lo que significa que se le puede
-enviar un puntero a cualquier tipo. El mayor problema que puede taer esto es que, como son bytes,
-el cliente no sepa como interpretarlos.
+El servicio recibe punteros a estas estructuras, las cuales va a trabajar y retornar nuevamente casteando a (caddr\_t), el cual es equivalente a un void*
+Esto nos permite trabajar con cualquier tipo de C, siempre volviendo a castear a la estructura definida a partir del .x
 
 \section{Punto 4}
 
-\textit{¿Podría implementar un servidor de archivos remotos utilizando sockets?\\Describa
-brevemente la interfaz y los detalles que considere más importantes del diseño.}\\
+Para este punto, se implementaron las funciones básicas, \texttt{write|add}, \texttt{read|get} y \texttt{list|ls}
 
-No solo sería posible, sino que ya existen 2 protocolos para envio de archivos por la red.
-
-Estos protocolos se diferencian en, orientado a la conexion \textbf{FTP} o no orientado a la
-conexion \textbf{TFTP}.
-
-\subsection{FTP}
-Un servidor FTP se podría implementar utilizando 2 sockets para el servidor, uno utilizado para los datos,
-y otro utilizado para el control. (Puertos 20 y 21 en el estándar, respectivamente).
-Ambos socket deben ser del tipo TCP.\\
-Se cuenta con instrucciónes específicas (muy similares a las de linux) para el uso de los archivos, como por ejemplo:
-\begin{itemize}
-  \item \textbf{ls:} Lista los archivos.
-  \item \textbf{cd:} Cambia de directorio.
-  \item \textbf{close:} Cierra la conexión con el servidor remoto (TCP FIN).
-  \item \textbf{delete:} Elimina un archivo.
-  \item \textbf{get:} Baja un archivo.
-  \item \textbf{mkdir:} Crea un directorio.
-\end{itemize}
-Entre otras instrucciones.\\
-\textit{Todas las acciones se ejecutan \textbf{sobre} el filesystem del servidor remoto FTP.}
-
-
-\subsection{TFTP}
-Un servidor TFTP utiliza solamente un socket, para realizar la conexión, del tipo UDP.
-Cuenta con un conjunto de instrucciones mucho más reducido que el servidor FTP.
-
-\subsection{Implementación propia}
-Para la implementación de un servidor básico, pensaría en un grupo de comandos similar al FTP,
-pero acotado tanto en cantidad, como en seguridad de cada una.
-
-Para seguir completamente un cliente FTP, como se dijo anteriormente, es necesario realizar una
-conexión TCP completa, eso quiere decir, con un saludo de 3 vías, y un cierre también de 3 vías.
-
-Como instrucciones iniciales, pensaría las siguientes:
-
-\begin{itemize}
-  \item \textbf{ls:} Lista los archivos.
-  \item \textbf{add:} Agregar un archivo.
-  \item \textbf{get:} Baja un archivo.
-  \item \textbf{delete:} Elimina un archivo.
-\end{itemize}
-
-Para el manejo de los comandos el servidor tiene que manejar 2 instancias.
-La primer instancia es la de comandos.\\
-El servidor, en principio, se encuentra a la espera de alguno de los comandos
-dichos anteriormente. Cualquier palabra diferente de los comandos va a dar un
-mensaje de 'comando no reconocido'.
-
-Luego, cada comando deberá reconocer las acciones a realizar luego.
-
-\textit{Nota: para simplificar el funcionamiento del servidor, se asume un
-\textbf{único} directorio.}
-
-\subsubsection{LS - Listar archivos}
-
-En principio, este comando no representa mayores problemas.
-Desde el cliente se le manda la palabra \texttt{ls} o \texttt{list}.
-
-Luego, el servidor contesta con la lista de archivos que tiene.
-El listado de archivos lo puede obtener mediante la función \texttt{readdir}
-Previamente abriento el directorio con la función \texttt{opendir}
-Se debe verificar el tamaño de los datos enviados desde el servidor para 
-asgurarse que lleguen todos.
-
-\subsubsection{ADD - Agregar un archivo}
-
-Este puede ser el comando más complejo de implementar de la lista.
-Luegamente, en primer instancia se manda el nombre del comando, junto con el
-path relativo al archivo a subir.
-
-Desde el cliente, se verifica la existencia del archivo y, de existir, lo abre.
-Luego comprueba el tamaño del archivo y lo envía al servidor.
-Para comprobar la integridad del archivo, se envía por último un \textit{checksum},
-el cual el servidor debe contrastar contra un checksum del archivo que le llegó.
-
-\subsubsection{GET - Baja un archivo}
-
-Este comando presenta una complejidad similar al anterior, pero ahora la carga se presenta
-del lado del servidor.
-
-En primer instancia, el cliente manda la palabra \texttt{get}, seguida del nombre del archivo a bajar.
-
-El servidor comprueba la existencia del archivo, de no existir lo informa, de existir,
-primero abre el archivo y comprueba su tamaño. Luego genera un checksum del archivo.
-Por último, envía el archivo y el checksum por el socket.
-
-\subsubsection{DELETE - Elimina un archivo}
-
-En primera instancia, el cliente envía la palabra \texttt{delete}, seguído del nombre del archivo a eliminar.
-
-El servidor comprueba que exista el archivo, y lo elimina.
-
-En este comando no es necesario comprobar el tamaño del nombre del archivo dado que el \textbf{máximo}
-path admitido en linux es de 4096 (definido por la variable \texttt{PATH\_MAX}, en \texttt{linux/limits.h})
+Como primera instancia, se definió nuestro archivo \texttt{.x}, disponible para ver en el apéndice \ref{punto-4}
 
 \section{Punto 5}
-\textit{Defina qué es un servidor con estado (\textbf{stateful server}) y qué es un servidor sin estado
-(\textbf{stateless server}).}\\
+\subsection{A}
+\subsection{A.1}
+Para el experimento del timeout usaremos el caso 1-simple. 
+Vemos que si ponemos en el proceso servidor un delay de 25 mediante un sleep(25) en el medio de la comunicación:
+\ref{experiment-timeout-25}
+Entonces la comunicación se realiza exitosamente y la llamada al proceso remoto termina de forma correcta:
+\ref{experiment-timeout-25-client}
+\ref{experiment-timeout-25-server}
 
-\subsection{Servidor con estado}
-Un servidor con estado, es aquel que recuerda el estado en el que habia quedado el sistema
-en la anterior conexión de un cliente, sin la necesidad de mantener la conexión.
-Esto quiere decir, por ejemplo, un servidor con estado es aquel que puede mantener una 
-página web por ejemplo.
+En cambio si ponemos en el proceso servidor un delay de 26 mediante un sleep(26) en el medio de la comunicación:
+\ref{experiment-timeout-26}
+Entonces la comunicación se corta por parte del cliente y la llamada no se completa:
+\ref{experiment-timeout-26-client}
+\ref{experiment-timeout-26-server} 
 
-\subsection{Servidor sin estado}
-Un servidor sin estado, es aquel que no almacena el estado entre conexiones de un cliente.
-Esto quiere decir, que el servidor \textbf{siempre} arranca en el mismo estado para todas las
-conexiones.
+Mediante estos resultados podemos afirmar que el timeout definido en el proceso cliente es el 25 segundos, por los que si el proceso servidor o la comunicación tardan más de ese tiempo entonces el cliente finalizará la comunicación abruptamente dando por sentado una falla en la misma.
+Esto lo podemos corroborar en el codigo de llamada al proceso por parte del cliente:
+\ref{client-timeout}
+
+\subsection{A.2}
+También utilizaremos para calcular el promedio de una llamada rpc el caso 1-simple. Cambiaremos el codigo del cliente de tal manera que solo llame a un proceso remoto y agregaremos una función para calcular el tiempo que tarda la llamada al proceso remoto:
+Funcion para calcular el tiempo:
+\begin{lstlisting}
+double dwalltime (){
+  double sec;
+  struct timeval tv;
+  gettimeofday(&tv,NULL);
+  sec=tv.tv_sec + tv.tv_usec /1000000.0;
+  return sec;
+}
+\end{lstlisting}
+
+Llamada a proceso remoto:
+\begin{lstlisting}
+  /* get the 2 numbers that should be added */
+  x = atoi(argv[2]);
+  y = atoi(argv[3]);
+
+  double time = dwalltime();
+  printf("%d + %d = %d\n",x,y, add(clnt,x,y));
+  printf("%g \n" ,dwalltime() - time);
+ 
+
+  return(0);
+\end{lstlisting} 
+
+Se ejecutó 50 veces el proceso cliente con los siguientes resultados: 
+
+0.000288963
+0.000247002
+0.000273943
+0.000135899
+0.000260115
+0.000271082
+0.000247955
+0.000322104
+0.00015521
+0.000272989
+0.000265121
+0.000277042
+0.000202179
+0.000264883
+0.000272989
+0.00028801
+0.000247955
+0.000257015
+0.000270844
+0.000267029
+0.000267982
+0.000257969
+0.000261068
+0.00027895
+0.000280142
+0.000283957
+0.000282764
+0.000194073
+0.000265837
+0.000252008
+0.000263929
+0.000252962
+0.000270128
+0.000262022
+0.000276089
+0.000256062
+0.00026989
+0.000192881
+0.000282049
+0.000222921
+0.00019002
+0.000277996
+0.000178099
+0.000316143
+0.000213146
+0.000187159
+0.000271082
+0.000237942
+0.000293016
+0.000289917
+---------------------
+Sum: 0.012716532
+Average: 0.00025433064
+Este es el tiempo que tardó la llamada en 50 ejecuciones distintas. Debajo, la suma y el promedio de ellas, todo expresado en segundos.
+
+\subsection{B}
+Teniendo en cuenta los datos del inciso anterior, se redujo el timeout del proceso cliente del caso 1-simple un 10\% menos que el promedio encontrado (0.00025433064 - 0.00025433064*10/100 = 0.00022889757):
+
+\label{reduced-timeout}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/reduced-timeout.png}
+\caption{Experiment reduced timeout\label{Reduced timeout}}
+\end{figure}
+
+
+Y se ejecutó 10 veces el cliente, haciendo por lo tanto 10 llamadas remotas, pero al parecer el struct TIMEOUT no permite floats, por lo que todo lo menor a 1 será tomado como 0 y ninguna llamada será menor al tiempo de timeout.
+
+\subsection{C}
+
 
 \newpage
 \onecolumn
+\appendix
+\section{Punto 1}
+\subsection{A}
+\label{local-procedures}
+\begin{lstlisting}
+#include <stdio.h>
+#include <stdlib.h>
 
-\appendices
-\section{Código C}
-\label{appendixA}
-Se presentarán secciones del código C de principal relevancia.\\
-Cambios planteados al cliente de csock - \texttt{csock/client.c}\\
+int add( int x, int y ) {
+  return(x+y);     /* Note the use of the '+' operator to achieve addition! */
+}
 
-\subsection{Punto 2-B}
-\label{punto2b}
+int subtract( int x, int y ) {
+  return(x-y);     /* This is a little harder, we have to use '-' */
+}
 
-\subsubsection{Cliente}
 
-\lstinputlisting[language=C]{../csock/clientv1.c}
+int main( int argc, char *argv[]) {
 
-\subsubsection{Servidor}
+  int x,y;
 
-\lstinputlisting[language=C]{../csock/serverv1.c}
+  if (argc!=3) {
+    fprintf(stderr,"Usage: simp num1 num\n");
+    fprintf(stderr,"       num1 and num2 must be integer values (for now)\n");
+    fprintf(stderr,"       Floating point arithmetic is coming soon - preregister now and\n");
+    fprintf(stderr,"       receive our new integrated multiplication program at no extra cost!\n");
+    exit(0);
+  }
 
-\subsection{Punto 2-C}
-\label{punto2c}
+  x = atoi(argv[1]);
+  y = atoi(argv[2]);
 
-\subsubsection{Cliente}
+  printf("%d + %d = %d\n",x,y,add(x,y));
+  printf("%d - %d = %d\n",x,y,subtract(x,y));
+  return(0);
+}
+\end{lstlisting}
 
-\lstinputlisting[language=C]{../csock/client.c}
+\subsection{B}
 
-\subsubsection{Servidor}
-
-\lstinputlisting[language=C]{../csock/serverv1.c}
-
-\noindent\rule{\textwidth}{1pt}
-
-\noindent
-Cambios planteados al servidor de csock - \texttt{csock/server.c}\\
-
-\lstinputlisting[language=C]{../csock/server.c}
-
-\section{Código Java}
-\hyperref[appendixA]{Al código C}\\
-Se presentarán secciones del código Java de principal relevancia.
-\lstinputlisting[language=Java, firstline=9]{../javasock/Client.java}
-
-\section{Datos leídos}
-\label{appendixC}
-
-\textbf{Datos del buffer $10^{3}$:}
-\lstinputlisting{../csock/data/buffer_1000_data}
-
-\noindent \textbf{Datos del buffer $10^{4}$:}
-\lstinputlisting{../csock/data/buffer_10000_data}
-
-\noindent \textbf{Datos del buffer $10^{5}$:}
-\lstinputlisting{../csock/data/buffer_100000_data}
-
-\noindent \textbf{Datos del buffer $10^{6}$:}
-\lstinputlisting{../csock/data/buffer_1000000_data}
-
-\section{Capturas}
-\label{capturas}
-
-\begin{figure}[ht!]
+\label{1-simple-client}
+\begin{figure}[H]
 \centering
-\includegraphics[width=125mm]{capturas/server.png}
+\includegraphics[width=125mm]{capturas/1-simple-client.png}
+\caption{Simple client\label{client}}
+\end{figure}
+
+\label{1-simple-server}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/1-simple-server.png}
+\caption{Simple server\label{server}}
+\end{figure}
+
+\label{2-ui-client}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/2-ui-client.png}
+\caption{UI client\label{client}}
+\end{figure}
+
+\label{3-array-client}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/3-array-client.png}
+\caption{Array client\label{client}}
+\end{figure}
+
+\label{3-array-server}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/3-array-server.png}
+\caption{Array server\label{server}}
+\end{figure}
+
+\label{4-list-client}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/4-list-client.png}
+\caption{List client\label{client}}
+\end{figure}
+
+\label{4-list-server}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/4-list-server.png}
+\caption{List server\label{server}}
+\end{figure}
+
+\subsection{C}
+
+\label{udp-client}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/udp-client.png}
+\caption{UDP client\label{udp client}}
+\end{figure}
+
+\label{exit-to-server}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/exit-to-server.png}
+\caption{Server exit\label{server exit}}
+\end{figure}
+
+\label{server-trouble}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/server-trouble.png}
+\caption{server trouble\label{server trouble}}
+\end{figure}
+
+\label{client-timeout}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/client-timeout.png}
+\caption{Client timeout\label{client timeout}}
+\end{figure}
+
+\label{client-trouble}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/client-trouble.png}
+\caption{Client trouble\label{Client trouble}}
+\end{figure}
+
+\label{server-sleep}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/server-sleep.png}
+\caption{Server sleep\label{Server sleep}}
+\end{figure}
+
+\label{server-waitig}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/server-waiting.png}
+\caption{Server waiting\label{Server waiting}}
+\end{figure}
+
+\label{tcp-client}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/tcp-client.png}
+\caption{TCP client\label{tcp client}}
+\end{figure}
+
+
+\section{Punto 2}
+
+\label{error-multi}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/error-muli.png}
 \caption{Servidor\label{Servidor}}
 \end{figure}
 
-\begin{figure}[ht!]
+\label{punto-4}
+\section{Punto 4}
+
+\section{Punto 5}
+
+\label{experiment-timeout25}
+\begin{figure}[H]
 \centering
-\includegraphics[width=125mm]{capturas/client.png}
-\caption{Cliente\label{Cliente}}
+\includegraphics[width=125mm]{capturas/experiment-timeout25.png}
+\caption{Experiment timeout \label{Experiment-timeout}}
+\end{figure}
+
+\label{experiment-timeout25-client}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/experiment-timeout25-client.png}
+\caption{Experiment timeout client1\label{Client1}}
+\end{figure}
+
+\label{experiment-timeout25-server}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/experiment-timeout25-server.png}
+\caption{Experiment timeout server1\label{Server1}}
+\end{figure}
+
+\label{experiment-timeout26-client}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/experiment-timeout26-client.png}
+\caption{Experiment timeout client2\label{Client2}}
+\end{figure}
+
+\label{experiment-timeout26-server}
+\begin{figure}[H]
+\centering
+\includegraphics[width=125mm]{capturas/experiment-timeout26-server.png}
+\caption{Experiment timeout serve2\label{Server2}}
 \end{figure}
 
 \ifCLASSOPTIONcaptionsoff

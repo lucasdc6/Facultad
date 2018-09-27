@@ -940,19 +940,13 @@ Se presentarán secciones del código Java de principal relevancia.
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=250mm]{capturas/server1.png}
-\caption{Servidor Parte 1\label{Servidor Parte 1}}
+\includegraphics[width=125mm]{capturas/server.png}
+\caption{Servidor\label{Servidor}}
 \end{figure}
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=250mm]{capturas/server2.png}
-\caption{Servidor Parte 2\label{Servidor Parte 2}}
-\end{figure}
-
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=100mm]{capturas/cliente.png}
+\includegraphics[width=125mm]{capturas/client.png}
 \caption{Cliente\label{Cliente}}
 \end{figure}
 
