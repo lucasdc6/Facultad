@@ -40,7 +40,11 @@ int main( int argc, char *argv[]) {
     exit(1);
   }
 
-  sleep_time(clnt,30);
+  struct timeval tv;
+  tv.tv_sec = 5;    /* change time-out to 5 seconds */
+  tv.tv_usec = 0;
+  clnt_control(clnt, CLSET_TIMEOUT, &tv);
+  sleep_time(clnt,6);
  
   return(0);
 }

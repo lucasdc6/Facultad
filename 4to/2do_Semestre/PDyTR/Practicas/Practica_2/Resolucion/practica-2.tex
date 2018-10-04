@@ -756,11 +756,55 @@ Teniendo en cuenta los datos del inciso anterior, se redujo el timeout del proce
 \caption{Experiment reduced timeout\label{Reduced timeout}}
 \end{figure}
 
-
 Y se ejecutó 10 veces el cliente, haciendo por lo tanto 10 llamadas remotas, pero al parecer el struct TIMEOUT no permite floats, por lo que todo lo menor a 1 será tomado como 0 y ninguna llamada será menor al tiempo de timeout.
 
 \subsection{C}
+Se realizó un cliente/servidor RCP en donde siempre se corta la comunicación por exceso de tiempo. Para ello se definió solo una función en el servidor, llamada sleep\_time, que recibe como parámetro la cantidad de segundo que esta función se quedará "dormida" antes de seguir con la ejecución, esto se implementó con la función sleep(). El cliente por su parte lo que hace es setear su tiempo de timeout en un valor determinado (5 segundos en nuestro ejemplo), y luego llamar a la función del servidor pasando como parámetro un valor mayor al seteado en su timeout (6 segundos en nuestro ejemplo). De esta forma nos aseguramos que el servidor tardará en ejecutar el proceso más tiempo que el definido en el timeout del cliente, por lo que la llamada siempre fallará.
+Parte codigo cliente:
+\begin{lstlisting}
+int main( int argc, char *argv[]) {
+  CLIENT *clnt;
+  if (argc!=2) {
+    fprintf(stderr,"Usage: %s hostname\n",argv[0]);
+    exit(0);
+  }
 
+  /* Create a CLIENT data structure that reference the RPC
+     procedure SIMP_PROG, version SIMP_VERSION running on the
+     host specified by the 1st command line arg. */
+
+  clnt = clnt_create(argv[1], SLEEPER_PROG, SLEEPER_VERSION, "tcp");
+
+  /* Make sure the create worked */
+  if (clnt == (CLIENT *) NULL) {
+    clnt_pcreateerror(argv[1]);
+    exit(1);
+  }
+  struct timeval tv;
+  tv.tv_sec = 5;    /* change time-out to 5 seconds */
+  tv.tv_usec = 0;
+  clnt_control(clnt, CLSET_TIMEOUT, &tv);
+  sleep_time(clnt,6);
+
+  return(0);
+}
+\end{lstlisting}
+
+Codigo servidor: 
+\begin{lstlisting}
+#include <stdio.h>
+#include "sleeper.h"
+
+int *
+sleep_time_1_svc(sleeping_time *argp, struct svc_req *rqstp){
+  static int  result;
+
+  sleep(argp->time);
+  result = argp->time;
+  
+  return (&result);
+}
+\end{lstlisting}
 
 \newpage
 \onecolumn
