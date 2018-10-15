@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
 public interface IfaceRemoteClass extends Remote
 {
     /* It will be possible to invoke this method from an application in other JVM */
-    public String read(String data) throws RemoteException;
+    public byte[] read(String data) throws RemoteException;
     public Boolean write(String path, byte[] data) throws RemoteException;
     public String list(String data) throws RemoteException;
 }

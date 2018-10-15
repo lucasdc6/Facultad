@@ -13,6 +13,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.nio.file.DirectoryStream;
+import java.security.*;
 
 /* This class implements the interface with remote methods */
 public class RemoteClass extends UnicastRemoteObject implements IfaceRemoteClass
@@ -24,15 +25,16 @@ public class RemoteClass extends UnicastRemoteObject implements IfaceRemoteClass
         super();
     }
     /* Remote method implementation */
-    public String read(String path) throws RemoteException
+    public byte[] read(String path) throws RemoteException
     {
         try {
-            String contents = new String(Files.readAllBytes(Paths.get(path)));
-            System.out.println(contents);
+            byte[] contents = Files.readAllBytes(Paths.get(path));
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            System.out.println(md5.digest(contents).toString());
             return contents;
         } catch(Exception e) {
             System.out.println(e);
-            return e.toString();
+            return null;
         }
     }
 
