@@ -11,8 +11,10 @@ import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 import java.nio.file.DirectoryStream;
+import java.util.Arrays;
+import java.nio.file.StandardOpenOption;
+import java.io.IOException;
 
 /* This class implements the interface with remote methods */
 public class RemoteClass extends UnicastRemoteObject implements IfaceRemoteClass
@@ -24,26 +26,44 @@ public class RemoteClass extends UnicastRemoteObject implements IfaceRemoteClass
         super();
     }
     /* Remote method implementation */
-    public String read(String path) throws RemoteException
+    public byte[] read(String path, int position) throws RemoteException
     {
         try {
-            String contents = new String(Files.readAllBytes(Paths.get(path)));
-            System.out.println(contents);
-            return contents;
+            byte[] contents = Files.readAllBytes(Paths.get(path));
+            int fileSize=contents.length;
+            contents=Arrays.copyOfRange(contents,position,fileSize);
+            byte fileEnd=1;
+            if (contents.length>1024){
+                contents=Arrays.copyOf(contents,1024);
+                fileEnd=0;
+            }
+            byte[] sizeAndContent=Arrays.copyOf(contents,contents.length+1);   
+            sizeAndContent[contents.length]=fileEnd;         
+            System.out.println(fileEnd);
+            return sizeAndContent;
         } catch(Exception e) {
             System.out.println(e);
-            return e.toString();
+            return new byte[0];
         }
     }
 
-    public Boolean write(String path, byte[] data) throws RemoteException
+    public int write(String path,byte[] data) throws RemoteException
     {
         try {
-            Files.write(Paths.get(path), data);
-            return true;            
+            if (data.length>1024)
+                data=Arrays.copyOf(data,1024);
+            try{
+                Files.write(Paths.get(path), data,StandardOpenOption.APPEND);
+            }
+            catch (IOException e) {
+                Files.createFile(Paths.get(path));
+                Files.write(Paths.get(path), data,StandardOpenOption.APPEND);
+            }
+            System.out.println(data.length);
+            return data.length;            
         } catch (Exception e) {
             System.out.println(e.toString());
-            return false;
+            return -1;
         }
     }
 
