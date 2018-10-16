@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+if [ "$1" == "-h" -o "$1" == "--help" ]; then
+  echo "Usage:"
+  echo -e "\trun [CANT]\n"
+  echo -e "Write to [NAME]\n"
+  exit 0
+fi
+
+LOOP=${1:-10}
+FILE=${2:-times}
+
+if [ -f $FILE ]; then
+  echo "$FILE already exists"
+  exit 1
+fi
+
+touch $FILE
+chmod 666 $FILE
+
+for ((i=1; i <= $LOOP; i++)); do
+  echo -e "Run $i/$LOOP"
+  java AskRemote localhost time >> $FILE
+done
+
+DS=`awk '{x+=$0;y+=$0^2}END{print sqrt(y/NR-(x/NR)^2)}' $FILE`
+MEDIA=`awk '{for(i=1;i<=NF;i++)s+=$i}END{print s}' $FILE`
+
+echo "===================" >> $FILE
+printf "Media: " >> $FILE
+echo $MEDIA >> $FILE
+printf "Desviacion estandar: " >> $FILE
+echo $DS >> $FILE
+

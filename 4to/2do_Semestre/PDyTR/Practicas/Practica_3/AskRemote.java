@@ -120,6 +120,16 @@ public class AskRemote{
                             else
                                 list(remote,args[2]);
                             break;
+                    case "time":
+                            long startTime = System.nanoTime();
+                            remote.time();
+                            long stopTime = System.nanoTime();
+                            System.out.println(stopTime - startTime);
+                            break;
+                    case "timeout":
+                            Boolean ret = remote.timeout();
+                            System.out.println(ret);
+                            break;    
                     default: System.out.println("Command unavailable");
                             break;
             }

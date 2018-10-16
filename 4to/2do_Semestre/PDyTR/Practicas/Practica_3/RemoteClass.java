@@ -10,9 +10,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
+import java.rmi.dgc.*;
 import java.nio.file.DirectoryStream;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import java.nio.file.StandardOpenOption;
 import java.io.IOException;
 
@@ -80,5 +81,20 @@ public class RemoteClass extends UnicastRemoteObject implements IfaceRemoteClass
             System.out.println(e);
             return e.toString();
         }
+    }
+
+    public Boolean time() throws RemoteException
+    {
+        return true;
+    }
+
+    public Boolean timeout() throws RemoteException
+    {
+        try {
+            TimeUnit.MINUTES.sleep(6);
+        } catch(InterruptedException e) {
+            return false;
+        }
+        return true;
     }
 }

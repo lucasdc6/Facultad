@@ -246,10 +246,26 @@ Tiempos de respuesta de una invocación:
   una invocacióncon JAVA RMI. Muestre promedio y desviaciónestándarde
   tiempo respuesta.
 
+  Se ejecutó 500 veces un comando, y se guardo el tiempo de respuesta,
+  con eso se calculó la media y la desviación estándar.\\
+
+  \hyperref[section:times]{(Ver apéndice - Subsección Tiempos de ejecución)} \\
+
+  Se puede volver a generar el archvio corriendo el script \textit{get\_data}
+  el cual acepta como primer parametro la cantidad de iteraciones y como
+  segundo parámetro el nombre de archivo donde dejar los valores.\\
+
   \item Investigue los timeouts relacionados con RMI. Como mínimo,
   verifique si existe un timeout predefinido. Si existe, indique de
   cuantoes el tiempo y si podría cambiarlo. Si no existe, proponga alguna
-  forma de evitar que el cliente quede esperando indefinidamente.
+  forma de evitar que el cliente quede esperando indefinidamente.\\
+
+  Cuenta con un timeout predefinido en 10 minutos. Esta información la
+  encontramos en la documentación de oracle
+  \hyperref[section:links]{(Ver apéndice - Subsección Links)}
+
+  Se puede cambiar el timeout seteando la propiedad
+  \textbf{java.rmi.dgc.leaseValue}
 
 \end{enumerate}
 
@@ -273,6 +289,17 @@ Tiempos de respuesta de una invocación:
 \subsection{StartRemoteObject}
 \label{section:StartRemoteObject}
 \lstinputlisting[language=Java, firstline=7]{../StartRemoteObject.java}
+
+\subsection{Tiempos de ejecución}
+Ver archivo completo en \textbf{code/times}\\
+Los valores se encuentran en \textbf{nanosegundos}
+\label{section:times}
+\lstinputlisting[firstline=495]{code/times}
+
+\subsection{Links}
+\label{section:links}
+Documentación de propiedades del paquete \textbf{java.rmi}\\
+https://docs.oracle.com/javase/8/docs/technotes/guides/rmi/javarmiproperties.html
 
 \ifCLASSOPTIONcaptionsoff
   \newpage

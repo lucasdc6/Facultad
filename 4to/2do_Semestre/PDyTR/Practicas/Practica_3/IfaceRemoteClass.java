@@ -13,4 +13,6 @@ public interface IfaceRemoteClass extends Remote
     public byte[] read(String path, int position) throws RemoteException;
     public int write(String path,byte[] data) throws RemoteException;
     public String list(String data) throws RemoteException;
+    public Boolean time() throws RemoteException;
+    public Boolean timeout() throws RemoteException;
 }
