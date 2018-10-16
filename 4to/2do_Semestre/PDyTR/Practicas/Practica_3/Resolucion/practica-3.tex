@@ -260,12 +260,13 @@ Tiempos de respuesta de una invocación:
   cuantoes el tiempo y si podría cambiarlo. Si no existe, proponga alguna
   forma de evitar que el cliente quede esperando indefinidamente.\\
 
-  Cuenta con un timeout predefinido en 10 minutos. Esta información la
-  encontramos en la documentación de oracle
-  \hyperref[section:links]{(Ver apéndice - Subsección Links)}
+  El paquete \textbf{java.rmi} no cuenta con timeout configurable,
+  se puede utilizar el paquete \textbf{sun.rmi}, el cual cuenta con una
+  propiedad configurable de timeout.
 
-  Se puede cambiar el timeout seteando la propiedad
-  \textbf{java.rmi.dgc.leaseValue}
+  De no utilizarse \textbf{sun.rmi}, se pueden llegar a trabajar con algun
+  timer o algo similar, pero no hay ninguna herramienta que nos brinde 
+  \textbf{java.rmi} para dicho fin.
 
 \end{enumerate}
 
