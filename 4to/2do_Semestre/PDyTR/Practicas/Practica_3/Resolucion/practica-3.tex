@@ -84,10 +84,29 @@
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{enumitem}
 \usepackage[svgnames]{xcolor}
+\usepackage{color}
+
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
 \hypersetup{
   colorlinks=false,
   linkbordercolor={white}
+}
+
+\lstset{language=Java,
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\ttfamily,
 }
 
 % *** MISC UTILITY PACKAGES ***
@@ -469,7 +488,7 @@ colorlinks=true,linkcolor={black},citecolor={black},urlcolor={black},
 pdftitle={Práctica 3},
 pdfsubject={Programación Distribuida y Tiempo Real - Práctica 2},
 pdfauthor={Lucas Di Cunzolo,Santiago Tettamanti},
-pdfkeywords={Programación Distribuida y Tiempo Real, c, java, LaTeX, sockets}}
+pdfkeywords={Programación Distribuida y Tiempo Real, java, LaTeX, rmi}}
 %\ifCLASSINFOpdf
 %\usepackage[\MYhyperrefoptions,pdftex]{hyperref}
 %\else
@@ -612,12 +631,12 @@ pdfkeywords={Programación Distribuida y Tiempo Real, c, java, LaTeX, sockets}}
 % in the abstract or keywords.
 \IEEEtitleabstractindextext{%
 \begin{abstract}
-RPC - Introducción.
+Remote Method Invocation
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-Programación Distribuida y Tiempo Real, c, \LaTeX, rpc
+Programación Distribuida y Tiempo Real, java, \LaTeX, RMI
 \end{IEEEkeywords}}
 
 
@@ -648,7 +667,161 @@ Programación Distribuida y Tiempo Real, c, \LaTeX, rpc
 \IEEEpeerreviewmaketitle
 
 \section{Punto 1}
-aa
+
+Utilizando como base el programa ejemplo de RMI
+\begin{enumerate}[label=\alph* -]
+  \item Analice si RMI es de acceso completamente
+  transparente (access transparency, tal como está definido en
+  Coulouris-Dollimore-Kindberg). Justifique.\\\\
+  Colouris:
+     Access transparency. Enables local and remote resources to be
+     accessed using identical operations They both offer a similar level
+     of transparency that is, local and remote calls employ the same
+     syntax but remote interfaces typically expose the distributed nature
+     of the underlying call, for example by supporting remote exceptions
+
+  Vemos que sintácticamente las operaciones son idénticas y no se podría
+  saber si la operación es local o remota dado que el los nombres de las
+  operaciones son exactamente los mismos. sin embargo a la hora de llamar
+  a la clase hay que hacer un lookup del nombre de esta, al no estar en
+  el espacio de nombres local, teniendo el cuenta el hostname remoto.
+  Por lo que si bien a nivel invocación de métodos nunca no enteramos si
+  es local o remoto y no se hace ninguna diferencia en la invocación de
+  ambos, a la hora de obtener la clase remota si. Todo esto sin tener en
+  cuenta el manejo de posibles errores en la comunicación ya que el método
+  remoto tiende a fallar mucho más seguido que el local mayormente por fallas
+  en la comunicación que son inexistentes en el otro.
+  En conclusión, teniendo en cuenta lo definido en el libro, RMI si ofrece
+  una tranparencia de acceso al permitir invocar tanto un procedimiento
+  local como remoto de la misma manera. Pero esa transparencia no es total
+  ya que hay que tener en cuenta otras cuestiones como el lookup de la clase
+  remota y la posible falla en la comunicación.\\
+
+  \item Enumere los archivos .class que deberían estar del lado del
+  cliente y del lado del servidor y que contiene cada uno.
+
+  \begin{itemize}
+    \item \textbf{AskRemote.class:} Presente en el cliente, identifica a la clas
+    cliente que realiza el llamado al metodo remoto. Contiene, entre otras
+    cosas, información de conexión al servidor tal como su hostname,
+    invocación a la clase y al método remoto.\\
+
+    \item \textbf{StartRemoteObject.class:} Presente en el servidor. Es la clase
+    encargada de instanciar a la clase contenedora de los métodos remotos
+    a invocar y la registra en el espacio de nombres asegurándose que
+    pueda ser llamada por el cliente.\\
+
+    \item \textbf{IfaceRemoteClass.class:} Presente en el servidor; es la interface
+    que define los métodos que pueden ser invocados y que la clase del
+    servidor debe implementar.\\
+
+    \item \textbf{RemoteClass.class:} Presente en el servidor;
+    solo implementa los métodos que serán invocados remotamente
+    presentes en la interfáz mencionada anteriormente. Extiende de
+    UnicastRemoteObject, lo que hace toda la comunicación totalmente
+    transparente al programador desde este lado.\\
+  \end{itemize}
+\end{enumerate}
+
+\section{Punto 2}
+Identifique similitudes y diferencias entre RPC y RMI.
+
+La principal diferencia entre RPC y RMI es que RMI involucra objetos.
+En lugar de llamar procedimientos de forma remota llama a métodos de
+objetos remotos. Se podría decir que RMI es la version orientada a objetos
+de RPC.  En RMI cada objeto tiene una referencia única en todo el sistema,
+tanto si los objetos son remotos como locales, permitiendo así el pasó de
+objetos como parámetros, herencia y relaciones entre objetos remotos,
+ofreciendo un pasaje de parámetros con una mayor riqueza semántica y un
+mayor nivel de abstracción que en RPC, donde solo se pueden pasar
+parámetros por valor.
+
+En ambos modelos los detalles de implementación están ocultos al usuario
+y los métodos o procesos disponibles se conocen a través de una interfaz
+que provee el servidor.
+Ambos ofrecen un alto nivel de transparencia de acceso, llamadas remotas
+y locales poseen la misma sintáxis pero las interfaces remotas
+diferencian la naturaleza distribuida de las llamadas remotas al, por
+ejemplo, soportar excepciones remotas o tener en cuenta posibles fallas
+en la comunicación con tiempos de timeout.
+
+\section{Punto 3}
+
+\section{Punto 4}
+
+\begin{enumerate}[label=\alph* -]
+  \item Defina e implemente con RMI un servidor.
+  
+  Para esto se utilizó la estructura de archivos del ejemplo. Se definió
+  una interfaz con 3 métodos, \textit{read}, \textit{write} y
+  \textit{list}
+  Tanto el cliente como el servidor, se alimentan de la interfaz definida
+  en la clase IfaceRemoteClass.
+  \hyperref[section:IfaceRemoteClass]{(Ver apéndice - Subsección IfaceRemoteClass)}
+  
+  Donde la clase que los implementa es la RemoteClass
+  \hyperref[section:RemoteClass]{(Ver apéndice - Subsección RemoteClass)}
+  
+  Luego se implementó un cliente que interactúe contra el servidor, con
+  los comandos basicos, nombrados anteriormente. Esto se hizo en la clase
+  AskRemote
+  \hyperref[section:AskRemote]{(Ver apéndice - Subsección AskRemote)}
+
+  El servidor, utiliza la implementación de la clase RemoteClass, y
+  corre instanciando un objeto de la clase StartRemoteObject.
+  \hyperref[section:StartRemoteObject]{(Ver apéndice - Subsección StartRemoteObject)}
+
+\end{enumerate}
+
+\section{Punto 5}
+
+Investigue si es posible que varias invocaciones remotas estén
+ejecutándose concurrentemente y si esto es apropiado o no para el
+servidor de archivos del ejercicio anterior. En caso de que no sea 
+apropiado, analice si es posible proveer una solución
+(enunciar/describir una solución, no es necesario implementarla).
+
+Nota: diseñar un experimento con el que se pueda demostrar
+fehacientemente que dos o más invocaciones remotas se ejecutan
+concurrentemente o no. Compare este comportamiento con lo que sucede con
+RPC.
+
+\section{Punto 6}
+
+Tiempos de respuesta de una invocación:
+
+\begin{enumerate}[label=\alph* -]
+  \item Diseñe experimento que muestre el tiempo de respuesta mínimo de
+  una invocacióncon JAVA RMI. Muestre promedio y desviaciónestándarde
+  tiempo respuesta.
+
+  \item Investigue los timeouts relacionados con RMI. Como mínimo,
+  verifique si existe un timeout predefinido. Si existe, indique de
+  cuantoes el tiempo y si podría cambiarlo. Si no existe, proponga alguna
+  forma de evitar que el cliente quede esperando indefinidamente.
+
+\end{enumerate}
+
+\newpage
+\onecolumn
+\appendix{Código Java}
+\label{appendix:codigo-java}
+
+\subsection{IfaceRemoteClass}
+\label{section:IfaceRemoteClass}
+\lstinputlisting[language=Java, firstline=7]{../IfaceRemoteClass.java}
+
+\subsection{AskRemote}
+\label{section:AskRemote}
+\lstinputlisting[language=Java, firstline=6]{../AskRemote.java}
+
+\subsection{RemoteClass}
+\label{section:RemoteClass}
+\lstinputlisting[language=Java, firstline=8]{../RemoteClass.java}
+
+\subsection{StartRemoteObject}
+\label{section:StartRemoteObject}
+\lstinputlisting[language=Java, firstline=7]{../StartRemoteObject.java}
 
 \ifCLASSOPTIONcaptionsoff
   \newpage
