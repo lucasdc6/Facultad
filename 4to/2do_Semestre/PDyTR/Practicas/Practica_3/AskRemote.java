@@ -97,8 +97,12 @@ public class AskRemote{
                                 System.out.println("4 argument needed: (remote) hostname, command , local directory and remote directory");
                                 System.exit(1);
                             }
-                            else
+                            else {
+                                long startTime = System.nanoTime();
                                 read(remote,args[2],args[3]);
+                                long stopTime = System.nanoTime();
+                                System.out.printf("Took: %d ms\n", (stopTime - startTime)/1000000);
+                            }
                             break;
                     case "write":
                     case "add":
@@ -107,8 +111,12 @@ public class AskRemote{
                                 System.out.println("4 argument needed: (remote) hostname, command , local directory and remote directory");
                                 System.exit(1);
                             }
-                            else
+                            else {
+                                long startTime = System.nanoTime();
                                 write(remote,args[2],args[3]);
+                                long stopTime = System.nanoTime();
+                                System.out.printf("Took: %d ms\n", (stopTime - startTime)/1000000);
+                            }
                             break;
                     case "list":
                     case "ls":
@@ -117,14 +125,19 @@ public class AskRemote{
                                 System.out.println("3 argument needed: (remote) hostname, command and directory");
                                 System.exit(1);
                             }
-                            else
+                            else {
+                                long startTime = System.nanoTime();
                                 list(remote,args[2]);
+
+                                long stopTime = System.nanoTime();
+                                System.out.printf("Took: %d ms\n", (stopTime - startTime)/1000000);
+                            }
                             break;
                     case "time":
                             long startTime = System.nanoTime();
                             remote.time();
                             long stopTime = System.nanoTime();
-                            System.out.println(stopTime - startTime);
+                            System.out.printf("Took: %d ms\n", (stopTime - startTime)/1000000);
                             break;
                     case "timeout":
                             Boolean ret = remote.timeout();

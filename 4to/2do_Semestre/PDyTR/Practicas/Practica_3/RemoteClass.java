@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.rmi.dgc.*;
 import java.nio.file.DirectoryStream;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +38,7 @@ public class RemoteClass extends UnicastRemoteObject implements IfaceRemoteClass
                 fileEnd=0;
             }
             byte[] sizeAndContent=Arrays.copyOf(contents,contents.length+1);   
-            sizeAndContent[contents.length]=fileEnd;         
+            sizeAndContent[contents.length]=fileEnd;    
             return sizeAndContent;
         } catch(Exception e) {
             System.out.println(e);
