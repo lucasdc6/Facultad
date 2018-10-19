@@ -24,7 +24,7 @@ for ((i=1; i <= $LOOP; i++)); do
 done
 
 DS=`awk '{x+=$0;y+=$0^2}END{print sqrt(y/NR-(x/NR)^2)}' $FILE`
-MEDIA=`awk '{for(i=1;i<=NF;i++)s+=$i}END{print s}' $FILE`
+MEDIA=`awk '{for(i=1;i<=NF;i++)s+=$i}END{print s/NR}' $FILE`
 
 echo "===================" >> $FILE
 printf "Media: " >> $FILE

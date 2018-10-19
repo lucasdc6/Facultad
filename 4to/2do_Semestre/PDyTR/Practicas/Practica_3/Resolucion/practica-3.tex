@@ -201,7 +201,8 @@ Una solucion sería que  tanto el servidor como el cliente tengan sus propias co
 implementado con RPC en la práctica anterior:}
 
 \begin{enumerate}[label=\alph* -]
-  \item \textit{Defina e implemente con RMI un servidor.}
+  \item \textit{Defina e implemente con RMI un servidor y un cliente con
+  un copiado de archivos con backup}\\\\
   
   Para esto se utilizó la estructura de archivos del ejemplo. Se definió
   una interfaz con 3 métodos, \textit{read}, \textit{write} y
@@ -235,7 +236,27 @@ apropiado, analice si es posible proveer una solución
 Nota: diseñar un experimento con el que se pueda demostrar
 fehacientemente que dos o más invocaciones remotas se ejecutan
 concurrentemente o no. Compare este comportamiento con lo que sucede con
-RPC.
+RPC.\\\\
+Al funcionar sobre Java, RMI admite concurrencia nativa.
+El principal inconveniente en RMI, es que no maneja multihilos de manera
+segura, es decir, los llamados pueden causar colisiones en los recursos
+del servidor.\\
+Para evitar esto, se pueden utilizar mecanismos conocidos para sincronización,
+aunque RMI no provee ninguno por su cuenta.\\
+En nuestro caso, contamos con 2 comandos seguros para la concurrencia, estamos
+hablando de los comandos \textit{read} y \textit{list}, mientras que contamos con
+comandos como \textit{write} y \textit{readwrite} los cuales no lo son.\\
+El principal inconveniente que puede traer la ejecución de comandos no seguros, es
+la perdida de datos en el servidor.\\
+Para mayor información de manejo de hilos con RMI, se consultaron foros.\\
+\hyperref[section:links]{Ver apéndice - Subsección Links}
+
+Para demostrar la concurrencia de RMI, se utilizó un comando extra, para
+mayor simplicidad del experimento.\\
+En este caso, el método remoto solamente genera un sleep de 6 minutos.\\
+\hyperref[fig:concurrecia]{Ver captura}\\
+En la captura se puede observar como ambos clientes ejecutan concurrentemente
+el comando \textit{timeout} sin ningún problema.
 
 \section{Punto 6}
 
@@ -300,7 +321,21 @@ Los valores se encuentran en \textbf{nanosegundos}
 \subsection{Links}
 \label{section:links}
 Documentación de propiedades del paquete \textbf{java.rmi}\\
-https://docs.oracle.com/javase/8/docs/technotes/guides/rmi/javarmiproperties.html
+https://docs.oracle.com/javase/8/docs/technotes/guides/rmi/javarmiproperties.html\\\\
+Artículos de multithread
+\begin{itemize}
+  \item Java RMI and Thread Synchronization questions\\\url{https://stackoverflow.com/questions/2275868/java-rmi-and-thread-synchronization-questions}
+  \item Java RMI and synchronized methods\\\url{https://stackoverflow.com/questions/3507253/java-rmi-and-synchronized-methods/3629723}
+\end{itemize}
+
+\subsection{Capturas}
+\label{section:capturas}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=180mm]{capturas/concurrencia.png}
+  \caption{Experimento concurrecia}
+  \label{fig:concurrecia}
+\end{figure}
 
 \ifCLASSOPTIONcaptionsoff
   \newpage

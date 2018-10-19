@@ -90,6 +90,7 @@ public class RemoteClass extends UnicastRemoteObject implements IfaceRemoteClass
     public Boolean timeout() throws RemoteException
     {
         try {
+            System.out.println("Processing timeout command...");
             TimeUnit.MINUTES.sleep(6);
         } catch(InterruptedException e) {
             return false;

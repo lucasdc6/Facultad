@@ -81,6 +81,10 @@ public class AskRemote{
             + "\t- <host> get <local> <remote>: Store a file from <local> to <remote>\n"
             + "\t- <host> list <remote directory>: List files from <remote directory>\n"
             + "\t- <host> ls <remote directory>: List files from <remote directory>\n"
+            + "\t- <host> readwrite <local> <remote>: Store a file from <local> to <remote> and backup at server\n"
+            + "\t- <host> rw <local> <remote>: Store a file from <local> to <remote> and backup at server\n"
+            + "\t- <host> time: Get time from remote method\n"
+            + "\t- <host> timeout: Sleep 6 minutes\n"
             );
             System.exit(1);
         }
@@ -133,13 +137,29 @@ public class AskRemote{
                                 System.out.printf("Took: %d ms\n", (stopTime - startTime)/1000000);
                             }
                             break;
+                    case "rw":
+                    case "readwrite":
+                            if (args.length != 4)
+                            {
+                                System.out.println("4 argument needed: (remote) hostname, command , local directory and remote directory");
+                                System.exit(1);
+                            }
+                            else {
+                                long startTime = System.nanoTime();
+                                read(remote,args[2],args[3]);
+                                write(remote,args[2],"backup-" + args[2]);
+                                long stopTime = System.nanoTime();
+                                System.out.printf("Took: %d ms\n", (stopTime - startTime)/1000000);
+                            }
+                            break;
                     case "time":
                             long startTime = System.nanoTime();
                             remote.time();
                             long stopTime = System.nanoTime();
-                            System.out.printf("Took: %d ms\n", (stopTime - startTime)/1000000);
+                            System.out.println(stopTime - startTime);
                             break;
                     case "timeout":
+                            System.out.println("timeout command...");
                             Boolean ret = remote.timeout();
                             System.out.println(ret);
                             break;    
