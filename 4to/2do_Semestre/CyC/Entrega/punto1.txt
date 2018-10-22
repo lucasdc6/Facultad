@@ -1,0 +1,13 @@
+# Autor:
+## Lucas Di Cunzolo, 13572/5
+
+# El estado q0 es el estado en el que se verifica el input.
+(q0,0)=>(q1,B,D)
+(q0,1)=>(q1,B,D)
+(q0,B)=>(qa,B,D)
+
+# El estado q1 es el estado en el que se copia el valor actual,
+# y se mueve a la derecha.
+(q1,0)=>(q1,0,D)
+(q1,1)=>(q1,1,D)
+(q1,B)=>(qa,B,D)

@@ -1,0 +1,10 @@
+# Autor:
+## Lucas Di Cunzolo, 13572/5
+
+# El estado q0 es el estado en el que se verifica el input.
+(q0,B)=>(qf,B,S)
+(q0,0)=>(q1,0,I)
+(q0,1)=>(q1,1,I)
+
+# El estado q1 es el estado que inserta un 1 al principio.
+(q1,B)=>(qa,1,S)
