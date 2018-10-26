@@ -2,9 +2,19 @@
 ## Lucas Di Cunzolo, 13572/5
 
 # El estado q0 es el estado en el que se verifica el input.
-(q0,B)=>(qf,B,S)
+
+# 1110101101011100
+(q0,B)=>(qr,B,S)
+
+# 1110110111101101100
 (q0,0)=>(q1,0,I)
+
+# 111011101111011101100
 (q0,1)=>(q1,1,I)
 
 # El estado q1 es el estado que inserta un 1 al principio.
+# 111101010111011100
 (q1,B)=>(qa,1,S)
+
+# Codificacion completa
+# 111010110101110011101101111011011001110111011110111011001111010101110111000INPUT

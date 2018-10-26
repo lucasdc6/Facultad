@@ -2,12 +2,27 @@
 ## Lucas Di Cunzolo, 13572/5
 
 # El estado q0 es el estado en el que se verifica el input.
-(q0,0)=>(q1,B,D)
-(q0,1)=>(q1,B,D)
-(q0,B)=>(qa,B,D)
+
+# 11101011010100
+(q0,B)=>(qr,B,D)
+
+# 11101101111010100
+(q0,0)=>(q1,B,D)
+
+# 111011101111010100
+(q0,1)=>(q1,B,D)
 
 # El estado q1 es el estado en el que se copia el valor actual,
 # y se mueve a la derecha.
+
+# 1111011011110110100
 (q1,0)=>(q1,0,D)
+
+# 111101110111101110100
 (q1,1)=>(q1,1,D)
+
+# 11110101010100
 (q1,B)=>(qa,B,D)
+
+# Codificacion completa
+# 11101011010100111011011110101001110111011110101001111011011110110100111101110111101110100111101010101000INPUT
