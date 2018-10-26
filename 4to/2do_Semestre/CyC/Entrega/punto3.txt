@@ -1,7 +1,6 @@
 # Autor:
 ## Lucas Di Cunzolo, 13572/5
 
-# Definicion MT codificada
 # Estados
 # qa = 1
 # qr = 11

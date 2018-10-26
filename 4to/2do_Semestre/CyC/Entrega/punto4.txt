@@ -18,7 +18,10 @@
 # I = 11
 # S = 111
 
-# El estado q0 es el estado en el que se verifica el input.
+#-----------------------------------------------------------#
+# El estado q0 es el estado en el que se verifica el input. #
+#-----------------------------------------------------------#
+
 (q0,B)=>(qr,B,S)
 (q0,0)=>(q1,0,D)
 (q0,1)=>(q0,1,D)
@@ -26,43 +29,70 @@
 (q1,0)=>(qsh,0,D)
 (q1,1)=>(q1,1,D)
 
-# El estado qsh busca estados qa o qr para invertirlos
+#-----------------------------------------------------------#
+# El estado qsh busca estados qa o qr para invertirlos      #
+#-----------------------------------------------------------#
+
 (qsh,0)=>(qr,0,s)
 (qsh,1)=>(qsh1,1,D)
 
-# El estado qsh1 comprueba si es qa, qr u otro estado
-# De ser qa, invierte los siguientes valores
-# De ser qr u otro estado, sigue comprobando
+#-----------------------------------------------------------#
+# El estado qsh1 comprueba si es qa, qr u otro estado       #
+# De ser qa, invierte los siguientes valores                #
+# De ser qr u otro estado, sigue comprobando                #
+#-----------------------------------------------------------#
+
 (qsh1,0)=>(qi0,1,D)
 (qsh1,1)=>(qsh2,1,D)
 
-# El estado qsh2 comrueba si es qr u otro estado
-# Si es qr, lo lleva a qa
-# Si es otro, sigue hasta la siguiente quintupla
+#-----------------------------------------------------------#
+# El estado qsh2 comrueba si es qr u otro estado            #
+# Si es qr, lo lleva a qa                                   #
+# Si es otro, sigue hasta la siguiente quintupla            #
+#-----------------------------------------------------------#
+
 (qsh2,0)=>(qchr,0,I)
 (qsh2,1)=>(qn,1,D)
 
-# El estado qchr, cambia un estado qr por qa
+#-----------------------------------------------------------#
+# El estado qchr, cambia un estado qr por qa                #
+#-----------------------------------------------------------#
+
 (qchr,0)=>(qn,0,D)
 (qchr,1)=>(qchr,B,D)
 
-# Los estados qi0 y qi1 realizan un corrimiento a la derecha
-# El estado qi0 intercambia el valor actual, por un 0
+#-----------------------------------------------------------#
+# Los estados qi0 y qi1 realizan un corrimiento a la derecha#
+# El estado qi0 intercambia el valor actual, por un 0       #
+#-----------------------------------------------------------#
+
 (qi0,B)=>(qa,0,D)
 (qi0,0)=>(qi0,0,D)
 (qi0,1)=>(qi1,0,D)
 
-# El estado qi1 intercambia el valor actual, por un 1
+#-----------------------------------------------------------#
+# El estado qi1 intercambia el valor actual, por un 1       #
+#-----------------------------------------------------------#
+
 (qi1,B)=>(qa,1,D)
 (qi1,0)=>(qi0,1,D)
 (qi1,1)=>(qi1,1,D)
 
-# El estado qn, busca la siguiente quintupla
+#-----------------------------------------------------------#
+# El estado qn, busca la siguiente quintupla                #
+#-----------------------------------------------------------#
+
 (qn,B)=>(qr,B,D)
 (qn,0)=>(qn1,0,D)
 (qn,1)=>(qn,1,D)
 
-# El estado qn1 comprueba si el separador es de quintupla o de componente
-# 00 y 0 respectivamente.
+#-----------------------------------------------------------#
+# El estado qn1 comprueba si el separador es de quintupla o #
+# de componente 00 y 0 respectivamente.                     #
+#-----------------------------------------------------------#
+
 (qn1,0)=>(q0,0,D)
 (qn1,1)=>(qn,1,D)
+
+
+# La MT falla al tener más de un estado qr
