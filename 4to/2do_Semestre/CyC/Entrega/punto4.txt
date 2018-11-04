@@ -18,81 +18,129 @@
 # I = 11
 # S = 111
 
-#-----------------------------------------------------------#
+#------------------------q0---------------------------------#
 # El estado q0 es el estado en el que se verifica el input. #
 #-----------------------------------------------------------#
 
 (q0,B)=>(qr,B,S)
-(q0,0)=>(q1,0,D)
-(q0,1)=>(q0,1,D)
+(q0,1)=>(qe,1,D)
+(q0,0)=>(qe,0,D)
 
-(q1,0)=>(qsh,0,D)
-(q1,1)=>(q1,1,D)
-
-#-----------------------------------------------------------#
-# El estado qsh busca estados qa o qr para invertirlos      #
+#------------------------qe---------------------------------#
+# qe saltea la priemer componenete                          #
 #-----------------------------------------------------------#
 
-(qsh,0)=>(qr,0,s)
-(qsh,1)=>(qsh1,1,D)
+(qe,1)=>(qe,1,D)
+(qe,0)=>(qs,0,D)
+(qe,B)=>(qr,B,S)
 
-#-----------------------------------------------------------#
-# El estado qsh1 comprueba si es qa, qr u otro estado       #
-# De ser qa, invierte los siguientes valores                #
-# De ser qr u otro estado, sigue comprobando                #
-#-----------------------------------------------------------#
-
-(qsh1,0)=>(qi0,1,D)
-(qsh1,1)=>(qsh2,1,D)
-
-#-----------------------------------------------------------#
-# El estado qsh2 comrueba si es qr u otro estado            #
-# Si es qr, lo lleva a qa                                   #
-# Si es otro, sigue hasta la siguiente quintupla            #
+#-------------------------qs--------------------------------#
+# qs llega al inicio de la tercer componente                #
 #-----------------------------------------------------------#
 
-(qsh2,0)=>(qchr,0,I)
-(qsh2,1)=>(qn,1,D)
+(qs,B)=>(qe,B,S)
+(qs,1)=>(qs,1,D)
+(qs,0)=>(qsi,0,D)
 
-#-----------------------------------------------------------#
-# El estado qchr, cambia un estado qr por qa                #
-#-----------------------------------------------------------#
-
-(qchr,0)=>(qn,0,D)
-(qchr,1)=>(qchr,B,D)
-
-#-----------------------------------------------------------#
-# Los estados qi0 y qi1 realizan un corrimiento a la derecha#
-# El estado qi0 intercambia el valor actual, por un 0       #
+#-------------------------qsi-------------------------------#
+# qsi verifica el primer valor de la tercer componente es   #
+# un 1                                                      #
 #-----------------------------------------------------------#
 
-(qi0,B)=>(qa,0,D)
-(qi0,0)=>(qi0,0,D)
-(qi0,1)=>(qi1,0,D)
+(qsi,0)=>(qr,0,D)
+(qsi,1)=>(qsa,1,D)
 
-#-----------------------------------------------------------#
-# El estado qi1 intercambia el valor actual, por un 1       #
-#-----------------------------------------------------------#
-
-(qi1,B)=>(qa,1,D)
-(qi1,0)=>(qi0,1,D)
-(qi1,1)=>(qi1,1,D)
-
-#-----------------------------------------------------------#
-# El estado qn, busca la siguiente quintupla                #
+#-------------------------qsa-------------------------------#
+# qsa determina si es qa (si el segundo valor de la tercer  #
+# componente es 0)                                          #
 #-----------------------------------------------------------#
 
-(qn,B)=>(qr,B,D)
-(qn,0)=>(qn1,0,D)
-(qn,1)=>(qn,1,D)
+(qsa,0)=>(qd0,m,D)
+(qsa,1)=>(qsr,1,D)
 
+#-------------------------qsr-------------------------------#
+# MT punto 3                                                #
+# qsr determina si es qr (si el segundo valor de la tercer  #
+# componente es 1)                                          #
 #-----------------------------------------------------------#
-# El estado qn1 comprueba si el separador es de quintupla o #
-# de componente 00 y 0 respectivamente.                     #
+
+(qsr,0)=>(qm,0,I)
+(qsr,1)=>(qsig,1,D)
+
+#---------------------qsig-&-qsig1--------------------------#
+# qsig y qsig1 saltea el resto de componenete               #
 #-----------------------------------------------------------#
 
-(qn1,0)=>(q0,0,D)
-(qn1,1)=>(qn,1,D)
+(qsig,0)=>(qsig1,0,D)
+(qsig,1)=>(qsig,1,D)
 
+(qsig1,0)=>(qe,0,D)
+(qsig1,1)=>(qsig,1,D)
 
-# La MT falla al tener más de un estado qr
+#--------------------------qi------------------------------#
+# MT punto 1                                               #
+# El estado qi inicia el corrimiento a izquierda           #
+#----------------------------------------------------------#
+
+(qi,1)=>(qi1,B,I)
+(qi,0)=>(qi0,B,I)
+
+#--------------------------qi0-----------------------------#
+# El estado qi0 escribe un 0 en la la celda actual, y mueve#
+# a izquierda.                                             #
+#----------------------------------------------------------#
+
+(qi0,0)=>(qi0,0,I)
+(qi0,1)=>(qi1,0,I)
+(qi0,m)=>(qsig,0,D)
+
+#--------------------------qi1-----------------------------#
+# El estado qi1 escribe un 1 en la celda actual, y mueve   #
+# a izquierda                                              #
+#----------------------------------------------------------#
+
+(qi1,0)=>(qi0,1,I)
+(qi1,1)=>(qi1,1,I)
+(qi1,m)=>(qsig,1,I)
+
+#------------------------qd0--------------------------------#
+# MT Punto 2                                                #
+# El estado qd0 es el estado que escribe un 0 en la celda   #
+# actual, y mueve a la derecha                              #
+#-----------------------------------------------------------#
+
+(qd0,0)=>(qd0,0,D)
+(qd0,1)=>(qd1,0,D)
+(qd0,B)=>(qb,0,S)
+
+#-------------------------qd1-------------------------------#
+# El estado qd1 es el estado que escribe un 1 en la celda   #
+# actual, y mueve a la derecha                              #
+#-----------------------------------------------------------#
+
+(qd1,0)=>(qd0,1,D)
+(qd1,1)=>(qd1,1,D)
+(qd1,B)=>(qb,1,S)
+
+#-------------------------qb--------------------------------#
+# El estado qb regresa al input modificado                  #
+#-----------------------------------------------------------#
+
+(qb,0)=>(qb,0,I)
+(qb,1)=>(qb,1,I)
+(qb,B)=>(qb,B,I)
+(qb,m)=>(qsig,1,I)
+
+#--------------------------qm-------------------------------#
+# El estado qm marca el dato anterior como marcado          #
+#-----------------------------------------------------------#
+
+(qm,1)=>(qf,m,D)
+
+#--------------------------qf-------------------------------#
+# qf va hasta el final del input                            #
+#-----------------------------------------------------------#
+
+(qf,0)=>(qf,0,D)
+(qf,1)=>(qf,1,D)
+(qf,B)=>(qi,B,I)
