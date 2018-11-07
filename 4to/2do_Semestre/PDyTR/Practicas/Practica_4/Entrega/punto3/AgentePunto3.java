@@ -12,6 +12,11 @@ import java.io.IOException;
 
 public class AgentePunto3 extends Agent
 {
+    private String action;
+    private String sourcePath;
+    private String destinationPath;
+    private byte[] file;
+
     public void setup()
     {
         Location origen = here();
@@ -21,6 +26,10 @@ public class AgentePunto3 extends Agent
     try {
         ContainerID destino = new ContainerID("Main-Container", null);
         System.out.println("Migrando el agente a " + destino.getID());
+        this.action="write";
+        this.sourcePath="/tmp/file";
+        this.destinationPath="/tmp/file2";
+        this.file= Files.readAllBytes(Paths.get(this.sourcePath));
         doMove(destino);
     } catch (Exception e) {
         System.out.println("\n\n\nNo fue posible migrar el agente\n\n\n");}
@@ -32,33 +41,27 @@ public class AgentePunto3 extends Agent
         System.out.println("\n\nHola, agente migrado con nombre local " + getLocalName());
         System.out.println("Y nombre completo... " + getName());
         System.out.println("Y en location " + origen.getID() + "\n\n");
+        this.write(this.destinationPath,this.file);
+        byte[] file=this.read(this.destinationPath,0);
+        this.write(this.sourcePath+"3",file);
     }
 
-    private byte[] read(String path, int position) throws RemoteException
+    private byte[] read(String path, int position)
     {
         try {
             byte[] contents = Files.readAllBytes(Paths.get(path));
             int fileSize=contents.length;
             contents=Arrays.copyOfRange(contents,position,fileSize);
-            byte fileEnd=1;
-            if (contents.length>1024){
-                contents=Arrays.copyOf(contents,1024);
-                fileEnd=0;
-            }
-            byte[] sizeAndContent=Arrays.copyOf(contents,contents.length+1);   
-            sizeAndContent[contents.length]=fileEnd;    
-            return sizeAndContent;
+            return contents;
         } catch(Exception e) {
             System.out.println(e);
             return new byte[0];
         }
     }
 
-    private int write(String path,byte[] data) throws RemoteException
+    private int write(String path,byte[] data)
     {
         try {
-            if (data.length>1024)
-                data=Arrays.copyOf(data,1024);
             try{
                 Files.write(Paths.get(path), data,StandardOpenOption.APPEND);
             }
@@ -74,7 +77,7 @@ public class AgentePunto3 extends Agent
         }
     }
 
-    private String list(String path) throws RemoteException
+    private String list(String path)
     {
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(Paths.get(path))) {
             String directoryPaths = "";
