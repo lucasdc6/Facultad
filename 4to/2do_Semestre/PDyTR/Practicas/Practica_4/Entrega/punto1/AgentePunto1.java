@@ -80,7 +80,7 @@ public class AgentePunto1 extends Agent
 		System.out.println("Termine la vuelta, tiempo total: "+ finishTime +" milisegundos");
 		
 		for (ContainerInfo containerInfo : info) {
-			System.out.println("\n\nInformación container " + containerInfo.getName() +" :");
+			System.out.println("\n\nInformacion container " + containerInfo.getName() +" :");
 			System.out.println("    Memoria libre: "+ (containerInfo.getFreeMemory()/1024)/1024 +"Mb");
 			System.out.println("    Tiempo de procesamiento: "+ containerInfo.getProcessingTime() +" milisegundos");
 			float processingPercentage = (containerInfo.getProcessingTime()*100)/finishTime;

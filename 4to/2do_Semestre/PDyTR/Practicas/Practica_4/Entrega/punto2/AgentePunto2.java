@@ -1,3 +1,4 @@
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 import jade.core.*;
@@ -29,7 +30,7 @@ public class AgentePunto2 extends Agent
 
         if (!actual.getName().equals(this.origen.getName())) {
             try {
-                List<String> numbers = Files.readAllLines(Paths.get("/tmp/file"));
+                List<String> numbers = Files.readAllLines(Paths.get("/tmp/file"), Charset.forName("utf8"));
                 int result = 0;
                 for (String number: numbers) {
                     result += Integer.parseInt(number);
@@ -40,7 +41,7 @@ public class AgentePunto2 extends Agent
             } catch(IOException e) {
                 System.out.println("El archivo no existe");
             } catch(Exception e) {
-                System.out.printf("Algo salió mal\n\n%s", e.getMessage());
+                System.out.printf("Algo salio mal\n\n%s", e.getMessage());
             }
     
             ContainerID destino = new ContainerID(this.origen.getName(), null);
