@@ -2,7 +2,7 @@ all: clean
 	mkdir punto1/classes punto2/classes punto3/classes
 	javac -classpath lib/jade.jar -d punto1/classes punto1/AgentePunto1.java
 	javac -classpath lib/jade.jar -d punto2/classes punto2/AgentePunto2.java
-	#javac -classpath lib/jade.jar -d punto3/classes punto3/AgentePunto1.java
+	javac -classpath lib/jade.jar -d punto3/classes punto3/AgentePunto3.java
 
 start-gui:
 	java -cp lib/jade.jar:classes jade.Boot -gui
