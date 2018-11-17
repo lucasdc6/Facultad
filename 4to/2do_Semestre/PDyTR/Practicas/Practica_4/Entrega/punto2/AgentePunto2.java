@@ -10,6 +10,7 @@ public class AgentePunto2 extends Agent
 {
     private final String machine = "Main-Container";
     private Location origen = null; 
+    private int suma;
     public void setup()
     {
         this.origen = here();
@@ -35,7 +36,7 @@ public class AgentePunto2 extends Agent
                 for (String number: numbers) {
                     result += Integer.parseInt(number);
                 }
-                System.out.printf("La suma es: %d\n", result);
+                suma = result;
             } catch(NumberFormatException e) {
                 System.out.println("Solo se admiten numeros");
             } catch(IOException e) {
@@ -43,9 +44,11 @@ public class AgentePunto2 extends Agent
             } catch(Exception e) {
                 System.out.printf("Algo salio mal\n\n%s", e.getMessage());
             }
-    
+            
             ContainerID destino = new ContainerID(this.origen.getName(), null);
             doMove(destino);
+        } else {
+            System.out.printf("La suma es: %d\n", this.suma);
         }
     }
 }

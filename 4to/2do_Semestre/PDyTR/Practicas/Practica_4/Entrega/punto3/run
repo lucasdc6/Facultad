@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+if [ $# -eq 0 ]; then
+  cat <<-HELP
+  Usage: $0
+    $0 read outputFile inputFile
+    $0 write inputFile outputFile
+    $0 readwrite outputFile inputFile
+    $0 list directory
+HELP
+  exit 0
+fi
+
+if [ $# -eq 2 ]; then
+  java -cp ../lib/jade.jar:classes jade.Boot -gui -container -host localhost -agents "mol:AgentePunto3($1,$2)"
+else
+  java -cp ../lib/jade.jar:classes jade.Boot -gui -container -host localhost -agents "mol:AgentePunto3($1,$2,$3)"
+fi
