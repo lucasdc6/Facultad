@@ -62,6 +62,8 @@ avgLength' :: [[Char]] -> Int
 avgLength' xs = (sum lengths) `div` (length lengths)
                 where lengths = lengths' xs
 
-adjacents :: [a] -> [(a,a)]
-adjacents = recr' [] (\x xs ys -> [(x, x)])
+adjacents :: [a] -> [(a, a)]
+adjacents = recr [] (\x xs ys -> if null xs then ys else (x, head xs) : ys)
 
+diffAdj :: [Int] -> [(Int, Int)]
+diffAdj = recr [] (\x (y : _) ys -> if even (x - y) then (x, y) : ys else ys)
