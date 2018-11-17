@@ -90,21 +90,33 @@ public class AgentePunto3 extends Agent
                 case "rw":
                 case "readwrite":
                     if(!actual.getName().equals(this.origen.getName())){
-                        this.file = this.read(this.destinationPath,0);
+                        this.file = this.read(this.destinationPath, this.actualSize);
+                        System.out.printf("Leyendo %d bytes de %d\n", this.file.length, this.fileSize);
                         doMove(new ContainerID(this.origen.getName(), null));
-                    } else {
-                        try {
+                    }
+                    else{
+                        try{
                             Files.write(Paths.get(this.sourcePath), this.file,StandardOpenOption.APPEND);
+                            System.out.printf("Escribiendo %d bytes de %d\n", this.file.length, this.fileSize);
                         }
                         catch (IOException e) {
                             Files.createFile(Paths.get(this.sourcePath));
                             Files.write(Paths.get(this.sourcePath), this.file,StandardOpenOption.APPEND);
+                            
+                        } finally {
+                            if (this.fileSize > this.actualSize) {
+                                System.out.println("Faltaron bytes");
+                                doMove(new ContainerID("Main-Container", null));
+                            } else {
+                                System.out.println("\n\n-------------------------------------------------------------------------------------------------");
+                                System.out.println("El archivo "+this.destinationPath+" se leyo correctamente y se guardo en "+this.sourcePath);
+                                this.actualSize = 0;
+                                this.file = this.read(this.sourcePath, this.actualSize);
+                                this.action="write";
+                                this.destinationPath+="-copia";
+                                doMove(new ContainerID("Main-Container", null));
+                            }
                         }
-                        System.out.println("\n\n-------------------------------------------------------------------------------------------------");
-                        System.out.println("El archivo "+this.destinationPath+" se leyo correctamente y se guardo en "+this.sourcePath);
-                        this.action="write";
-                        this.destinationPath+="-copia";
-                        doMove(new ContainerID("Main-Container", null));
                     }
                     break;
                 case "list":
@@ -188,9 +200,11 @@ public class AgentePunto3 extends Agent
                             this.action          = (String) args[0];
                             this.sourcePath      = (String) args[1];
                             this.destinationPath = (String) args[2];
-                            this.fileSize = Files.size(Paths.get(this.sourcePath));
                             if (this.action.equals("write")) {
                                 this.file = this.read(this.destinationPath, this.actualSize);
+                                this.fileSize = Files.size(Paths.get(this.sourcePath));
+                            } else {
+                                this.fileSize = Files.size(Paths.get(this.destinationPath));
                             }
                         }
                         break;

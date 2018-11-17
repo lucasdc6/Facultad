@@ -175,6 +175,8 @@ El agente comprende 4 acciones:
         Al terminar la migración, se leen los archivos del directorio, y se
         almcenan en una variable de instancia del agente. Luego se vuelve al
         cliente y se informa lo leído.
+        \hyperref[fig:list]{Ver apéndice de capturas, Sección Punto 3}
+
   \item read: Recibe 2 argumentos extra a la acción, que marcan el nombre del
         nuevo archivo y el nombre del archivo remoto (en ese orden)
         Una vez parseados los argumentos, se realiza la migración al serviodr.
@@ -187,16 +189,18 @@ El agente comprende 4 acciones:
         En el servidor se copian los siguientes 2000 bytes \texttt{a partir}
         de los bytes copiados.(Esta acción se repite tantas veces como 
         sea necesaria)\\
-        \hyperref[section:code-punto3]{Ver apéndice de código, Sección Punto 3}
-
         \hyperref[fig:initial-file]{Ver apéndice de capturas, Sección Punto 3}
   
   \item write: Trabaja de igual manera que el read, pero a manera inversa,
         siendo el cliente del item anterior, el servidor, y el servidor del item
         anterior el cliente.
+        \hyperref[fig:initial-file]{Ver apéndice de capturas, Sección Punto 3}
   \item readwrite: Trabaja de igual manera que ejecutar primer un read y lugo un
         write de ese archivo.
+        \hyperref[fig:start-read2]{Ver apéndice de capturas, Sección Punto 3}
 \end{itemize}
+
+\hyperref[section:code-punto3]{Ver apéndice de código, Sección Punto 3}
 
 Para ejecutar, se debe levantar el \texttt{jade.Boot}, esto se puede hacer
 mediante el comando \texttt{make}
@@ -262,25 +266,110 @@ Para ver la sección de ayuda del comando, se puede utilizar la flag \texttt{-h}
 
 \subsubsection{Punto 3}
 \label{section:cap-punto3}
+
 \begin{figure}[H]
   \centering
-  \label{fig:initial-file}
-  \includegraphics[width=90mm]{images/punto-3/1-initial-file.png}
-  \caption{Inicio de copia}
+  \includegraphics[width=160mm]{images/punto-3/list/1-list.png}
+  \caption{Listado}
+  \label{fig:list}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=75mm]{images/punto-3/2-start-read.png}
-  \caption{Primera parte de la copia}
+  \label{fig:initial-file}
+  \includegraphics[width=90mm]{images/punto-3/1-initial-file.png}
+  \caption{Archivo para las pruebas}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=75mm]{images/punto-3/read/2-start-read.png}
+  \caption{Primera parte de la lectura}
   \label{fig:start-read}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=160mm]{images/punto-3/3-end-read.png}
-  \caption{Fin de la copia}
+  \includegraphics[width=160mm]{images/punto-3/read/3-end-read.png}
+  \caption{Fin de la lectura}
   \label{fig:end-read}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=75mm]{images/punto-3/write/2-start-write.png}
+  \caption{Primera parte de la escritura}
+  \label{fig:start-write}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=160mm]{images/punto-3/write/3-end-write.png}
+  \caption{Fin de la escritura}
+  \label{fig:end-write}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=160mm]{images/punto-3/readwrite/2-start-read.png}
+  \caption{Inicio de la lectura}
+  \label{fig:start-read2}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=160mm]{images/punto-3/readwrite/3-end-read.png}
+  \caption{Fin de la lectura}
+  \label{fig:end-read2}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=160mm]{images/punto-3/readwrite/4-start-write.png}
+  \caption{Inicio de la escritura (backup)}
+  \label{fig:start-write-backup}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=160mm]{images/punto-3/readwrite/5-end-write.png}
+  \caption{Fin de la escritura (backup)}
+  \label{fig:end-write-backup}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=160mm]{images/punto-3/readwrite/6-end-state.png}
+  \caption{Estado final de los archivos}
+  \label{fig:end-state}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=160mm]{images/punto-3/readwrite/7-diff.png}
+  \caption{Diff final entre archivos}
+  \label{fig:diff}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=160mm]{images/punto-3/readwrite/8-open-original.png}
+  \caption{Apertura archivo original}
+  \label{fig:open-original}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=160mm]{images/punto-3/readwrite/9-open-copy.png}
+  \caption{Apertura archivo copia}
+  \label{fig:open-copy}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=160mm]{images/punto-3/readwrite/10-open-backup.png}
+  \caption{Apertura archivo backup}
+  \label{fig:open-backup}
 \end{figure}
 
 \ifCLASSOPTIONcaptionsoff
