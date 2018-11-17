@@ -134,9 +134,11 @@ Luego, para ejecutar el punto, se puede ejcutar \texttt{make run-punto1}
 
 \textit{Programe un agente para que calcule la suma de todos los números
 almacenados en un archivo de una computadora que se le pasa como
-parámetro. Comente cómose haríalo mismo con una aplicación
-cliente/servidor. Comente quepasaría si hubiera otros sitios con
+parámetro. Comente cómo se haríalo mismo con una aplicación
+cliente/servidor. Comente que pasaría si hubiera otros sitios con
 archivos que deben ser procesados de manera similar}
+
+\subsection{Implementación}
 
 Para este punto, se programó un agente que recibe el nombre de una computadora,
 y migra el agente.
@@ -154,8 +156,21 @@ mediante el comando \texttt{make}
 Simplemente se puede ejecutar \texttt{make start-gui}
 Luego, para ejecutar el punto, se puede ejcutar \texttt{make run-punto2}
 
+\subsection{Aplicación cliente/servidor}
+
+Para realizar una implementación similar, el servidor debe poder acceder
+al filesystem del cliente. De poder hacer, puede copiarlo y trabajarlo
+localmente, para retornan un valor final.
+
+De no poder acceder al filesystem, se puede trabajar exponiendo un
+servicio que acepte un archivo, y retorne su suma.
+
+De todas formas, la interacción puede llegar a ser un poco menos directa,
+aunque más simple.
 
 \section{Punto 3}
+
+\subsection{Implementación}
 
 \textit{Defina  e  implemente  con  agentes  un  sistema  de  archivos
 distribuido  similar  al  de  las prácticas anteriores.}
@@ -174,7 +189,7 @@ El agente comprende 4 acciones:
         (recordemos que nos encontramos en el cliente).
         Al terminar la migración, se leen los archivos del directorio, y se
         almcenan en una variable de instancia del agente. Luego se vuelve al
-        cliente y se informa lo leído.
+        cliente y se informa lo leído.\\
         \hyperref[fig:list]{Ver apéndice de capturas, Sección Punto 3}
 
   \item read: Recibe 2 argumentos extra a la acción, que marcan el nombre del
@@ -193,10 +208,10 @@ El agente comprende 4 acciones:
   
   \item write: Trabaja de igual manera que el read, pero a manera inversa,
         siendo el cliente del item anterior, el servidor, y el servidor del item
-        anterior el cliente.
+        anterior el cliente.\\
         \hyperref[fig:initial-file]{Ver apéndice de capturas, Sección Punto 3}
   \item readwrite: Trabaja de igual manera que ejecutar primer un read y lugo un
-        write de ese archivo.
+        write de ese archivo.\\
         \hyperref[fig:start-read2]{Ver apéndice de capturas, Sección Punto 3}
 \end{itemize}
 
@@ -210,6 +225,13 @@ Simplemente se puede ejecutar \texttt{make start-gui}
 Luego, para interactuar con el servidor, se cuenta con el script \texttt{run}
 
 Para ver la sección de ayuda del comando, se puede utilizar la flag \texttt{-h}
+
+\subsection{Comparación con prácticas anteriores}
+
+Esta solución, plantea más comodidad al momento de manejar los datos
+(se cuenta con una clase con atributos accesibles tanto en el cliente,
+como en el servidor). Aunque veo que el migrado de código en repetidas
+ocaciones puede llegar a generar un overhead mayor.
 
 \newpage
 \onecolumn
