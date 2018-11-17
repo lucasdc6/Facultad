@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-if [ $# -eq 0 ]; then
+set -e
+if [ $# -eq 0 -o "$1" = "-h" -o "$1" = "--help" ]; then
   cat <<-HELP
   Usage: $0
     $0 read outputFile inputFile

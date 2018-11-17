@@ -31,9 +31,6 @@ public class AgentePunto3 extends Agent
 
         //informacion del agente
         this.origen = here();
-        //System.out.println("\n\nHola, agente con nombre local " + getLocalName());
-        //System.out.println("Y nombre completo... " + getName());
-        //System.out.println("Y en location " + origen.getID() + "\n\n");
 
     try {
         //migracion a otro container
@@ -48,21 +45,20 @@ public class AgentePunto3 extends Agent
     {
         //Muestro info del container actual
         Location actual = here();
-        //System.out.println("\n\nHola, agente migrado con nombre local " + getLocalName());
-        //System.out.println("Y nombre completo... " + getName());
-        //System.out.println("Y en location " + origen.getID() + "\n\n");
         try{
             switch (this.action) {
                 case "write":
                     if(!actual.getName().equals(this.origen.getName())){
-                        this.actualSize += this.write(this.destinationPath,this.file);
+                        this.write(this.destinationPath,this.file);
                         doMove(new ContainerID(this.origen.getName(), null));
                     } else {
-                        if (this.actualSize != this.fileSize) {
+                        if (this.fileSize > this.actualSize) {
                             this.file = this.read(this.sourcePath, this.actualSize);
+                            System.out.printf("Se leyeron %d de %d bytes\n\n", this.file.length, this.fileSize);
                             doMove(new ContainerID("Main-Container", null));
+                        } else {
+                            System.out.println("El archivo "+this.sourcePath+" se escribio correctamente en el directorio remoto "+this.destinationPath);
                         }
-                        System.out.println("El archivo "+this.sourcePath+" se escribio correctamente en el directorio remoto "+this.destinationPath);
                     }
                     break;
                 case "read":
@@ -136,7 +132,6 @@ public class AgentePunto3 extends Agent
             in.skip(this.actualSize);
             in.read(contents, 0, noBytes);
             this.actualSize += contents.length;
-            this.fileSize= Files.size(Paths.get(path));
             return contents;
         } catch(IOException e) {
             System.out.println(e);
@@ -154,6 +149,7 @@ public class AgentePunto3 extends Agent
                 Files.createFile(Paths.get(path));
                 Files.write(Paths.get(path), data,StandardOpenOption.APPEND);
             }
+            System.out.printf("Se escribieron %d de %d bytes\n", this.actualSize, this.fileSize);
             return data.length;            
         } catch (IOException e) {
             System.out.println(e.toString());
@@ -192,9 +188,9 @@ public class AgentePunto3 extends Agent
                             this.action          = (String) args[0];
                             this.sourcePath      = (String) args[1];
                             this.destinationPath = (String) args[2];
-                            if (((String) args[0]).equals("write")) {
-                                this.file          = Files.readAllBytes(Paths.get(this.sourcePath));
-                                this.fileSize = Files.size(Paths.get(this.sourcePath));
+                            this.fileSize = Files.size(Paths.get(this.sourcePath));
+                            if (this.action.equals("write")) {
+                                this.file = this.read(this.destinationPath, this.actualSize);
                             }
                         }
                         break;
@@ -211,7 +207,7 @@ public class AgentePunto3 extends Agent
                         }
                         break;
                 
-                default: System.out.println("Command unavailable");
+                default: System.out.printf("Command %s unavailable\n", (String) args[0]);
                         System.exit(1);
                         break;
             }

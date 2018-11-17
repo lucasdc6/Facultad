@@ -13,8 +13,5 @@ run-punto1:
 run-punto2:
 	cd punto2 && java -cp ../lib/jade.jar:classes jade.Boot -gui -container -host localhost -agents mol:AgentePunto2
 
-run-punto3:
-	cd punto3 && java -cp ../lib/jade.jar:classes jade.Boot -gui -container -host localhost -agents mol:AgentePunto3
-
 clean:
 	- rm -r APDescription.txt MTPs-Main-Container.txt punto1/classes punto2/classes punto3/classes

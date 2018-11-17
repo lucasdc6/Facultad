@@ -38,7 +38,6 @@ public class AgentePunto1 extends Agent
 			System.out.println("Migrando el agente a " + destino.getID());
 			startTime = System.currentTimeMillis();    
 			doMove(destino);
-			System.out.println("WaAASSAAAA");
 		} catch (Exception e) {
 			System.out.println("\n\n\nNo fue posible migrar el agente\n\n\n");}
 	}
