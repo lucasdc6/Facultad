@@ -94,6 +94,41 @@ takeWhileGen p = recGen (\x rs _ -> if p x then Gen x rs else Gen x [] )
 -- dropWhileGen p = recGen (\x _ ts -> if p x then Gen (head ts) (tail ts) else Gen x ts )
 
 
+-- Punto 5
+
+data GenExp a = Leaf a | Un (GenExp a) | BinG (GenExp a) (GenExp a)
+
+foldGenExp :: (a -> b) -> (b -> b) -> (b -> b -> b) -> GenExp a -> b
+foldGenExp fLeaf fUn fBinG (Leaf x) = fLeaf x
+foldGenExp fLeaf fUn fBinG (Un e) = fUn (foldGenExp fLeaf fUn fBinG e)
+foldGenExp fLeaf fUn fBinG (BinG e1 e2) = fBinG (foldGenExp fLeaf fUn fBinG e1) (foldGenExp fLeaf fUn fBinG e2)
+
+data NExp = Num Int | Sum NExp NExp | Sub NExp NExp | Neg NExp
+
+foldNExp :: (Int -> a) -> (a -> a -> a) -> (a -> a -> a) -> (a -> a) -> NExp -> a
+foldNExp fNum fSum fSub fNeg (Num n) = fNum n
+foldNExp fNum fSum fSub fNeg (Sum e1 e2) = fSum (foldNExp fNum fSum fSub fNeg e1) (foldNExp fNum fSum fSub fNeg e2)
+foldNExp fNum fSum fSub fNeg (Sub e1 e2) = fSub (foldNExp fNum fSum fSub fNeg e1) (foldNExp fNum fSum fSub fNeg e2)
+foldNExp fNum fSum fSub fNeg (Neg e) = fNeg (foldNExp fNum fSum fSub fNeg e)
+
+foldEither :: (a -> c) -> (b -> c) -> Either a b -> c
+foldEither f g (Left x) = f x
+foldEither f g (Right x) = g x
+
+
+data Nat = Zero | Succ Nat deriving Show
+
+foldNat :: (a -> a) -> a -> Nat -> a
+foldNat f z Zero = z
+foldNat f z (Succ n) = f (foldNat f z n)
+
+sumNat :: Nat -> Int
+sumNat = foldNat (\tot -> tot + 1) 0
+
+zero = Zero
+one = Succ(Zero)
+seven = Succ(Succ(Succ(Succ(Succ(Succ(Succ(Zero)))))))
+
 -- Extra
 
 data Weird a b = First a
