@@ -61,7 +61,7 @@ mix Yellow Red = Orange
 mix Yellow Blue = Green
 
 -- b Puntos
-data Point = Point2D { x, y :: Float } | Point3D { x, y, z :: Float } deriving Show
+data (Num a) => Point a = Point2D a a | Point3D a a a deriving Show
 
 sqr :: Float -> Float
 sqr x = x * x

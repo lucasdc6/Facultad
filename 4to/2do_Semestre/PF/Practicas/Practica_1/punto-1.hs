@@ -8,7 +8,7 @@ sign x | x < 0 = -1
        | otherwise = 0
 
 absolute :: Int -> Int
-absolute x = (sign x * x)
+absolute x = sign x * x
 
 absolute' :: Int -> Int
 absolute' x | x < 0 = x * (-1)
@@ -47,27 +47,27 @@ xorC' x y | x == y = False
           | otherwise = True
 
 dividesTo :: (Int, Int) -> Bool
-dividesTo (x,y) | (mod x y) == 0 = True
+dividesTo (x,y) | mod x y == 0 = True
                 | otherwise = False
 
 dividesToC :: Int -> Int -> Bool
-dividesToC x y | (mod x y) == 0 = True
+dividesToC x y | mod x y == 0 = True
                | otherwise = False
 
 isMultiple :: (Int, Int) -> Bool
 isMultiple (x,y) = dividesTo(x,y)
 
 isMultipleC :: Int -> Int -> Bool
-isMultipleC x y = dividesToC x y
+isMultipleC = dividesToC
 
 isCommonDivisor :: (Int, (Int, Int)) -> Bool
-isCommonDivisor (n,(x, y)) | dividesTo(x,n) == False = False
-                           | dividesTo(y,n) == False = False
+isCommonDivisor (n,(x, y)) | not dividesTo(x,n) = False
+                           | not dividesTo(y,n) = False
                            | otherwise = True
 
 isCommonDivisorC :: Int -> (Int, Int) -> Bool
-isCommonDivisorC n (x, y) | dividesToC x n == False = False
-                          | dividesToC y n == False = False
+isCommonDivisorC n (x, y) | not (dividesToC x n) = False
+                          | not (dividesToC y n) = False
                           | otherwise = True
 
 swap :: (Int, Int) -> (Int, Int)
@@ -99,7 +99,7 @@ power4' :: Int -> Int
 power4' x = sqr (sqr x)
 
 power4'' :: Int -> Int
-power4'' x = (sqr x) * (sqr x)
+power4'' x = sqr x * sqr x
 
 -- Punto 4
 

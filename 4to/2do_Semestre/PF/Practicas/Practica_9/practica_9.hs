@@ -1,35 +1,35 @@
 data TipTree a = Tip a | Join (TipTree a) (TipTree a) deriving Show
 
-treeE = Join (Tip 2) (Join (Tip 1) (Join (Tip 2) (Tip 3)))
+tipTreeE = Join (Tip 2) (Join (Tip 1) (Join (Tip 2) (Tip 3)))
 
 foldTipTree :: ( a -> b ) -> ( b -> b -> b ) -> TipTree a -> b
 foldTipTree f g (Tip t) = f t
 foldTipTree f g (Join t1 t2) = g (foldTipTree f g t1) (foldTipTree f g t2)
 
 heightTip :: TipTree a -> Int
-heightTip = foldTipTree (\_ -> 0) (\t1 t2 -> if t1 > t2 then 1 + t1 else 1 + t2)
+heightTip = foldTipTree (const 0) (\t1 t2 -> if t1 > t2 then 1 + t1 else 1 + t2)
 
 leaves :: TipTree a -> Int
-leaves = foldTipTree (\_ -> 1) (\t1 t2 -> t1 + t2)
+leaves = foldTipTree (const 1) (+)
 
 nodes :: TipTree a -> Int
-nodes = foldTipTree (\_ -> 0) (\t1 t2 -> t1 + t2 + 1)
+nodes = foldTipTree (const 0) (\t1 t2 -> t1 + t2 + 1)
 
 walkover :: TipTree a -> [a]
-walkover = foldTipTree (\t -> [t]) (\t1 t2 -> t1 ++ t2)
+walkover = foldTipTree (: []) (++)
 
 mirrorTip :: TipTree a -> TipTree a
-mirrorTip = foldTipTree (\t -> Tip t) (\t1 t2 -> Join t2 t1)
+mirrorTip = foldTipTree Tip (flip Join)
 
 mapTip :: (a -> b) -> TipTree a -> TipTree b
-mapTip f = foldTipTree (\t -> Tip (f t)) (\t1 t2 -> Join t1 t2)
+mapTip f = foldTipTree (Tip . f) Join
 
 
 -- Punto 2
 data BinTree a = Empty | Bin a (BinTree a) (BinTree a) deriving Show
 
 
-binTree = (Bin 1 (Bin 2 Empty Empty) (Empty))
+binTree = Bin 1 (Bin 2 Empty Empty) Empty
 
 -- nodesBin Empty = ...
 -- nodesBin Bin n t1 t2 = n ... nodesBin t1 ... nodesBin t2
@@ -47,11 +47,11 @@ heightBin (Bin n t1 t2) = if heightBin t1 > heightBin t2 then heightBin t1 + 1 e
 
 mapBin :: (a -> b) -> BinTree a -> BinTree b
 mapBin f Empty = Empty
-mapBin f (Bin n t1 t2) = (Bin (f n) (mapBin f t1) (mapBin f t2))
+mapBin f (Bin n t1 t2) = Bin (f n) (mapBin f t1) (mapBin f t2)
 
 mirrorBin :: BinTree a -> BinTree a
 mirrorBin Empty = Empty
-mirrorBin (Bin n t1 t2) = (Bin n t2 t1)
+mirrorBin (Bin n t1 t2) = Bin n t2 t1
 
 foldBin :: (a -> b -> b -> b) -> b -> BinTree a -> b
 foldBin f z Empty = z
@@ -71,12 +71,16 @@ mirrorBin' = foldBin (\n t1 t2 -> (Bin n t2 t1)) Empty
 
 data GenTree a = Gen a [GenTree a] deriving Show
 
+foldGen :: (a -> [b] -> b) -> GenTree a -> b
 foldGen f (Gen t ts) = f t (map (foldGen f) ts)
 
-children (Gen _ ts) = ts 
+foldGen' :: (a -> c -> b) -> ([b] -> c) -> GenTree a -> b
+foldGen' f g (Gen x ts) = f x (g (map (foldGen' f g) ts))
+
+children (Gen _ ts) = ts
 
 
-treeGen = Gen 2 [(Gen 2 []), (Gen 3 [(Gen 3 [])])]
+treeGen = Gen 2 [Gen 2 [], Gen 3 [Gen 3 []]]
 
 recGen :: (a -> [b] -> [GenTree a] -> b) -> GenTree a -> b
 recGen f t@(Gen x ts) = foldGen f' t t
@@ -86,5 +90,21 @@ recGen f t@(Gen x ts) = foldGen f' t t
 takeWhileGen :: (a -> Bool) -> GenTree a -> GenTree a
 takeWhileGen p = recGen (\x rs _ -> if p x then Gen x rs else Gen x [] ) 
 
-dropWhileGen :: (a -> Bool) -> GenTree a -> GenTree a
-dropWhileGen p = recGen (\x _ ts -> if p x then Gen (head ts) (tail ts) else Gen x ts )
+-- dropWhileGen :: (a -> Bool) -> GenTree a -> GenTree a
+-- dropWhileGen p = recGen (\x _ ts -> if p x then Gen (head ts) (tail ts) else Gen x ts )
+
+
+-- Extra
+
+data Weird a b = First a
+               | Second b
+               | Third [(a,b)]
+               | Fourth (Weird a b) deriving Show
+
+weirdE = Fourth (Third [(1,'a')])
+
+foldW :: ( a -> c ) -> ( b -> c ) -> ( [(a,b)] -> c ) -> ( c -> c ) -> Weird a b -> c
+foldW fFirst fSecond fThird fFourth (First x) = fFirst x
+foldW fFirst fSecond fThird fFourth (Second x) = fSecond x
+foldW fFirst fSecond fThird fFourth (Third xs) = fThird xs
+foldW fFirst fSecond fThird fFourth (Fourth w) = fFourth (foldW fFirst fSecond fThird fFourth w)
