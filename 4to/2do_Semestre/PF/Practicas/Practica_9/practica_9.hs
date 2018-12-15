@@ -6,27 +6,30 @@ foldTipTree :: ( a -> b ) -> ( b -> b -> b ) -> TipTree a -> b
 foldTipTree f g (Tip t) = f t
 foldTipTree f g (Join t1 t2) = g (foldTipTree f g t1) (foldTipTree f g t2)
 
-heightTip :: TipTree a -> Int
-heightTip = foldTipTree (const 0) (\t1 t2 -> if t1 > t2 then 1 + t1 else 1 + t2)
+heightTip' :: TipTree a -> Int
+heightTip' = foldTipTree (const 0) (\t1 t2 -> if t1 > t2 then 1 + t1 else 1 + t2)
 
-leaves :: TipTree a -> Int
-leaves = foldTipTree (const 1) (+)
+leaves' :: TipTree a -> Int
+leaves' = foldTipTree (const 1) (+)
 
-nodes :: TipTree a -> Int
-nodes = foldTipTree (const 0) (\t1 t2 -> t1 + t2 + 1)
+nodes' :: TipTree a -> Int
+nodes' = foldTipTree (const 0) (\t1 t2 -> t1 + t2 + 1)
 
-walkover :: TipTree a -> [a]
-walkover = foldTipTree (: []) (++)
+walkover' :: TipTree a -> [a]
+walkover' = foldTipTree (: []) (++)
 
-mirrorTip :: TipTree a -> TipTree a
-mirrorTip = foldTipTree Tip (flip Join)
+idTip' :: TipTree a -> TipTree a
+idTip' = foldTipTree Tip Join
 
-mapTip :: (a -> b) -> TipTree a -> TipTree b
-mapTip f = foldTipTree (Tip . f) Join
+mirrorTip' :: TipTree a -> TipTree a
+mirrorTip' = foldTipTree Tip (flip Join)
+
+mapTip' :: (a -> b) -> TipTree a -> TipTree b
+mapTip' f = foldTipTree (Tip . f) Join
 
 
 -- Punto 2
-data BinTree a = Empty | Bin a (BinTree a) (BinTree a) deriving Show
+data BinTree a = Empty | Bin a (BinTree a) (BinTree a) deriving (Show, Eq)
 
 
 binTree = Bin 1 (Bin 2 Empty Empty) Empty
@@ -66,7 +69,6 @@ heightBin' = foldBin (\n t1 t2 -> t1 + t2 + 1) 0
 mirrorBin' :: BinTree a -> BinTree a
 mirrorBin' = foldBin (\n t1 t2 -> (Bin n t2 t1)) Empty
 
-
 -- Punto 3
 
 data GenTree a = Gen a [GenTree a] deriving Show
@@ -103,13 +105,14 @@ foldGenExp fLeaf fUn fBinG (Leaf x) = fLeaf x
 foldGenExp fLeaf fUn fBinG (Un e) = fUn (foldGenExp fLeaf fUn fBinG e)
 foldGenExp fLeaf fUn fBinG (BinG e1 e2) = fBinG (foldGenExp fLeaf fUn fBinG e1) (foldGenExp fLeaf fUn fBinG e2)
 
-data NExp = Num Int | Sum NExp NExp | Sub NExp NExp | Neg NExp
+data NExp = Num Int | Sum NExp NExp | Sub NExp NExp | Mul NExp NExp | Neg NExp
 
-foldNExp :: (Int -> a) -> (a -> a -> a) -> (a -> a -> a) -> (a -> a) -> NExp -> a
-foldNExp fNum fSum fSub fNeg (Num n) = fNum n
-foldNExp fNum fSum fSub fNeg (Sum e1 e2) = fSum (foldNExp fNum fSum fSub fNeg e1) (foldNExp fNum fSum fSub fNeg e2)
-foldNExp fNum fSum fSub fNeg (Sub e1 e2) = fSub (foldNExp fNum fSum fSub fNeg e1) (foldNExp fNum fSum fSub fNeg e2)
-foldNExp fNum fSum fSub fNeg (Neg e) = fNeg (foldNExp fNum fSum fSub fNeg e)
+foldNExp :: (Int -> a) -> (a -> a -> a) -> (a -> a -> a) -> (a -> a -> a) -> (a -> a) -> NExp -> a
+foldNExp fNum fSum fSub fMul fNeg (Num n) = fNum n
+foldNExp fNum fSum fSub fMul fNeg (Sum e1 e2) = fSum (foldNExp fNum fSum fSub fMul fNeg e1) (foldNExp fNum fSum fSub fMul fNeg e2)
+foldNExp fNum fSum fSub fMul fNeg (Sub e1 e2) = fSub (foldNExp fNum fSum fSub fMul fNeg e1) (foldNExp fNum fSum fSub fMul fNeg e2)
+foldNExp fNum fSum fSub fMul fNeg (Mul e1 e2) = fMul (foldNExp fNum fSum fSub fMul fNeg e1) (foldNExp fNum fSum fSub fMul fNeg e2)
+foldNExp fNum fSum fSub fMul fNeg (Neg e) = fNeg (foldNExp fNum fSum fSub fMul fNeg e)
 
 foldEither :: (a -> c) -> (b -> c) -> Either a b -> c
 foldEither f g (Left x) = f x
