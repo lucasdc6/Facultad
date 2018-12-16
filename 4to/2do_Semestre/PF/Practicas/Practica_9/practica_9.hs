@@ -27,6 +27,14 @@ mirrorTip' = foldTipTree Tip (flip Join)
 mapTip' :: (a -> b) -> TipTree a -> TipTree b
 mapTip' f = foldTipTree (Tip . f) Join
 
+filterTip :: (a -> Bool) -> TipTree a -> [a]
+filterTip f = foldTipTree (\n -> if f n then [n] else []) (++)
+
+data ABTree a b = LeafAB b | Branch a (ABTree a b) (ABTree a b)
+
+foldAB :: (b -> c) -> (a -> c -> c -> c) -> ABTree a b -> c
+foldAB f g (LeafAB n) = f n
+foldAB f g (Branch n t1 t2) = g n (foldAB f g t1) (foldAB f g t2)
 
 -- Punto 2
 data BinTree a = Empty | Bin a (BinTree a) (BinTree a) deriving (Show, Eq)
