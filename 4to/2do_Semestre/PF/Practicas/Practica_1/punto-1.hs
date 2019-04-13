@@ -1,6 +1,6 @@
 -- Punto 1
 seven :: a -> Int
-seven x = 7
+seven _ = 7
 
 sign :: Int -> Int
 sign x | x < 0 = -1
@@ -15,7 +15,7 @@ absolute' x | x < 0 = x * (-1)
             | otherwise = x
 
 and' :: (Bool, Bool) -> Bool
-and' (x,y) | x == False = False
+and' (x,y) | not x
            | y == False = False
            | otherwise = True
 
