@@ -34,9 +34,12 @@ int main(int argc, char* argv[])
 
   // Run threads
   for (int i = 0; i < thread_number; i++) {
-    params[i].start = i > 0 ? (i-1) * 30 : i * 30;
-    params[i].end = i > 0 ? 30 : i * 30;
-    params[i].id = i;
+    params[i] = (options){
+      .start = i*thread_number,
+      .end = (1+i)*thread_number,
+      .id = i
+    };
+
     pthread_create(&threads[i], &attr, test, &params[i]);
   }
 

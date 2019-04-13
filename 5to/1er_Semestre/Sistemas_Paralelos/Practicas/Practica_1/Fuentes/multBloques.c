@@ -102,8 +102,9 @@ void producto(double *A,double *B,double *C, int r,int N,int sizeMatrix, int siz
 
  
 	for (I=0;I<N;I++){
-    printf("asd");
+    printf("\n\nasd\n\n");
 		for (J=0;J<N;J++){
+      printf("\n\nASD\n\n");
 			despC = (I*N+J)*sizeBlock;
 
       printf("I = %d\nJ = %d\n\n\n", I, J);
