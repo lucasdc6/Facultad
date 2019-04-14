@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 {
   // Check for thread_number
   if (argc < 2) {
-    printf("You must specify a number\n");
+    printf("You must specify a thread number\n");
     return 1;
   }
 

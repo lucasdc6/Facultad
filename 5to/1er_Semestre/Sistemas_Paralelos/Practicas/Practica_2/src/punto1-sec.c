@@ -1,156 +1,120 @@
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
 
-int sizeBlock, blockNumber, n, thread_number;
-double *A; // Matriz A
-double *B; // Matriz B
-double *C; // Matriz C
+#define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_RESET "\x1b[0m"
 
 double dwalltime()
 {
-	double sec;
-	struct timeval tv;
+  double sec;
+  struct timeval tv;
 
-	gettimeofday(&tv,NULL);
-	sec = tv.tv_sec + tv.tv_usec/1000000.0;
-	return sec;
+  gettimeofday(&tv,NULL);
+  sec = tv.tv_sec + tv.tv_usec/1000000.0;
+  return sec;
 }
 
-void * mult(void * arg)
+void print_matrix(double *matrix, int N)
 {
-  int id= *(int *) arg;
-  printf("Start mult in thread %d\n", id);
-  long limit = (1 + id) * blockNumber / thread_number;
-  double aux;
-
-  for (int i = id * blockNumber / thread_number; i < limit; i++) {
-    for (int j = 0; j < n; j++) {
-      aux = 0.0;
-      for (int k = 0; k < n; k++) {
-        aux += A[i*n+k] * B[j+k*n];
-        printf("%d: aux = %g\n",id,  aux);
-        printf("%d: A[%d] = %g\n",id,  i*n+k, A[i*n+k]);
-        printf("%d: B[%d] = %g\n\n\n", id, j+k*n, B[j+k*n]);
-      }
-      C[i*n+j] = aux;
-      printf("%d: C[%d] = %g\n\n\n", id, i*n+j, C[i*n+j]);
+  for (int i = 0; i < N; i++) {
+    for(int j = 0; j < N; j++) {
+      printf(" %g ", matrix[i*N+j]);
     }
+    printf("\n");
   }
-  return 0;
 }
-
-void imprimeMatriz(double *S,int N,int r){
-// Imprime la matriz pasada por parametro
-// N es la cantidad de bloques, r dimension de cada bloque
-  int i,j,I,J,despB;
-
-  printf("Contenido de la matriz: \n");
-  for (I= 0; I< N; I++){
-    //para cada fila de bloques (I)
-    for (i= 0; i< r; i++){
-      for(J=0;J<N;J++){
-		    despB=(I*N+J)*r*r;
-	      for (j=0;j<r;j++){
-	        printf("\t%g ",S[despB+ i*r+j]);
-	      }//end for j
-	    }//end for J
-      printf("\n");
-    }//end for i
-  }//end for I
-  printf(" \n\n");
-}
-
-void crearIdentidad(double *S, int blockNumber, int sizeMatrix,int N,int r){
-//Inicializa la matriz S como una matriz identidad
-//pone cada bloque en 0, y a los bloques diagonales pone 1 en su diag. interna
-
-//inicializa en cero la matriz
-  int i,j;
-  for (i = 0; i < sizeMatrix; i++){
-	  S[i]=0.0;
-  }//end for j
-
-//inicializa los N bloques de la diagonal como identidad
-  for (i = 0; i < sizeMatrix; i = i + (N + 1) * blockNumber){
-	//en i commienza el bloque a actualizar
-	  for (j=0; j<blockNumber; j=j+r+1){
-		  S[i+j]= 1.0;
-	  }
-  };//end for i
-}
-
-void crearMatriz(double *S, int sizeMatrix){
-  int i;
-  for(i = 0; i < sizeMatrix; i++) {
-    S[i] = rand()%10;
-  }//end i
-}
-
 
 int main(int argc, char* argv[])
 {
-  // Check for thread_number
-  if (argc < 2) {
-    printf("You must specify a number\n");
-    return 1;
+  double initial_time;
+  int check = 1;
+
+  #ifdef DEBUG
+  int debug = 1;
+  if (getenv("DEBUG")) {
+    debug = atoi(getenv("DEBUG"));
+    printf(ANSI_COLOR_RED "Debug mode - Level %d\n" ANSI_COLOR_RESET, debug);
+  }
+  #endif
+
+  // Check arguments
+  if (argc < 2)
+  {
+    printf("You must specify:\n\t- matrix size\n");
+    exit(1);
   }
 
-  // Set thread_number and initialize threads ids array
-  thread_number = atoi(argv[1]);
-  n = atoi(argv[2]);
-
-  printf("thread_number %d\n", thread_number);
-  int N = n * n;
-  int ids[thread_number];
-  A = (double*) malloc(N * sizeof(double)); //aloca memoria para A
-  B = (double*) malloc(N * sizeof(double)); //aloca memoria para B
-  C = (double*) malloc(N * sizeof(double)); //aloca memoria para C
-
-
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n; j++) {
-      A[i*n+j] = 1.0;
-      B[i*n+j] = 1.0;
-      C[i*n+j] = 0.0;
-    }
-  } 
-
-  sizeBlock = N / thread_number;
-  blockNumber = thread_number;
-
-  printf("sizeBock = %d\n", sizeBlock);
-
-  // Declare threads config
-  pthread_attr_t attr;
-  pthread_t threads[thread_number];
-  pthread_attr_init(&attr);
-
+  // Initialize variable
+  int N = atoi(argv[1]);;
+  double *A; // Matriz A
+  double *B; // Matriz B
+  double *C; // Matriz C
   
+  #ifdef DEBUG
+  if (debug > 1) {
+    printf("\nInitial variablres:\n\n");
+    printf("N = %d\n\n", N);
+  }
+  #endif
 
-  for (int i=0; i < blockNumber; i++){
-    ids[i] = i;
-    pthread_create(&threads[i], &attr, mult, &ids[i]);
-	}
+  // Alloc matrix A, B and C
+  A = (double*)malloc(sizeof(double)*N*N);
+  B = (double*)malloc(sizeof(double)*N*N);
+  C = (double*)malloc(sizeof(double)*N*N);
 
-  // Wait for all threads
-  for (int i = 0; i < thread_number; i++) {
-    pthread_join(threads[i], NULL);
+  // Matrix initialization
+  for(int i = 0; i < N; i++){
+    for(int j = 0; j < N; j++){
+      A[i * N + j] = 1; 
+      B[i * N + j] = 1;
+    }
+  }   
+
+  //Realiza la multiplicacion
+
+  initial_time = dwalltime();
+
+  for(int i = 0; i < N; i++){
+    for(int j = 0; j < N; j++){
+      int aux = 0;
+      for(int k = 0; k < N; k++){
+        aux += A[i*N+k] * B[k+j*N];
+      }
+      C[i*N+j] = aux;
+    }
   }
 
-  printf("A: \n" );
-  imprimeMatriz(A, n, 1);
+  printf("Time %g\n", dwalltime() - initial_time);
 
-  printf("B: \n" );
-  imprimeMatriz(B, n, 1);
+  //Verifica el resultado
+  for(int i = 0; i < N; i++){
+    for(int j = 0; j < N; j++){
+      check = check && (C[i*N+j] == N);
+    }
+  }
 
-  printf("C: \n" );
-  imprimeMatriz(C, n, 1);
+  #ifdef DEBUG
+  if (debug > 2) {
+    printf("\n---------------------------------------------------------------------------------------\n");
+    print_matrix(A, N);
+    printf("\n---------------------------------------------------------------------------------------\n");
+    print_matrix(B, N);
+    printf("\n---------------------------------------------------------------------------------------\n");
+    print_matrix(C, N);
+    printf("\n---------------------------------------------------------------------------------------\n\n");
+  }
+  #endif
 
   free(A);
   free(B);
   free(C);
+  
+  if(!check){
+    printf("Multiplication error!\n");
+    return 2;
+  }
 
+  printf("Everything it's ok!\n");
   return 0;
 }
