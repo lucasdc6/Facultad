@@ -27,8 +27,12 @@ void print_matrix(double *matrix, int N)
 
 int main(int argc, char* argv[])
 {
-  double initial_time;
-  int check = 1;
+  // Check arguments
+  if (argc < 2)
+  {
+    printf("You must specify:\n\t- matrix size\n");
+    exit(1);
+  }
 
   #ifdef DEBUG
   int debug = 1;
@@ -38,14 +42,9 @@ int main(int argc, char* argv[])
   }
   #endif
 
-  // Check arguments
-  if (argc < 2)
-  {
-    printf("You must specify:\n\t- matrix size\n");
-    exit(1);
-  }
-
   // Initialize variable
+  double initial_time;
+  int check = 1;
   int N = atoi(argv[1]);;
   double *A; // Matriz A
   double *B; // Matriz B
@@ -71,8 +70,7 @@ int main(int argc, char* argv[])
     }
   }   
 
-  //Realiza la multiplicacion
-
+  //Start processor time
   initial_time = dwalltime();
 
   for(int i = 0; i < N; i++){

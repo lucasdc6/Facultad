@@ -18,6 +18,12 @@ double dwalltime()
 
 int main(int argc, char* argv[])
 {
+  // Check for arguments
+  if (argc < 3) {
+    printf("You must specify:\n\n\t- verctor size\n\t- number to search\n");
+    return 1;
+  }
+
   #ifdef DEBUG
   int debug = 0;
   if (getenv("DEBUG")) {
@@ -26,15 +32,8 @@ int main(int argc, char* argv[])
   }
   #endif
 
-  // Check for thread_number
-  if (argc < 3) {
-    printf("You must specify:\n\n\t- verctor size\n\t- number to search\n");
-    return 1;
-  }
-
   // Initialize variable
   long long int vector_size = atoll(argv[1]);
-  int *numbers = (int*) malloc(sizeof(int) * vector_size);
   long long int ocurrences = 0;
   int number = atoi(argv[2]);
 
@@ -45,10 +44,15 @@ int main(int argc, char* argv[])
   }
   #endif
 
+  // Alloc memory
+  int *numbers = (int*) malloc(sizeof(int) * vector_size);
+
+  // Initialize vector
   for (long long int i = 0; i < vector_size; i++) {
     numbers[i] = rand()%10;
   }
 
+  //Start processor time
   int initial_time = dwalltime();
 
   for (int i = 0; i < vector_size; i++) {

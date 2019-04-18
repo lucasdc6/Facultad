@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
+#define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_RESET "\x1b[0m"
+
 double dwalltime()
 {
 	double sec;
@@ -15,23 +18,41 @@ double dwalltime()
 
 int main(int argc, char* argv[])
 {
-  // Check for thread_number
+  // Check for arguments
   if (argc < 2) {
     printf("You must specify a verctor size\n");
     return 1;
   }
+
+  #ifdef DEBUG
+  int debug = 1;
+  if (getenv("DEBUG")) {
+    debug = atoi(getenv("DEBUG"));
+    printf(ANSI_COLOR_RED "Debug mode - Level %d\n" ANSI_COLOR_RESET, debug);
+  }
+  #endif
 
   // Set thread_number and initialize threads ids array
   long long int vector_size = atoll(argv[1]);
   int *numbers;
   long long int sum = 0;
 
+  #ifdef DEBUG
+  if (debug > 1) {
+    printf("\nInitial variablres:\n\n");
+    printf("vector_size = %lld\n\n", vector_size);
+  }
+  #endif
+
+  // Alloc memory
   numbers = (int*) malloc(sizeof(int) * vector_size);
 
+  // Initialize vector
   for (long long int i = 0; i < vector_size; i++) {
     numbers[i] = rand()%10;
   }
 
+  //Start processor time
   int initial_time = dwalltime();
 
   for (int i = 0; i < vector_size; i++) {

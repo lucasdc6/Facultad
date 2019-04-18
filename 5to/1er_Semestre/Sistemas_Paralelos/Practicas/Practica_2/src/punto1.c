@@ -7,7 +7,7 @@
 #define ANSI_COLOR_RESET "\x1b[0m"
 
 #ifdef DEBUG
-int debug = 1;
+int debug = 0;
 #endif
 
 int N;
@@ -65,8 +65,12 @@ void print_matrix(double *matrix)
 
 int main(int argc, char* argv[])
 {
-  double initial_time;
-  int check = 1;
+  // Check arguments
+  if (argc < 3)
+  {
+    printf("You must specify:\n\t- thread number\n\t- matrix size\n");
+    exit(1);
+  }
 
   #ifdef DEBUG
   if (getenv("DEBUG")) {
@@ -75,15 +79,10 @@ int main(int argc, char* argv[])
   }
   #endif
 
-  // Check arguments
-  if (argc < 3)
-  {
-    printf("You must specify:\n\t- thread number\n\t- matrix size\n");
-    exit(1);
-  }
-
 
   // Initialize variable
+  double initial_time;
+  int check = 1;
   thread_number = atoi(argv[1]);
   N = atoi(argv[2]);
   block_size = N / thread_number;
@@ -109,25 +108,26 @@ int main(int argc, char* argv[])
     }
   }   
 
-  // Inicializacion de threads
+  // Threads declaration
   pthread_t threads[thread_number];
 
-  //Realiza la multiplicacion
-
+  //Start processor time
   initial_time = dwalltime();
 
+  // Run threads
   for(int i = 0; i < thread_number; i++){
     ids[i]= i;
     pthread_create(&threads[i], NULL, mult, &ids[i]);
   }   
 
+  // Wait for all threads
   for(int i = 0; i < thread_number; i++){
     pthread_join(threads[i], NULL);
   }
 
   printf("Time %g\n", dwalltime() - initial_time);
 
-  //Verifica el resultado
+  // Verify result
   for(int i = 0; i < N; i++){
     for(int j = 0; j < N; j++){
       check = check && (C[i*N+j] == N);
