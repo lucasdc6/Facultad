@@ -5,6 +5,7 @@
 #include <limits.h>
 
 #define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_YELLOW  "\x1b[33m"
 #define ANSI_COLOR_RESET "\x1b[0m"
 
 double dwalltime()
@@ -30,6 +31,8 @@ int main(int argc, char* argv[])
   if (getenv("DEBUG")) {
     debug = atoi(getenv("DEBUG"));
     printf(ANSI_COLOR_RED "Debug mode - Level %d\n" ANSI_COLOR_RESET, debug);
+  } else {
+    printf(ANSI_COLOR_YELLOW "Debug binary\nSet DEBUG environment variable with a level\n" ANSI_COLOR_RESET);
   }
   #endif
 
