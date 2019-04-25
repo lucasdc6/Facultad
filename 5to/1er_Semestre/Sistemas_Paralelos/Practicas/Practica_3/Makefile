@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -fopenmp
+CFLAGS := -fopenmp -lm
 SRC_DIR := src
 TEMPLATE_DIR := templates
 BIN_DIR := bin
