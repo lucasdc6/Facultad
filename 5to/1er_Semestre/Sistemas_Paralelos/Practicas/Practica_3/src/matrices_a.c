@@ -33,7 +33,7 @@ int main(int argc,char*argv[]){
       A[i*N+j]=1;
       B[i+j*N]=1;
     }
-  }   
+  }
 
   timetick = dwalltime();
   //Realiza la multiplicacion
